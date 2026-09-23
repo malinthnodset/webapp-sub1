@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "iG2GUQxPSVQ=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Malin\\Documents\\GitHub\\webapp-sub1\\SubApp1\\SubApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Malin\\.nuget\\packages\\microsoft.web.librarymanager.build\\3.0.114\\microsoft.web.librarymanager.build.3.0.114.nupkg.sha512"
+  ],
+  "logs": []
+}
