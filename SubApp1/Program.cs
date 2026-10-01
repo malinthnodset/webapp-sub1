@@ -1,6 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using SubApp1.DAL;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// services (ASP.NET components) for handling controllers and views to dependency injection container 
+// sets up the MVC pattern for handling HTTP requests
 builder.Services.AddControllersWithViews();
+
+// dependency injection 
+builder.Services.AddDbContext<QuizDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
