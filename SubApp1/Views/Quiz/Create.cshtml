@@ -1,6 +1,8 @@
-@model SubApp1.ViewModels.QuizCreateViewModel // defines the data for our page
+@model SubApp1.ViewModels.QuizCreateViewModel 
 
-<h1>Create quiz</h1>
+@{
+    ViewData["Title"] = "Create quiz";
+}
 
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -46,14 +48,14 @@
 <script>
     let nextIndex = @Model.Questions.Count;
 
-    $("#add-question").on("click", function () {
+    document.getElementById("add-question").addEventListener("click", function () {
         const row = `
             <div class="card p-3 mb-2 question-row">
                 <input name="Questions[${nextIndex}].Prompt" class="form-control mb-2" placeholder="Question" />
                 <input name="Questions[${nextIndex}].CorrectAnswer" class="form-control mb-2" placeholder="Correct answer" />
                 <input name="Questions[${nextIndex}].Points" value="1" class="form-control" />
             </div>`;
-        $("#questions").append(row);
+        document.getElementById("questions").insertAdjacentHTML("beforeend", row);
         nextIndex++;
     });
 </script>
