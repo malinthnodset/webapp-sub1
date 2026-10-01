@@ -1,0 +1,60 @@
+@model IEnumerable<dynamic>
+
+<div class="course-modules">
+    @if (Model != null)
+    {
+        foreach (var module in Model)
+        {
+            <details class="course-module">
+                <summary class="course-module__title">@module.Title</summary>
+                <div class="course-module__quizzes">
+                    @foreach (var quiz in module.Quizzes)
+                    {
+                        <a class="course-module__quiz"
+                           asp-controller="Quiz"
+                           asp-action="Details"
+                           asp-route-id="@quiz.Id">
+                            @quiz.Title
+                        </a>
+                    }
+                </div>
+            </details>
+        }
+    }
+</div>
+
+<style>
+    .course-module {
+        margin-bottom: .75rem;
+        border: 1px solid #d1d5db;
+        border-radius: .5rem;
+        overflow: hidden;
+    }
+
+    .course-module__title {
+        padding: 1rem;
+        background: #f3f4f6;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .course-module__quizzes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .75rem;
+        padding: 1rem;
+    }
+
+    .course-module__quiz {
+        flex: 1 1 180px;
+        padding: .85rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: .375rem;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .course-module__quiz:hover {
+        background: #f9fafb;
+    }
+</style>
