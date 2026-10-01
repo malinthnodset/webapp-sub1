@@ -11,6 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// registering the QuizRepository-db (in DAL)
+builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

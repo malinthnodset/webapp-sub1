@@ -9,11 +9,11 @@ public class Quiz
 	[Required, StringLength(200)]
 	public string Title { get; set; } = string.Empty;
 
-	[StringLength(100)]
+	[StringLength(2000)]
 	public string? Description { get; set; }
-    [StringLength(2000)]
 
-    // connecting to course
+	// connecting to course
+    [StringLength(100)]
 	public int CourseId { get; set; }
 	public Course Course { get; set; } = null!; // must belong to a course
 
