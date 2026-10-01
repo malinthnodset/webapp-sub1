@@ -1,0 +1,59 @@
+@model SubApp1.ViewModels.DashboardViewModel;
+@{ ViewData["Title"] = "Dashboard"; }
+<p>Courses in model: @Model.Courses.Count</p>
+
+<h1 class="mb-4">My Courses</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="accordion" id="courseAccordion">
+@foreach (var course in Model.Courses)
+{
+    var collapseId = $"course-{course.Id}";
+    <div class="accordion-item shadow-sm mb-3">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                <span class="flex-grow-1 fw-semibold">@course.Title</span>
+                <span class="badge bg-secondary me-3">@course.QuizCount Quiz to complete</span>
+                @if (course.IsCompleted)
+                {
+                    <span class="badge bg-success fs-6">✓</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger fs-6">✗</span>
+                }
+            </button>
+        </h2>
+        <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#courseAccordion">
+            <ul class="list-group list-group-flush">
+            @foreach (var quiz in course.Quizzes)
+            {
+                <li class="list-group-item d-flex align-items-center">
+                    <a asp-controller="Quiz" asp-action="Details" asp-route-id="@quiz.Id" //The asp-controller="Quiz" link needs to match whatever your teammate names the quiz page controller, so agree on that name with them.
+                       class="flex-grow-1 text-decoration-none">@quiz.Title</a>
+                    <span class="badge bg-light text-dark border me-3">@quiz.QuestionCount Questions</span>
+                    <span class="text-muted small me-3">@quiz.BestPercentage.ToString("0")%</span>
+                    @if (quiz.IsCompleted)
+                    {
+                        <span class="badge bg-success">✓</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">✗</span>
+                    }
+                </li>
+            }
+            @if (!course.Quizzes.Any())
+            {
+                <li class="list-group-item text-muted">No quizzes yet.</li>
+            }
+            </ul>
+        </div>
+    </div>
+}
+</div>
