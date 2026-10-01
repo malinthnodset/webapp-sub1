@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SubApp1.ViewModel;
 
-public class TakeQuizViewModel
+public class TakeQuizViewModel // Form data; correct answers stay out of the browser
 {
     public int QuizId { get; set; }
 
@@ -11,7 +11,7 @@ public class TakeQuizViewModel
     public List<TakeQuizQuestionViewModel> Questions { get; set; } = new();
 }
 
-public class TakeQuizQuestionViewModel
+public class TakeQuizQuestionViewModel // One prompt and its submitted answer
 {
     public int QuestionId { get; set; }
 

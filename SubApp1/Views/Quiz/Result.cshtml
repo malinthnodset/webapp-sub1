@@ -1,7 +1,7 @@
 @model SubApp1.ViewModel.QuizResultViewModel
 
 @{
-    ViewData["Title"] = "Quiz result";
+    ViewData["Title"] = "Quiz result"; // Set the shared layout's page title
 }
 
 <h1>@Model.Title: result</h1>
@@ -13,7 +13,7 @@
 <p>Correct answers: @Model.CorrectAnswers / @Model.TotalQuestions</p>
 
 <ol>
-    @foreach (var answer in Model.Answers) // iterates through the list of answers and compares them to the correct answer
+    @foreach (var answer in Model.Answers)
     {
         <li>
             <h2>@answer.Prompt</h2>

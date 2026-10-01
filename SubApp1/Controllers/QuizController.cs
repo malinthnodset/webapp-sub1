@@ -4,17 +4,17 @@ using SubApp1.ViewModel;
 
 namespace SubApp1.Controllers;
 
-public class QuizController : Controller
+public class QuizController : Controller // Handles quiz display and submissions
 {
     private readonly IQuizService _quizService;
 
-    public QuizController(IQuizService quizService)
+    public QuizController(IQuizService quizService) // Receives quiz loading and grading logic
     {
         _quizService = quizService;
     }
 
     [HttpGet]
-    public IActionResult Take(int id = 1) // GET request 
+    public IActionResult Take(int id = 1) // Loads one quiz> defaults to the sample quiz
     {
         var quiz = _quizService.GetQuizToTake(id);
         return quiz is null ? NotFound() : View(quiz);
@@ -22,7 +22,7 @@ public class QuizController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Submit(TakeQuizViewModel submission) //POST request
+    public IActionResult Submit(TakeQuizViewModel submission) // Validates, grades, and shows the result
     {
         var quiz = _quizService.GetQuizToTake(submission.QuizId);
         if (quiz is null)
@@ -32,7 +32,7 @@ public class QuizController : Controller
 
         if (!ModelState.IsValid)
         {
-            foreach (var question in quiz.Questions)
+            foreach (var question in quiz.Questions) // Preserve answers when redisplaying validation errors
             {
                 question.SubmittedAnswer = submission.Questions?
                     .FirstOrDefault(answer => answer.QuestionId == question.QuestionId)

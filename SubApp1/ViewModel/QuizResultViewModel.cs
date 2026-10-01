@@ -1,6 +1,6 @@
 namespace SubApp1.ViewModel;
 
-public class QuizResultViewModel
+public class QuizResultViewModel // Overall score and per-question feedback
 {
     public string Title { get; set; } = string.Empty;
 
@@ -12,14 +12,14 @@ public class QuizResultViewModel
 
     public int TotalQuestions { get; set; }
 
-    public decimal Percentage => MaximumPoints == 0
+    public decimal Percentage => MaximumPoints == 0 // Avoid division by zero for an empty quiz
         ? 0
         : Math.Round(PointsEarned / MaximumPoints * 100, 2);
 
     public List<QuizAnswerResultViewModel> Answers { get; set; } = new();
 }
 
-public class QuizAnswerResultViewModel
+public class QuizAnswerResultViewModel // Grading feedback for one answer
 {
     public string Prompt { get; set; } = string.Empty;
 
