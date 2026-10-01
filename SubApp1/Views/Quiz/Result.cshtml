@@ -1,0 +1,27 @@
+@model SubApp1.ViewModel.QuizResultViewModel
+
+@{
+    ViewData["Title"] = "Quiz result";
+}
+
+<h1>@Model.Title: result</h1>
+
+<p>
+    Score: @Model.PointsEarned / @Model.MaximumPoints points
+    (@Model.Percentage%)
+</p>
+<p>Correct answers: @Model.CorrectAnswers / @Model.TotalQuestions</p>
+
+<ol>
+    @foreach (var answer in Model.Answers) // iterates through the list of answers and compares them to the correct answer
+    {
+        <li>
+            <h2>@answer.Prompt</h2>
+            <p>Your answer: @answer.SubmittedAnswer</p>
+            <p>Correct answer: @answer.CorrectAnswer</p>
+            <p>@(answer.IsCorrect ? "Correct" : "Incorrect")</p>
+        </li>
+    }
+</ol>
+
+<a asp-action="Take" asp-route-id="1">Try again</a>

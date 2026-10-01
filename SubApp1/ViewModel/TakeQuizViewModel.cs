@@ -1,0 +1,23 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace SubApp1.ViewModel;
+
+public class TakeQuizViewModel
+{
+    public int QuizId { get; set; }
+
+    public string Title { get; set; } = string.Empty;
+
+    public List<TakeQuizQuestionViewModel> Questions { get; set; } = new();
+}
+
+public class TakeQuizQuestionViewModel
+{
+    public int QuestionId { get; set; }
+
+    public string Prompt { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Please enter an answer.")]
+    [StringLength(2000)]
+    public string? SubmittedAnswer { get; set; }
+}
