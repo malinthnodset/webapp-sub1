@@ -1,6 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<SubApp1.Services.IQuizService, SubApp1.Services.InMemoryQuizService>(); // Replace with persistent storage later.
 
 var app = builder.Build();
 

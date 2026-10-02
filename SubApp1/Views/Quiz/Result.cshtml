@@ -1,0 +1,27 @@
+@model SubApp1.ViewModel.QuizResultViewModel
+
+@{
+    ViewData["Title"] = "Quiz result"; // Set the shared layout's page title
+}
+
+<h1>@Model.Title: result</h1>
+
+<p>
+    Score: @Model.PointsEarned / @Model.MaximumPoints points
+    (@Model.Percentage%)
+</p>
+<p>Correct answers: @Model.CorrectAnswers / @Model.TotalQuestions</p>
+
+<ol>
+    @foreach (var answer in Model.Answers)
+    {
+        <li>
+            <h2>@answer.Prompt</h2>
+            <p>Your answer: @answer.SubmittedAnswer</p>
+            <p>Correct answer: @answer.CorrectAnswer</p>
+            <p>@(answer.IsCorrect ? "Correct" : "Incorrect")</p>
+        </li>
+    }
+</ol>
+
+<a asp-action="Take" asp-route-id="1">Try again</a>
