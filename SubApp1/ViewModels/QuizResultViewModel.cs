@@ -1,4 +1,4 @@
-namespace SubApp1.ViewModel;
+namespace SubApp1.ViewModels;
 
 public class QuizResultViewModel // Overall score and per-question feedback
 {

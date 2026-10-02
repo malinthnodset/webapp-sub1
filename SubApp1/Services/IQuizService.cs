@@ -1,4 +1,4 @@
-using SubApp1.ViewModel;
+using SubApp1.ViewModels;
 
 namespace SubApp1.Services;
 

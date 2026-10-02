@@ -1,0 +1,125 @@
+2026-10-02 11:20:21.515 +02:00 [INF] User profile is available. Using 'C:\Users\Malin\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-10-02 11:20:21.636 +02:00 [INF] Now listening on: http://localhost:5166
+2026-10-02 11:20:21.642 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-10-02 11:20:21.645 +02:00 [INF] Hosting environment: Development
+2026-10-02 11:20:21.650 +02:00 [INF] Content root path: C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1
+2026-10-02 11:20:25.304 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/ - null null
+2026-10-02 11:20:25.407 +02:00 [INF] Executing endpoint 'SubApp1.Controllers.DashboardController.Index (SubApp1)'
+2026-10-02 11:20:25.431 +02:00 [INF] Route matched with {action = "Index", controller = "Dashboard"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller SubApp1.Controllers.DashboardController (SubApp1).
+2026-10-02 11:20:25.446 +02:00 [INF] Executing ViewResult, running view Index.
+2026-10-02 11:20:25.514 +02:00 [INF] Executed ViewResult - view Index executed in 70.173ms.
+2026-10-02 11:20:25.517 +02:00 [INF] Executed action SubApp1.Controllers.DashboardController.Index (SubApp1) in 83.4821ms
+2026-10-02 11:20:25.519 +02:00 [INF] Executed endpoint 'SubApp1.Controllers.DashboardController.Index (SubApp1)'
+2026-10-02 11:20:25.525 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/ - 200 null text/html; charset=utf-8 222.3572ms
+2026-10-02 11:20:25.542 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/jquery/dist/jquery.min.js - null null
+2026-10-02 11:20:25.545 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-10-02 11:20:25.548 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2026-10-02 11:20:25.552 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:25.562 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:25.563 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:25.592 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\xranefklnh-{0}-46ein0sx1k-46ein0sx1k.gz'
+2026-10-02 11:20:25.594 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:25.596 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - 200 232871 text/css 50.6433ms
+2026-10-02 11:20:25.641 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/js/bootstrap.bundle.min.js'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\kjoi13niiy-{0}-493y06b0oq-493y06b0oq.gz'
+2026-10-02 11:20:25.644 +02:00 [INF] Sending file. Request path: 'lib/jquery/dist/jquery.min.js'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\dth3ead690-{0}-o1o13a6vjx-o1o13a6vjx.gz'
+2026-10-02 11:20:25.648 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:25.649 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:25.653 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/jquery/dist/jquery.min.js - 200 87576 text/javascript 111.6883ms
+2026-10-02 11:20:25.653 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 200 80764 text/javascript 105.227ms
+2026-10-02 11:20:25.690 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/favicon.ico - null null
+2026-10-02 11:20:25.697 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/favicon.ico - 404 0 null 6.9642ms
+2026-10-02 11:20:25.700 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/favicon.ico, Response status code: 404
+2026-10-02 11:20:34.466 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Quiz/Details/1 - null null
+2026-10-02 11:20:34.478 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Quiz/Details/1 - 404 0 null 12.3439ms
+2026-10-02 11:20:34.546 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/Quiz/Details/1, Response status code: 404
+2026-10-02 11:20:40.477 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Quiz/Create - null null
+2026-10-02 11:20:40.490 +02:00 [INF] Executing endpoint 'SubApp1.Controllers.QuizController.Create (SubApp1)'
+2026-10-02 11:20:40.519 +02:00 [INF] Route matched with {action = "Create", controller = "Quiz"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create() on controller SubApp1.Controllers.QuizController (SubApp1).
+2026-10-02 11:20:41.785 +02:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Code", "c"."Name"
+FROM "Courses" AS "c"
+2026-10-02 11:20:41.922 +02:00 [INF] Executing ViewResult, running view Create.
+2026-10-02 11:20:41.980 +02:00 [INF] Executed ViewResult - view Create executed in 58.6506ms.
+2026-10-02 11:20:41.981 +02:00 [INF] Executed action SubApp1.Controllers.QuizController.Create (SubApp1) in 1461.3449ms
+2026-10-02 11:20:41.982 +02:00 [INF] Executed endpoint 'SubApp1.Controllers.QuizController.Create (SubApp1)'
+2026-10-02 11:20:41.996 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Quiz/Create - 200 null text/html; charset=utf-8 1518.8595ms
+2026-10-02 11:20:41.997 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/jquery/dist/jquery.min.js - null null
+2026-10-02 11:20:41.997 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2026-10-02 11:20:41.999 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-10-02 11:20:42.002 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:42.003 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:42.007 +02:00 [INF] Sending file. Request path: 'lib/jquery/dist/jquery.min.js'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\dth3ead690-{0}-o1o13a6vjx-o1o13a6vjx.gz'
+2026-10-02 11:20:42.009 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\xranefklnh-{0}-46ein0sx1k-46ein0sx1k.gz'
+2026-10-02 11:20:42.011 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:42.012 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:42.013 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/jquery/dist/jquery.min.js - 200 87576 text/javascript 16.3192ms
+2026-10-02 11:20:42.013 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - 200 232871 text/css 14.5857ms
+2026-10-02 11:20:42.035 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:42.038 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/js/bootstrap.bundle.min.js'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\kjoi13niiy-{0}-493y06b0oq-493y06b0oq.gz'
+2026-10-02 11:20:42.048 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:20:42.050 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 200 80764 text/javascript 53.8443ms
+2026-10-02 11:20:59.030 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Quiz/1 - null null
+2026-10-02 11:20:59.036 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Quiz/1 - 404 0 null 5.713ms
+2026-10-02 11:20:59.039 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/Quiz/1, Response status code: 404
+2026-10-02 11:21:14.337 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Quiz/Create - null null
+2026-10-02 11:21:14.352 +02:00 [INF] Executing endpoint 'SubApp1.Controllers.QuizController.Create (SubApp1)'
+2026-10-02 11:21:14.356 +02:00 [INF] Route matched with {action = "Create", controller = "Quiz"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create() on controller SubApp1.Controllers.QuizController (SubApp1).
+2026-10-02 11:21:14.418 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Code", "c"."Name"
+FROM "Courses" AS "c"
+2026-10-02 11:21:14.420 +02:00 [INF] Executing ViewResult, running view Create.
+2026-10-02 11:21:14.437 +02:00 [INF] Executed ViewResult - view Create executed in 16.6333ms.
+2026-10-02 11:21:14.454 +02:00 [INF] Executed action SubApp1.Controllers.QuizController.Create (SubApp1) in 90.812ms
+2026-10-02 11:21:14.455 +02:00 [INF] Executed endpoint 'SubApp1.Controllers.QuizController.Create (SubApp1)'
+2026-10-02 11:21:14.458 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Quiz/Create - 200 null text/html; charset=utf-8 120.6696ms
+2026-10-02 11:21:19.480 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Home - null null
+2026-10-02 11:21:19.499 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Home - 404 0 null 18.5689ms
+2026-10-02 11:21:19.526 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/Home, Response status code: 404
+2026-10-02 11:21:24.396 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/ - null null
+2026-10-02 11:21:24.401 +02:00 [INF] Executing endpoint 'SubApp1.Controllers.DashboardController.Index (SubApp1)'
+2026-10-02 11:21:24.402 +02:00 [INF] Route matched with {action = "Index", controller = "Dashboard"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller SubApp1.Controllers.DashboardController (SubApp1).
+2026-10-02 11:21:24.404 +02:00 [INF] Executing ViewResult, running view Index.
+2026-10-02 11:21:24.408 +02:00 [INF] Executed ViewResult - view Index executed in 3.8419ms.
+2026-10-02 11:21:24.409 +02:00 [INF] Executed action SubApp1.Controllers.DashboardController.Index (SubApp1) in 5.5044ms
+2026-10-02 11:21:24.410 +02:00 [INF] Executed endpoint 'SubApp1.Controllers.DashboardController.Index (SubApp1)'
+2026-10-02 11:21:24.412 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/ - 200 null text/html; charset=utf-8 15.8707ms
+2026-10-02 11:21:24.415 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/jquery/dist/jquery.min.js - null null
+2026-10-02 11:21:24.415 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-10-02 11:21:24.421 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.421 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2026-10-02 11:21:24.423 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.427 +02:00 [INF] Sending file. Request path: 'lib/jquery/dist/jquery.min.js'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\dth3ead690-{0}-o1o13a6vjx-o1o13a6vjx.gz'
+2026-10-02 11:21:24.427 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.430 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\xranefklnh-{0}-46ein0sx1k-46ein0sx1k.gz'
+2026-10-02 11:21:24.429 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.431 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/js/bootstrap.bundle.min.js'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\kjoi13niiy-{0}-493y06b0oq-493y06b0oq.gz'
+2026-10-02 11:21:24.433 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.436 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/jquery/dist/jquery.min.js - 200 87576 text/javascript 20.592ms
+2026-10-02 11:21:24.437 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.438 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - 200 232871 text/css 22.4206ms
+2026-10-02 11:21:24.442 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 200 80764 text/javascript 20.1446ms
+2026-10-02 11:21:24.449 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-10-02 11:21:24.451 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.454 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\xranefklnh-{0}-46ein0sx1k-46ein0sx1k.gz'
+2026-10-02 11:21:24.456 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:21:24.458 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - 200 232871 text/css 8.921ms
+2026-10-02 11:26:21.373 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/quiz/1 - null null
+2026-10-02 11:26:21.377 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/quiz/1 - 404 0 null 3.7107ms
+2026-10-02 11:26:21.383 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/quiz/1, Response status code: 404
+2026-10-02 11:26:25.087 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-10-02 11:26:25.100 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:26:25.115 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\xranefklnh-{0}-46ein0sx1k-46ein0sx1k.gz'
+2026-10-02 11:26:25.137 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:26:25.138 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - 200 232871 text/css 51.6125ms
+2026-10-02 11:26:30.005 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Quiz-1 - null null
+2026-10-02 11:26:30.008 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Quiz-1 - 404 0 null 3.2378ms
+2026-10-02 11:26:30.013 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/Quiz-1, Response status code: 404
+2026-10-02 11:26:35.733 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/Quiz/1 - null null
+2026-10-02 11:26:35.737 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/Quiz/1 - 404 0 null 4.032ms
+2026-10-02 11:26:35.741 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5166/Quiz/1, Response status code: 404
+2026-10-02 11:26:38.201 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-10-02 11:26:38.207 +02:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:26:38.211 +02:00 [INF] Sending file. Request path: 'lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'C:\Users\Malin\Documents\GitHub\webapp-sub1\SubApp1\obj\Debug\net10.0\compressed\xranefklnh-{0}-46ein0sx1k-46ein0sx1k.gz'
+2026-10-02 11:26:38.226 +02:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-10-02 11:26:38.227 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5166/lib/bootstrap/dist/css/bootstrap.min.css - 200 232871 text/css 25.2065ms
+2026-10-02 11:27:01.631 +02:00 [INF] Application is shutting down...

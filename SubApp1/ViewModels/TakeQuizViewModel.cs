@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SubApp1.ViewModel;
+namespace SubApp1.ViewModels;
 
 public class TakeQuizViewModel // Form data; correct answers stay out of the browser
 {
