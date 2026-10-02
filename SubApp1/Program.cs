@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SubApp1.DAL;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,15 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
 
 // registering the QuizRepository-db (in DAL)
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+
+builder.Services.AddSerilog((services, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .MinimumLevel.Information()
+        .WriteTo.Console()
+        .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+});
+
 
 var app = builder.Build();
 
