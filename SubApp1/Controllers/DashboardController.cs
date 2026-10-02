@@ -1,35 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
+using SubApp1.Services;
 using SubApp1.ViewModels;
-// Hard-kodet fake data for synlighetens skyld. Må kobles opp i/etter databasen senere.
+
 namespace SubApp1.Controllers;
 
 public class DashboardController : Controller
 {
-    public IActionResult Index()
+    private readonly DashboardService _service;
+    private readonly ILogger<DashboardController> _logger;
+
+    public DashboardController(DashboardService service, ILogger<DashboardController> logger)
     {
-        var model = new DashboardViewModel
+        _service = service;
+        _logger = logger;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        try
         {
-            Courses = new List<CourseSummaryViewModel>
-            {
-                new()
-                {
-                    Id = 1, Title = "ITPE3200 Web Applications",
-                    Quizzes = new List<QuizSummaryViewModel>
-                    {
-                        new() { Id = 1, Title = "MVC Basics", QuestionCount = 10, BestPercentage = 80 },
-                        new() { Id = 2, Title = "Entity Framework", QuestionCount = 8, BestPercentage = 40 }
-                    }
-                },
-                new()
-                {
-                    Id = 2, Title = "DATA 2000 Databases",
-                    Quizzes = new List<QuizSummaryViewModel>
-                    {
-                        new() { Id = 3, Title = "SQL Joins", QuestionCount = 12, BestPercentage = 0 }
-                    }
-                }
-            }
-        };
-        return View(model);
+            var userId = "demo-user"; // TODO: replace with the logged-in user's id
+            var model = await _service.GetDashboardAsync(userId);
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load dashboard");
+            TempData["Error"] = "Could not load the dashboard. Please try again.";
+            return View(new DashboardViewModel());
+        }
     }
 }

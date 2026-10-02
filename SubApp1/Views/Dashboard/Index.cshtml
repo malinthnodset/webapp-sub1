@@ -32,10 +32,14 @@
         <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#courseAccordion">
             <ul class="list-group list-group-flush">
             @foreach (var quiz in course.Quizzes)
-            {
+            { //Link to quiz
                 <li class="list-group-item d-flex align-items-center">
-                    <a asp-controller="Quiz" asp-action="Details" asp-route-id="@quiz.Id" //The asp-controller="Quiz" link needs to match whatever your teammate names the quiz page controller, so agree on that name with them.
-                       class="flex-grow-1 text-decoration-none">@quiz.Title</a>
+                    <a asp-controller="Quiz"
+                        asp-action="Take"
+                        asp-route-id="@quiz.Id"
+                        class="flex-grow-1 text-decoration-none">
+                        @quiz.Title
+                    </a>
                     <span class="badge bg-light text-dark border me-3">@quiz.QuestionCount Questions</span>
                     <span class="text-muted small me-3">@quiz.BestPercentage.ToString("0")%</span>
                     @if (quiz.IsCompleted)
