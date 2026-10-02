@@ -1,0 +1,29 @@
+@model SubApp1.ViewModel.TakeQuizViewModel
+
+@{
+	ViewData["Title"] = Model.Title; // Show the quiz title in the shared layout
+}
+
+<h1>@Model.Title</h1>
+
+<form asp-controller="Quiz" asp-action="Submit" method="post">
+	@Html.AntiForgeryToken()
+	<input type="hidden" asp-for="QuizId" />
+
+	<div asp-validation-summary="ModelOnly" role="alert"></div>
+
+	@for (var index = 0; index < Model.Questions.Count; index++)
+	{
+		<section>
+			<h2>Question @(index + 1)</h2>
+			<p>@Model.Questions[index].Prompt</p>
+
+			<input type="hidden" asp-for="Questions[index].QuestionId" />
+			<label asp-for="Questions[index].SubmittedAnswer">Your answer</label>
+			<textarea asp-for="Questions[index].SubmittedAnswer" rows="4"></textarea>
+			<span asp-validation-for="Questions[index].SubmittedAnswer"></span>
+		</section>
+	}
+
+	<button type="submit">Submit answers</button>
+</form>

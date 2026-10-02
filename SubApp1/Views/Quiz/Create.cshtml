@@ -1,0 +1,62 @@
+@model SubApp1.ViewModels.QuizCreateViewModel 
+
+@{
+    ViewData["Title"] = "Create quiz";
+}
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CourseId"></label>
+        <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
+            <option value="">-- choose a course --</option>
+        </select>
+        <span asp-validation-for="CourseId" class="text-danger"></span>
+    </div>
+
+    <h2>Questions</h2>
+    <div id="questions">
+        @for (var i = 0; i < Model.Questions.Count; i++)
+        {
+            <div class="card p-3 mb-2 question-row">
+                <input asp-for="Questions[i].Prompt" class="form-control mb-2" placeholder="Question" />
+                <span asp-validation-for="Questions[i].Prompt" class="text-danger"></span>
+                <input asp-for="Questions[i].CorrectAnswer" class="form-control mb-2" placeholder="Correct answer" />
+                <input asp-for="Questions[i].Points" class="form-control" />
+            </div>
+        }
+    </div>
+
+    <button type="button" id="add-question" class="btn btn-secondary mb-3">+ Add question</button>
+    <br />
+    <button type="submit" class="btn btn-primary">Save quiz</button>
+</form>
+
+@section Scripts {
+<script>
+    let nextIndex = @Model.Questions.Count;
+
+    document.getElementById("add-question").addEventListener("click", function () {
+        const row = `
+            <div class="card p-3 mb-2 question-row">
+                <input name="Questions[${nextIndex}].Prompt" class="form-control mb-2" placeholder="Question" />
+                <input name="Questions[${nextIndex}].CorrectAnswer" class="form-control mb-2" placeholder="Correct answer" />
+                <input name="Questions[${nextIndex}].Points" value="1" class="form-control" />
+            </div>`;
+        document.getElementById("questions").insertAdjacentHTML("beforeend", row);
+        nextIndex++;
+    });
+</script>
+}
