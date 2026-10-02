@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SubApp1.DAL;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // sets up the MVC pattern for handling HTTP requests
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<SubApp1.Services.IQuizService, SubApp1.Services.InMemoryQuizService>(); // Replace with persistent storage later.
+builder.Services.AddScoped<SubApp1.Services.DashboardService>();
 
 // dependency injection 
 builder.Services.AddDbContext<QuizDbContext>(options =>
@@ -14,6 +16,15 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
 
 // registering the QuizRepository-db (in DAL)
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+
+builder.Services.AddSerilog((services, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .MinimumLevel.Information()
+        .WriteTo.Console()
+        .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+});
+
 
 var app = builder.Build();
 
@@ -24,10 +35,8 @@ if (app.Environment.IsDevelopment())
 
 app.MapStaticAssets(); // Enable static assets from wwwroot (images, JS, CSS)
 
-app.MapDefaultControllerRoute();
-
-// app.MapControllerRoute(
-//     name: "default",
-//     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();
