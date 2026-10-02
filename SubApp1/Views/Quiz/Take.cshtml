@@ -4,44 +4,147 @@
 	ViewData["Title"] = Model.Title; // Show the quiz title in the shared layout
 }
 
-<h1>@Model.Title</h1>
+<link rel="stylesheet" href="~/quiz-take.css" asp-append-version="true" />
 
-<form asp-controller="Quiz" asp-action="Submit" method="post">
-	@Html.AntiForgeryToken()
-	<input type="hidden" asp-for="QuizId" />
+<main class="take-quiz-page">
+	<div class="take-quiz-shell">
+		<header class="take-quiz-heading">
+			<p class="take-quiz-kicker">QUIZ IN PROGRESS</p>
+			<h1>@Model.Title</h1>
+			<div class="take-quiz-progress-copy">
+				<span id="question-counter" aria-live="polite">Question 1 of @Model.Questions.Count</span>
+				<span>Move at your own pace</span>
+			</div>
+			<div class="take-quiz-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="1" aria-valuemax="@Model.Questions.Count" aria-valuenow="1">
+				<div class="take-quiz-progress-bar" id="question-progress"></div>
+			</div>
+		</header>
 
-	<div asp-validation-summary="ModelOnly" role="alert"></div>
+		<form asp-controller="Quiz" asp-action="Submit" method="post" id="take-quiz-form">
+			@Html.AntiForgeryToken()
+			<input type="hidden" asp-for="QuizId" />
 
-	@for (var index = 0; index < Model.Questions.Count; index++)
-	{
-		<section>
-			<h2>Question @(index + 1)</h2>
-			<p>@Model.Questions[index].Prompt</p>
+			<div asp-validation-summary="ModelOnly" role="alert" class="take-quiz-summary"></div>
 
-			<input type="hidden" asp-for="Questions[index].QuestionId" />
-			@if (Model.Questions[index].Options.Count > 0)
+<<<<<<< HEAD
+			@for (var index = 0; index < Model.Questions.Count; index++)
 			{
-				<div class="mb-3">
-					<p class="form-label">Choose one answer</p>
-					@for (var optionIndex = 0; optionIndex < Model.Questions[index].Options.Count; optionIndex++)
+				<section class="question-card @(index == 0 ? "is-active" : string.Empty)"
+					 data-question-step="@index" aria-hidden="@(index == 0 ? "false" : "true")">
+					<div class="question-card-topline">
+						<span>QUESTION @(index + 1)</span>
+						<span>@(index == Model.Questions.Count - 1 ? "Last question" : $"{Model.Questions.Count - index - 1} left")</span>
+					</div>
+					<h2 class="question-prompt" tabindex="-1">@Model.Questions[index].Prompt</h2>
+
+					<input type="hidden" asp-for="Questions[index].QuestionId" />
+					@if (Model.Questions[index].Options.Count > 0)
 					{
-						var option = Model.Questions[index].Options[optionIndex];
-						var inputId = $"question-{Model.Questions[index].QuestionId}-option-{optionIndex}";
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="Questions[@index].SubmittedAnswer" id="@inputId" value="@option" checked="@(Model.Questions[index].SubmittedAnswer == option ? "checked" : null)" />
-							<label class="form-check-label" for="@inputId">@option</label>
-						</div>
+						<fieldset class="answer-options mb-3">
+							<legend class="answer-label">Choose one answer</legend>
+							@for (var optionIndex = 0; optionIndex < Model.Questions[index].Options.Count; optionIndex++)
+							{
+								var option = Model.Questions[index].Options[optionIndex];
+								var inputId = $"question-{Model.Questions[index].QuestionId}-option-{optionIndex}";
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="Questions[@index].SubmittedAnswer" id="@inputId" value="@option" checked="@(Model.Questions[index].SubmittedAnswer == option ? "checked" : null)" />
+									<label class="form-check-label" for="@inputId">@option</label>
+								</div>
+							}
+						</fieldset>
 					}
-				</div>
+					else
+					{
+						<label class="answer-label" asp-for="Questions[index].SubmittedAnswer">Your answer</label>
+						<textarea class="form-control answer-input" asp-for="Questions[index].SubmittedAnswer" rows="5" placeholder="Write your answer here..."></textarea>
+					}
+					<span asp-validation-for="Questions[index].SubmittedAnswer" class="field-validation"></span>
+					<p class="question-client-error" data-question-error role="alert"></p>
+				</section>
 			}
-			else
-			{
-				<label asp-for="Questions[index].SubmittedAnswer">Your answer</label>
-				<textarea asp-for="Questions[index].SubmittedAnswer" rows="4"></textarea>
-			}
-			<span asp-validation-for="Questions[index].SubmittedAnswer"></span>
-		</section>
-	}
 
-	<button type="submit">Submit answers</button>
-</form>
+			<footer class="take-quiz-controls">
+				<button class="quiz-nav-button quiz-nav-previous" id="previous-question" type="button" disabled>
+					<span aria-hidden="true">&larr;</span> Previous
+				</button>
+				<div class="quiz-nav-next-group">
+					<button class="quiz-nav-button quiz-nav-next" id="next-question" type="button">
+						Next <span aria-hidden="true">&rarr;</span>
+					</button>
+					<button class="quiz-nav-button quiz-nav-submit" id="submit-quiz" type="submit" hidden>
+						Submit quiz
+					</button>
+				</div>
+			</footer>
+		</form>
+	</div>
+</main>
+
+<script>
+	(() => {
+		const form = document.getElementById("take-quiz-form");
+		const panels = Array.from(document.querySelectorAll("[data-question-step]"));
+		const previousButton = document.getElementById("previous-question");
+		const nextButton = document.getElementById("next-question");
+		const submitButton = document.getElementById("submit-quiz");
+		const counter = document.getElementById("question-counter");
+		const progress = document.getElementById("question-progress");
+		const progressTrack = progress.parentElement;
+		let activeIndex = 0;
+
+		if (!form || panels.length === 0) return;
+
+		const questionIsAnswered = (panel) => {
+			const selectedOption = panel.querySelector('input[type="radio"]:checked');
+			if (selectedOption) return true;
+
+			const answer = panel.querySelector("textarea");
+			return answer !== null && answer.value.trim().length > 0;
+		};
+
+		const showQuestion = (index, moveFocus = true) => {
+			activeIndex = Math.max(0, Math.min(index, panels.length - 1));
+			panels.forEach((panel, panelIndex) => {
+				panel.classList.toggle("is-active", panelIndex === activeIndex);
+				panel.setAttribute("aria-hidden", panelIndex === activeIndex ? "false" : "true");
+			});
+
+			previousButton.disabled = activeIndex === 0;
+			nextButton.hidden = activeIndex === panels.length - 1;
+			submitButton.hidden = activeIndex !== panels.length - 1;
+			counter.textContent = `Question ${activeIndex + 1} of ${panels.length}`;
+			progress.style.width = `${((activeIndex + 1) / panels.length) * 100}%`;
+			progressTrack.setAttribute("aria-valuenow", String(activeIndex + 1));
+
+			if (moveFocus) panels[activeIndex].querySelector(".question-prompt").focus();
+		};
+
+		const validateQuestion = (panel) => {
+			const error = panel.querySelector("[data-question-error]");
+			if (questionIsAnswered(panel)) {
+				error.textContent = "";
+				return true;
+			}
+
+			error.textContent = "Please enter an answer before continuing.";
+			const answerInput = panel.querySelector("textarea, input[type='radio']");
+			if (answerInput) answerInput.focus();
+			return false;
+		};
+
+		previousButton.addEventListener("click", () => showQuestion(activeIndex - 1));
+		nextButton.addEventListener("click", () => {
+			if (validateQuestion(panels[activeIndex])) showQuestion(activeIndex + 1);
+		});
+		form.addEventListener("submit", (event) => {
+			const firstUnansweredIndex = panels.findIndex((panel) => !questionIsAnswered(panel));
+			if (firstUnansweredIndex !== -1) {
+				event.preventDefault();
+				showQuestion(firstUnansweredIndex);
+				validateQuestion(panels[firstUnansweredIndex]);
+			}
+		});
+
+		showQuestion(0, false);
+	})();
+</script>
