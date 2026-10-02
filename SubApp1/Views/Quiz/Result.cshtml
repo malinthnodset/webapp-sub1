@@ -4,6 +4,8 @@
     ViewData["Title"] = "Quiz result"; // Set the shared layout's page title
 }
 
+<link rel="stylesheet" href="~/quiz-result.css" asp-append-version="true" />
+
 <div class="row g-4">
     <main class="col-lg-8">
         <header class="card border-0 bg-primary-subtle mb-4">
@@ -24,8 +26,8 @@
         <div class="d-grid gap-3">
             @foreach (var answer in Model.Answers)
             {
-                <article class="card border-@(answer.IsCorrect ? "success" : "danger")">
-                    <div class="card-header bg-body d-flex justify-content-between align-items-start gap-3">
+                <article class="card quiz-result-answer @(answer.IsCorrect ? "quiz-result-answer-correct" : "quiz-result-answer-incorrect")">
+                    <div class="card-header d-flex justify-content-between align-items-start gap-3">
                         <h3 class="h5 mb-0">@answer.Prompt</h3>
                         @if (answer.IsCorrect)
                         {
@@ -80,7 +82,10 @@
             }
         </div>
 
-        <a class="btn btn-outline-primary mt-4" asp-action="Take" asp-route-id="1">Try again</a>
+        <div class="quiz-result-actions">
+            <a class="btn btn-primary" asp-action="Take" asp-route-id="1">Try again</a>
+            <a class="btn btn-outline-secondary" asp-controller="Dashboard" asp-action="Index">Back to dashboard</a>
+        </div>
     </main>
 
     <aside class="col-lg-4">
