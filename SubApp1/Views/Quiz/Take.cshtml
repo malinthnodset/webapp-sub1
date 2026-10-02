@@ -19,8 +19,26 @@
 			<p>@Model.Questions[index].Prompt</p>
 
 			<input type="hidden" asp-for="Questions[index].QuestionId" />
-			<label asp-for="Questions[index].SubmittedAnswer">Your answer</label>
-			<textarea asp-for="Questions[index].SubmittedAnswer" rows="4"></textarea>
+			@if (Model.Questions[index].Options.Count > 0)
+			{
+				<div class="mb-3">
+					<p class="form-label">Choose one answer</p>
+					@for (var optionIndex = 0; optionIndex < Model.Questions[index].Options.Count; optionIndex++)
+					{
+						var option = Model.Questions[index].Options[optionIndex];
+						var inputId = $"question-{Model.Questions[index].QuestionId}-option-{optionIndex}";
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="Questions[@index].SubmittedAnswer" id="@inputId" value="@option" checked="@(Model.Questions[index].SubmittedAnswer == option ? "checked" : null)" />
+							<label class="form-check-label" for="@inputId">@option</label>
+						</div>
+					}
+				</div>
+			}
+			else
+			{
+				<label asp-for="Questions[index].SubmittedAnswer">Your answer</label>
+				<textarea asp-for="Questions[index].SubmittedAnswer" rows="4"></textarea>
+			}
 			<span asp-validation-for="Questions[index].SubmittedAnswer"></span>
 		</section>
 	}

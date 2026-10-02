@@ -17,6 +17,8 @@ public class TakeQuizQuestionViewModel // One prompt and its submitted answer
 
     public string Prompt { get; set; } = string.Empty;
 
+    public List<string> Options { get; set; } = new();
+
     [Required(ErrorMessage = "Please enter an answer.")]
     [StringLength(2000)]
     public string? SubmittedAnswer { get; set; }
