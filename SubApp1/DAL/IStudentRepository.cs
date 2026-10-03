@@ -1,0 +1,1 @@
+//Contract for student data access, so the controller doesn't depend on EF Core.
