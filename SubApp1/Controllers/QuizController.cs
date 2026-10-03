@@ -76,17 +76,17 @@ public class QuizController : Controller
 
     // TAKE QUIZ
     [HttpGet]
-    public IActionResult Take(int id = 1) // Loads one quiz> defaults to the sample quiz
+    public async Task<IActionResult> Take(int id = 1)
     {
-        var quiz = _quizService.GetQuizToTake(id);
+        var quiz = await _quizService.GetQuizToTakeAsync(id);
         return quiz is null ? NotFound() : View(quiz);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Submit(TakeQuizViewModel submission) // Validates, grades, and shows the result
+    public async Task<IActionResult> Submit(TakeQuizViewModel submission)
     {
-        var quiz = _quizService.GetQuizToTake(submission.QuizId);
+        var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
         {
             return NotFound();
@@ -104,7 +104,7 @@ public class QuizController : Controller
             return View("Take", quiz);
         }
 
-        var result = _quizService.GradeQuiz(submission);
+        var result = await _quizService.GradeQuizAsync(submission, studentId: 1);
         return result is null ? BadRequest() : View("Result", result);
     }
 }

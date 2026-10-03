@@ -37,8 +37,26 @@
 					<h2 class="question-prompt" tabindex="-1">@Model.Questions[index].Prompt</h2>
 
 					<input type="hidden" asp-for="Questions[index].QuestionId" />
-					<label class="answer-label" asp-for="Questions[index].SubmittedAnswer">Your answer</label>
-					<textarea class="form-control answer-input" asp-for="Questions[index].SubmittedAnswer" rows="5" placeholder="Write your answer here..."></textarea>
+					@if (Model.Questions[index].Options.Count > 0)
+					{
+						<fieldset class="answer-options mb-3">
+							<legend class="answer-label">Choose one answer</legend>
+							@for (var optionIndex = 0; optionIndex < Model.Questions[index].Options.Count; optionIndex++)
+							{
+								var option = Model.Questions[index].Options[optionIndex];
+								var inputId = $"question-{Model.Questions[index].QuestionId}-option-{optionIndex}";
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="Questions[@index].SubmittedAnswer" id="@inputId" value="@option" checked="@(Model.Questions[index].SubmittedAnswer == option ? "checked" : null)" />
+									<label class="form-check-label" for="@inputId">@option</label>
+								</div>
+							}
+						</fieldset>
+					}
+					else
+					{
+						<label class="answer-label" asp-for="Questions[index].SubmittedAnswer">Your answer</label>
+						<textarea class="form-control answer-input" asp-for="Questions[index].SubmittedAnswer" rows="5" placeholder="Write your answer here..."></textarea>
+					}
 					<span asp-validation-for="Questions[index].SubmittedAnswer" class="field-validation"></span>
 					<p class="question-client-error" data-question-error role="alert"></p>
 				</section>
@@ -76,6 +94,9 @@
 		if (!form || panels.length === 0) return;
 
 		const questionIsAnswered = (panel) => {
+			const selectedOption = panel.querySelector('input[type="radio"]:checked');
+			if (selectedOption) return true;
+
 			const answer = panel.querySelector("textarea");
 			return answer !== null && answer.value.trim().length > 0;
 		};
@@ -105,7 +126,8 @@
 			}
 
 			error.textContent = "Please enter an answer before continuing.";
-			panel.querySelector("textarea").focus();
+			const answerInput = panel.querySelector("textarea, input[type='radio']");
+			if (answerInput) answerInput.focus();
 			return false;
 		};
 
