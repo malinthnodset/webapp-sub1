@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="~/quiz-result.css" asp-append-version="true" />
 
 <div class="row g-4">
-    <main class="col-lg-9">
+    <main class="col-lg-8">
         <header class="card border-0 bg-primary-subtle mb-4">
             <div class="card-body p-4">
                 <p class="text-uppercase fw-semibold mb-2">Quiz result</p>
@@ -83,12 +83,12 @@
         </div>
 
         <div class="quiz-result-actions">
-            <a class="btn btn-primary" asp-action="Take" asp-route-id="@Model.QuizId">Try again</a>
+            <a class="btn btn-primary" asp-action="Take" asp-route-id="1">Try again</a>
             <a class="btn btn-outline-secondary" asp-controller="Dashboard" asp-action="Index">Back to dashboard</a>
         </div>
     </main>
 
-    <aside class="col-lg-3">
+    <aside class="col-lg-4">
         <section class="card sticky-top">
             <div class="card-header bg-body">
                 <h2 class="h5 mb-0">Attempt history</h2>
