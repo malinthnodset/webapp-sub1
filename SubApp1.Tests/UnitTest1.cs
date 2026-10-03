@@ -4,6 +4,7 @@ using SubApp1.Services;
 using SubApp1.ViewModels;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SubApp1.Tests;
 
@@ -134,7 +135,8 @@ public class DatabaseQuizServiceTests
         await using var db = new QuizDbContext(options);
         await db.Database.EnsureCreatedAsync();
 
-        var service = new DatabaseQuizService(new QuizRepository(db));
+        var repository = new QuizRepository(db, NullLogger<QuizRepository>.Instance);
+        var service = new DatabaseQuizService(repository);
         var quiz = await service.GetQuizToTakeAsync(1000);
         var questions = await db.QuizQuestions
             .Where(question => question.QuizId == 1000)
@@ -162,7 +164,7 @@ public class DatabaseQuizServiceTests
         Assert.Equal(10, await db.QuizAnswers.CountAsync());
         Assert.Equal(1, await db.QuizResults.CountAsync());
 
-        var persistedHistory = await new QuizRepository(db).GetAttemptsForStudentAsync(result.QuizId, studentId: 1);
+        var persistedHistory = await repository.GetAttemptsForStudentAsync(result.QuizId, studentId: 1);
         Assert.Single(persistedHistory);
         Assert.NotNull(persistedHistory[0].Result);
     }
@@ -189,7 +191,7 @@ public class DatabaseQuizServiceTests
             Id = 1,
             Title = "Web basics",
             CourseId = 1,
-            Course = new Course { Id = 1, Name = "Web Applications" },
+            Course = new Course("ITPE3200", "Web Applications") { Id = 1 },
             Questions = new List<QuizQuestion>
             {
                 new() { Id = 1, QuizId = 1, Prompt = "What does HTTP stand for?", CorrectAnswer = "Hypertext Transfer Protocol", Points = 1, Order = 1 },
@@ -199,11 +201,9 @@ public class DatabaseQuizServiceTests
 
         public List<QuizAttempt> SavedAttempts { get; } = new();
 
-        public Task<IEnumerable<Quiz>> GetAll() => Task.FromResult<IEnumerable<Quiz>>(new[] { _quiz });
+        public Task<IEnumerable<Quiz>?> GetAllQuizzes() => Task.FromResult<IEnumerable<Quiz>?>(new[] { _quiz });
 
-        public Task<IEnumerable<Course>> GetAllCourses() => Task.FromResult<IEnumerable<Course>>(new[] { _quiz.Course });
-
-        public Task<Quiz?> GetById(int id) => Task.FromResult<Quiz?>(id == _quiz.Id ? _quiz : null);
+        public Task<Quiz?> GetQuizById(int id) => Task.FromResult<Quiz?>(id == _quiz.Id ? _quiz : null);
 
         public Task<Quiz?> GetQuizForTakingAsync(int id) => Task.FromResult<Quiz?>(id == _quiz.Id ? _quiz : null);
 
@@ -222,8 +222,10 @@ public class DatabaseQuizServiceTests
             return Task.FromResult(attempts);
         }
 
-        public Task Create(Quiz quiz) => throw new NotSupportedException();
+        public Task<bool> Create(Quiz quiz) => throw new NotSupportedException();
 
-        public Task Delete(int id) => throw new NotSupportedException();
+        public Task<bool> Update(Quiz quiz) => throw new NotSupportedException();
+
+        public Task<bool> Delete(int id) => throw new NotSupportedException();
     }
 }

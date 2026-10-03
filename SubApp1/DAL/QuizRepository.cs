@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
@@ -7,10 +8,12 @@ public class QuizRepository : IQuizRepository
 {
     // dependency injection - db
     private readonly QuizDbContext _db;
+    private readonly ILogger<QuizRepository> _logger;
 
-    public QuizRepository(QuizDbContext db)
+    public QuizRepository(QuizDbContext db, ILogger<QuizRepository> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<Quiz>?> GetAllQuizzes() // Quizzes
@@ -38,32 +41,6 @@ public class QuizRepository : IQuizRepository
             _logger.LogError("[QuizRepository] quiz FindAsync(id) failed when GetQuizById for QuizId {QuizId:0000}, error message:", e.Message);
             return null;
         }
-    }
-
-    public async Task<Quiz?> GetQuizForTakingAsync(int id)
-    {
-        return await _db.Quizzes
-            .AsNoTracking()
-            .Include(quiz => quiz.Course)
-            .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
-            .SingleOrDefaultAsync(quiz => quiz.Id == id);
-    }
-
-    public async Task AddAttemptAsync(QuizAttempt attempt)
-    {
-        _db.QuizAttempts.Add(attempt);
-        await _db.SaveChangesAsync();
-    }
-
-    public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
-    {
-        return await _db.QuizAttempts
-            .AsNoTracking()
-            .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
-            .Include(attempt => attempt.Result)
-            .OrderBy(attempt => attempt.CompletedAt)
-            .ThenBy(attempt => attempt.Id)
-            .ToListAsync();
     }
 
     public async Task<bool> Create(Quiz quiz)
@@ -123,11 +100,22 @@ public class QuizRepository : IQuizRepository
 
     public async Task<bool> Delete(int id)
     {
-        var quiz = await _db.Quizzes.FindAsync(id);
-        if (quiz != null)
+        try
         {
+            var quiz = await _db.Quizzes.FindAsync(id);
+            if (quiz is null)
+            {
+                return false;
+            }
+
             _db.Quizzes.Remove(quiz);
             await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to delete quiz {QuizId}", id);
+            return false;
         }
     }
 }
