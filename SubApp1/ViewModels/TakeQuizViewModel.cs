@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SubApp1.ViewModel;
+namespace SubApp1.ViewModels;
 
 public class TakeQuizViewModel // Form data; correct answers stay out of the browser
 {
@@ -16,6 +16,8 @@ public class TakeQuizQuestionViewModel // One prompt and its submitted answer
     public int QuestionId { get; set; }
 
     public string Prompt { get; set; } = string.Empty;
+
+    public List<string> Options { get; set; } = new();
 
     [Required(ErrorMessage = "Please enter an answer.")]
     [StringLength(2000)]
