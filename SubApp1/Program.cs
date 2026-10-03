@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SubApp1.DAL;
 using Serilog;
+using Serilog.Events;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +23,13 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
 {
     loggerConfiguration
         .MinimumLevel.Information()
-        .WriteTo.Console()
-        .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+        .WriteTo.Console() // can be commented out for less noise in console
+        .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log")
+        // filter out info-level EF db execution logs
+        .Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContexT", out var value) &&
+            e.Level == LogEventLevel.Information &&
+            e.MessageTemplate.Text.Contains("Executed DbCommand"));
 });
-
 
 var app = builder.Build();
 

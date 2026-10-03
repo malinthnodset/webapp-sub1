@@ -10,13 +10,16 @@ namespace SubApp1.Controllers;
 public class QuizController : Controller
 {
     // dependency injection - controller looks to interface repository files
-    private readonly IQuizRepository _quizRepository;
-    private readonly IQuizService _quizService;
+    private readonly IQuizRepository _quizRepository; // in DAL
+    private readonly IQuizService _quizService; // in Services
+    private readonly ILogger<QuizController> _logger;
 
-    public QuizController(IQuizRepository quizRepository, IQuizService quizService)
+
+    public QuizController(IQuizRepository quizRepository, IQuizService quizService, ILogger<QuizController> logger)
     {
         _quizRepository = quizRepository;
         _quizService = quizService;
+        _logger = logger;
     }
 
     // CREATE QUIZ
@@ -68,10 +71,10 @@ public class QuizController : Controller
         return RedirectToAction(nameof(Index));   // TODO: connect to created dashboard
     }
 
-    private async Task LoadCourses(QuizCreateViewModel vm)
+    private async Task LoadCourses(QuizCreateViewModel view)
     {
         var courses = await _quizRepository.GetAllCourses();
-        vm.Courses = new SelectList(courses, "Id", "Name");
+        view.Courses = new SelectList(courses, "Id", "Name");
     }
 
     // TAKE QUIZ
