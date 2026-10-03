@@ -4,6 +4,7 @@ using SubApp1.Services;
 using SubApp1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.InteropServices;
 
 namespace SubApp1.Controllers;
 
@@ -11,15 +12,16 @@ public class QuizController : Controller
 {
     // dependency injection - controller looks to interface repository files
     private readonly IQuizRepository _quizRepository; // in DAL
+    private readonly ICourseRepository _courseRepository; // create in DAL
     private readonly IQuizService _quizService; // in Services
     private readonly ILogger<QuizController> _logger;
 
-
-    public QuizController(IQuizRepository quizRepository, IQuizService quizService, ILogger<QuizController> logger)
+    public QuizController(IQuizRepository quizRepository, IQuizService quizService, ILogger<QuizController> logger, ICourseRepository courseRepository)
     {
         _quizRepository = quizRepository;
         _quizService = quizService;
         _logger = logger;
+        _courseRepository = courseRepository;
     }
 
     // CREATE QUIZ
@@ -27,40 +29,59 @@ public class QuizController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var view = new QuizCreateViewModel();
+        var vm = new QuizCreateViewModel();
         // for loop to start with 3 questions upon creation - more can be added
-        for (int i = 0; i < 3; i++) view.Questions.Add(new QuestionInput()); 
-        await LoadCourses(view);
-        return View(view);
+        for (int i = 0; i < 3; i++) vm.Questions.Add(new QuestionInput()); 
+        await LoadCourses(vm);
+        return View(vm);
     }
 
     // POST - submit the form (create the quiz)
     [HttpPost]
-    public async Task<IActionResult> Create(QuizCreateViewModel view)
+    public async Task<IActionResult> Create(QuizCreateViewModel vm)
     {
-        // must contain >= 1 question
-        if (view.Questions.Count == 0)
+        // VALIDATION
+
+        // must select an existing course
+        if(!vm.CourseId.HasValue)
+        {
+            // no course selected
+            ModelState.AddModelError(nameof(vm.CourseId), "Please select a course.");
+        }
+        else if (!await _courseRepository.CourseExists(vm.CourseId.Value))
+        {
+            // course does not exist
+            ModelState.AddModelError(
+            nameof(vm.CourseId),
+            // error mssg displayed on the form-page
+            "The selected course does not exist.");
+        }
+
+        // quiz must contain >= 1 question
+        if (vm.Questions.Count == 0)
             ModelState.AddModelError("", "Add at least one question.");
 
-        // error handling if the user tries to submit e.g. empty questions
+        // error handling if the user tries to submit with an issue - e.g. empty questions
         if (!ModelState.IsValid)
         {
-            await LoadCourses(view);       // dropdown list isn't posted back, so reload it "manually"
-            return View(view);             // redisplay with the user's input and error messages
+            await LoadCourses(vm);       // dropdown list isn't posted back, so this reloads it
+            return View(vm);             // redisplay with the user's input and error messages
         }
+
+        // VALIDATION PASSED - QUIZ CREATION
 
         // quiz details
         var quiz = new Quiz
         {
-            Title = view.Title,
-            Description = view.Description,
-            CourseId = view.CourseId!.Value,
-            CreatedByStudentId = 1,      // TODO: replace with logged-in student when login exists!
+            Title = vm.Title,
+            Description = vm.Description,
+            CourseId = vm.CourseId!.Value,
+            CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
             
             // the questions
-            Questions = view.Questions.Select((q, i) => new QuizQuestion
+            Questions = vm.Questions.Select((q, i) => new QuizQuestion
             {
-                Prompt = q.Prompt,
+                Prompt = q.Prompt.Trim(), // trims whitespace before grading
                 CorrectAnswer = q.CorrectAnswer,
                 Points = q.Points,
                 Order = i + 1 // to make it start with Q1 instead of Q0
@@ -71,10 +92,10 @@ public class QuizController : Controller
         return RedirectToAction(nameof(Index));   // TODO: connect to created dashboard
     }
 
-    private async Task LoadCourses(QuizCreateViewModel view)
+    private async Task LoadCourses(QuizCreateViewModel vm)
     {
-        var courses = await _quizRepository.GetAllCourses();
-        view.Courses = new SelectList(courses, "Id", "Name");
+        var courses = await _courseRepository.GetAllCourses();
+        vm.Courses = new SelectList(courses, "Id", "Name");
     }
 
     // TAKE QUIZ

@@ -12,13 +12,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<SubApp1.Services.IQuizService, SubApp1.Services.InMemoryQuizService>(); // Replace with persistent storage later.
 builder.Services.AddScoped<SubApp1.Services.DashboardService>();
 
-// dependency injection 
+// DATABASE
+
+// dependency injection  for DB
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// registering the QuizRepository-db (in DAL)
+// registering the repositories (in DAL)
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
+// LOGGER
 builder.Services.AddSerilog((services, loggerConfiguration) =>
 {
     loggerConfiguration

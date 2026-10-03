@@ -17,21 +17,24 @@ public class QuizCreateViewModel
     [Required(ErrorMessage = "Choose a course")]
     public int? CourseId { get; set; }   // int? so "nothing chosen" is distinguishable from 0
 
-    public List<QuestionInput> Questions { get; set; } = new();
+    // the quiz questions (creation form below)
+    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")]
+    public List<QuestionInput> Questions { get; set; } = [];
 
-    public IEnumerable<SelectListItem>? Courses { get; set; }   // for the course dropdown menu
+    // for the course dropdown menu
+    public IEnumerable<SelectListItem>? Courses { get; set; }   
 }
 
 // Quiz questions - for text answer with 1 correct reply
 public class QuestionInput
 {
-    [Required, StringLength(200)]
+    [Required, StringLength(250)]
     public string Prompt { get; set; } = string.Empty;
 
-    [Required, StringLength(2000)]
+    [Required, StringLength(250)]
     public string CorrectAnswer { get; set; } = string.Empty;
 
-    [Range(0.01, 1000)]
+    [Range(0.01, 10)]
     public decimal Points { get; set; } = 1;
 }
 

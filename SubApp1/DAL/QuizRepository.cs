@@ -12,7 +12,7 @@ public class QuizRepository : IQuizRepository
     public QuizRepository(QuizDbContext db, ILogger<QuizRepository> logger)
     {
         _db = db;
-        logger = logger;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<Quiz>?> GetAllQuizzes() // Quizzes
@@ -25,19 +25,6 @@ public class QuizRepository : IQuizRepository
         {
             // in case of error - display error mssg and return null
             _logger.LogError("[QuizRepository] quizzes ToListAsync() failed when GetAll(), error message: {e}", e.Message);
-            return null;
-        }
-    }
-
-    public async Task<IEnumerable<Course>?> GetAllCourses()
-    {
-        try 
-        {
-            return await _db.Courses.ToListAsync();
-        } 
-        catch (Exception e)
-        {
-            _logger.LogError("[QuizRepository] courses ToListAsync() failed when GetAllCourses(), error message: {e}", e.Message);
             return null;
         }
     }
