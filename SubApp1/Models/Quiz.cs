@@ -12,8 +12,7 @@ public class Quiz
 	[StringLength(2000)]
 	public string? Description { get; set; }
 
-	// connecting to course
-    [StringLength(100)]
+	// connecting to course (FK)
 	public int CourseId { get; set; }
 	public Course Course { get; set; } = null!; // must belong to a course
 
