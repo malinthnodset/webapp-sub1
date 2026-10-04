@@ -57,32 +57,6 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-    public async Task<Quiz?> GetQuizForTakingAsync(int id)
-    {
-        return await _db.Quizzes
-            .AsNoTracking()
-            .Include(quiz => quiz.Course)
-            .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
-            .SingleOrDefaultAsync(quiz => quiz.Id == id);
-    }
-
-    public async Task AddAttemptAsync(QuizAttempt attempt)
-    {
-        _db.QuizAttempts.Add(attempt);
-        await _db.SaveChangesAsync();
-    }
-
-    public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
-    {
-        return await _db.QuizAttempts
-            .AsNoTracking()
-            .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
-            .Include(attempt => attempt.Result)
-            .OrderBy(attempt => attempt.CompletedAt)
-            .ThenBy(attempt => attempt.Id)
-            .ToListAsync();
-    }
-
     public async Task<bool> Update(Quiz quiz)
     {
         try
@@ -117,5 +91,32 @@ public class QuizRepository : IQuizRepository
             _logger.LogError(e, "Failed to delete quiz {QuizId}", id);
             return false;
         }
+    }
+
+    // TAKE QUIZ METHODS
+    public async Task<Quiz?> GetQuizForTakingAsync(int id)
+    {
+        return await _db.Quizzes
+            .AsNoTracking()
+            .Include(quiz => quiz.Course)
+            .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
+            .SingleOrDefaultAsync(quiz => quiz.Id == id);
+    }
+
+    public async Task AddAttemptAsync(QuizAttempt attempt)
+    {
+        _db.QuizAttempts.Add(attempt);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
+    {
+        return await _db.QuizAttempts
+            .AsNoTracking()
+            .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
+            .Include(attempt => attempt.Result)
+            .OrderBy(attempt => attempt.CompletedAt)
+            .ThenBy(attempt => attempt.Id)
+            .ToListAsync();
     }
 }

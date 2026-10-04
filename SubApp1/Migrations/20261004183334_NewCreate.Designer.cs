@@ -8,16 +8,11 @@ using SubApp1.DAL;
 
 #nullable disable
 
-/*
-    File shows the database model for the InitialCreate migration. 
-    It helps EF understand what the schema looked like at that point; 
-    it does not contain the actual table-creation steps—that’s in 20261001195534_InitialCreate.cs.
-*/
 namespace SubApp1.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    [Migration("20261001195534_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261004183334_NewCreate")]
+    partial class NewCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +27,7 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -41,6 +37,9 @@ namespace SubApp1.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Courses");
                 });
@@ -52,14 +51,13 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CourseId")
-                        .HasMaxLength(2000)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CreatedByStudentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
+                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -142,7 +140,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("CorrectAnswer")
                         .IsRequired()
-                        .HasMaxLength(2000)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Order")
@@ -153,7 +151,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("Prompt")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("QuizId")

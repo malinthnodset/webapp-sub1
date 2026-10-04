@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SubApp1.ViewModels;
 
-// represents the data the creation page needs (so different from model-class)
+// represents the data the creation page needs
 
 // Quiz details
 public class QuizCreateViewModel

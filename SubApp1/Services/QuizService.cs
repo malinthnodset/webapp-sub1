@@ -4,11 +4,11 @@ using SubApp1.ViewModels;
 
 namespace SubApp1.Services;
 
-public class DatabaseQuizService : IQuizService
+public class QuizService : IQuizService
 {
     private readonly IQuizRepository _quizRepository;
 
-    public DatabaseQuizService(IQuizRepository quizRepository)
+    public QuizService(IQuizRepository quizRepository)
     {
         _quizRepository = quizRepository;
     }

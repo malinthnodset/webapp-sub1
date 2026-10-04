@@ -17,8 +17,8 @@ namespace SubApp1.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Code = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true)
+                    Code = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,8 +46,8 @@ namespace SubApp1.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    CourseId = table.Column<int>(type: "INTEGER", maxLength: 2000, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
+                    CourseId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedByStudentId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -102,8 +102,8 @@ namespace SubApp1.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     QuizId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Prompt = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    CorrectAnswer = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
+                    Prompt = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    CorrectAnswer = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
                     Points = table.Column<decimal>(type: "TEXT", nullable: false),
                     Order = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -170,7 +170,12 @@ namespace SubApp1.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            // indexing for faster db search (queries) - based on Foreign Keys
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_Code",
+                table: "Courses",
+                column: "Code",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_QuizAnswers_QuizAttemptId",
                 table: "QuizAnswers",
@@ -213,7 +218,6 @@ namespace SubApp1.Migrations
                 column: "CreatedByStudentId");
         }
 
-        // Step by step how to drop tables to avoid FK-dependency problems in case of db roll back
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {

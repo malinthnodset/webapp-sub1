@@ -1,6 +1,6 @@
 namespace SubApp1.Models;
 
-// The complete run thorugh ou a quiz, consisting of quiz answers
+// The complete run through of a quiz, consisting of quiz answers
 public class QuizAttempt
 {
 	public int Id { get; set; }

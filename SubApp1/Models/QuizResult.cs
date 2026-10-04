@@ -20,7 +20,7 @@ public class QuizResult
 	public int TotalQuestions { get; set; }
 	// public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
 
-	// percentage calculation
+	// percentage score calculation
     public decimal Percentage => MaximumPoints <= 0
 		? 0
 		: Math.Round(PointsEarned / MaximumPoints * 100, 2);
