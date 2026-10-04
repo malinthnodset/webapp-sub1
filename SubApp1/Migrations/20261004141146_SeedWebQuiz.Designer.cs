@@ -8,16 +8,11 @@ using SubApp1.DAL;
 
 #nullable disable
 
-/*
-    File shows the database model for the InitialCreate migration. 
-    It helps EF understand what the schema looked like at that point; 
-    it does not contain the actual table-creation steps—that’s in 20261001195534_InitialCreate.cs.
-*/
 namespace SubApp1.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    [Migration("20261001195534_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261004141146_SeedWebQuiz")]
+    partial class SeedWebQuiz
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +27,7 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -42,7 +38,24 @@ namespace SubApp1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "ITPE3200",
+                            Name = "Web Applications"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "EX1000",
+                            Name = "Example Course"
+                        });
                 });
 
             modelBuilder.Entity("SubApp1.Models.Quiz", b =>
@@ -52,14 +65,13 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CourseId")
-                        .HasMaxLength(2000)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CreatedByStudentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
+                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -74,6 +86,16 @@ namespace SubApp1.Migrations
                     b.HasIndex("CreatedByStudentId");
 
                     b.ToTable("Quizzes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1000,
+                            CourseId = 1,
+                            CreatedByStudentId = 1,
+                            Description = "A ten-question introduction to web development.",
+                            Title = "Web basics"
+                        });
                 });
 
             modelBuilder.Entity("SubApp1.Models.QuizAnswer", b =>
@@ -142,7 +164,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("CorrectAnswer")
                         .IsRequired()
-                        .HasMaxLength(2000)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Order")
@@ -153,7 +175,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("Prompt")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("QuizId")
@@ -164,6 +186,98 @@ namespace SubApp1.Migrations
                     b.HasIndex("QuizId");
 
                     b.ToTable("QuizQuestions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 10001,
+                            CorrectAnswer = "Hypertext Transfer Protocol",
+                            Order = 1,
+                            Points = 1m,
+                            Prompt = "What does HTTP stand for?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10002,
+                            CorrectAnswer = "4",
+                            Order = 2,
+                            Points = 1m,
+                            Prompt = "What is 2 + 2?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10003,
+                            CorrectAnswer = "HyperText Markup Language",
+                            Order = 3,
+                            Points = 1m,
+                            Prompt = "What does HTML stand for?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10004,
+                            CorrectAnswer = "Cascading Style Sheets",
+                            Order = 4,
+                            Points = 1m,
+                            Prompt = "What does CSS stand for?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10005,
+                            CorrectAnswer = "JavaScript",
+                            Order = 5,
+                            Points = 1m,
+                            Prompt = "Which language is commonly used to add interactivity to webpages?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10006,
+                            CorrectAnswer = "GET",
+                            Order = 6,
+                            Points = 1m,
+                            Prompt = "Which HTTP method is commonly used to retrieve data?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10007,
+                            CorrectAnswer = "POST",
+                            Order = 7,
+                            Points = 1m,
+                            Prompt = "Which HTTP method is commonly used to submit data?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10008,
+                            CorrectAnswer = "Uniform Resource Locator",
+                            Order = 8,
+                            Points = 1m,
+                            Prompt = "What does URL stand for?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10009,
+                            CorrectAnswer = "200",
+                            Order = 9,
+                            Points = 1m,
+                            Prompt = "Which HTTP status code indicates a successful request?",
+                            QuizId = 1000
+                        },
+                        new
+                        {
+                            Id = 10010,
+                            CorrectAnswer = "404",
+                            Order = 10,
+                            Points = 1m,
+                            Prompt = "Which HTTP status code means a requested resource was not found?",
+                            QuizId = 1000
+                        });
                 });
 
             modelBuilder.Entity("SubApp1.Models.QuizResult", b =>
@@ -214,6 +328,14 @@ namespace SubApp1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Students");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "test@example.com",
+                            Name = "Test Student"
+                        });
                 });
 
             modelBuilder.Entity("SubApp1.Models.Quiz", b =>

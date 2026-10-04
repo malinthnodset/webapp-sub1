@@ -100,7 +100,7 @@ public class QuizController : Controller
 
     // TAKE QUIZ
     [HttpGet]
-    public IActionResult Take(int id = 1) // Loads one quiz> defaults to the sample quiz
+    public IActionResult Take(int id) // Loads quiz. Defaults to the sample quiz if id = 1
     {
         var quiz = _quizService.GetQuizToTake(id);
         return quiz is null ? NotFound() : View(quiz);

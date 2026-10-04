@@ -170,6 +170,7 @@ namespace SubApp1.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            // indexing for faster db search (queries) - based on Foreign Keys
             migrationBuilder.CreateIndex(
                 name: "IX_QuizAnswers_QuizAttemptId",
                 table: "QuizAnswers",
@@ -212,6 +213,7 @@ namespace SubApp1.Migrations
                 column: "CreatedByStudentId");
         }
 
+        // Step by step how to drop tables to avoid FK-dependency problems in case of db roll back
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
