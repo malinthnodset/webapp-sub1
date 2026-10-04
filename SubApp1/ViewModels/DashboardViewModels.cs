@@ -5,6 +5,7 @@ public class DashboardViewModel
     public List<CourseSummaryViewModel> Courses { get; set; } = new();
 }
 
+// Course-info
 public class CourseSummaryViewModel
 {
     public int Id { get; set; }
@@ -14,6 +15,7 @@ public class CourseSummaryViewModel
     public List<QuizSummaryViewModel> Quizzes { get; set; } = new();
 }
 
+// Quiz info
 public class QuizSummaryViewModel
 {
     public int Id { get; set; }
