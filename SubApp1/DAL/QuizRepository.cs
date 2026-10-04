@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
 
 public class QuizRepository : IQuizRepository
 {
-    // dependency injection - db and logger
+    // dependency injection - db
     private readonly QuizDbContext _db;
     private readonly ILogger<QuizRepository> _logger;
 
@@ -70,33 +71,29 @@ public class QuizRepository : IQuizRepository
             return false; 
         }
     }
-        
 
     public async Task<bool> Delete(int id)
     {
-        try {
+        try
+        {
             var quiz = await _db.Quizzes.FindAsync(id);
-            // check if quiz exists (id found)
-            if (quiz == null)
+            if (quiz is null)
             {
-                _logger.LogError("[QuizRepository] quiz not found for the QuizId {QuizId:0000}", id);
-                return false; 
+                return false;
             }
 
             _db.Quizzes.Remove(quiz);
             await _db.SaveChangesAsync();
             return true;
-        } 
+        }
         catch (Exception e)
         {
-             _logger.LogError("[QuizRepository] quiz deletion failed for QuizId {QuizId:0000}, error message: {e}", id, e.Message);
+            _logger.LogError(e, "Failed to delete quiz {QuizId}", id);
             return false;
         }
-    }    
+    }
 
-    // Methods to TAKE QUIZ
-
-    // load quiz
+    // TAKE QUIZ METHODS
     public async Task<Quiz?> GetQuizForTakingAsync(int id)
     {
         return await _db.Quizzes
@@ -106,14 +103,12 @@ public class QuizRepository : IQuizRepository
             .SingleOrDefaultAsync(quiz => quiz.Id == id);
     }
 
-    // register new attempt
     public async Task AddAttemptAsync(QuizAttempt attempt)
     {
         _db.QuizAttempts.Add(attempt);
         await _db.SaveChangesAsync();
     }
 
-    // get all previous attempts from student/quiz-history
     public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
     {
         return await _db.QuizAttempts
