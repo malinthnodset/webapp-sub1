@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // services (ASP.NET components) for handling controllers and views to dependency injection container 
 // sets up the MVC pattern for handling HTTP requests
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<SubApp1.Services.IQuizService, SubApp1.Services.InMemoryQuizService>(); // Replace with persistent storage later.
+builder.Services.AddScoped<SubApp1.Services.IQuizService, SubApp1.Services.DatabaseQuizService>();
 builder.Services.AddScoped<SubApp1.Services.DashboardService>();
 
 // DATABASE
