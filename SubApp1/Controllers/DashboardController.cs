@@ -1,3 +1,4 @@
+//Handles the "Dashboard page" by asking DashboardService for the data and passing the result to the Index.cshtml.
 using Microsoft.AspNetCore.Mvc;
 using SubApp1.Services;
 using SubApp1.ViewModels;
