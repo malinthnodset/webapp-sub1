@@ -1,15 +1,17 @@
+<!--Displays the DashboardViewModel as course accordion with quiz links, and each quiz link currently points to QuizController.Take-->
 @model SubApp1.ViewModels.DashboardViewModel;
 @{ ViewData["Title"] = "Dashboard"; }
-<p>Courses in model: @Model.Courses.Count</p>
 
 <h1 class="mb-4">My Courses</h1>
 
+<!--displays error alert if the controller stored an error message-->
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
 <div class="accordion" id="courseAccordion">
+<!--Course items: loops over every course and renders each one as collapsible accordion item with its quiz count and a "checkmark" completion badge-->
 @foreach (var course in Model.Courses)
 {
     var collapseId = $"course-{course.Id}";
@@ -31,6 +33,7 @@
         </h2>
         <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#courseAccordion">
             <ul class="list-group list-group-flush">
+            <!--Quiz items: loops over a courses quizzes and renders each one as a list row with a link to the quiz, its question count, and completion status-->
             @foreach (var quiz in course.Quizzes)
             { //Link to quiz
                 <li class="list-group-item d-flex align-items-center">
@@ -52,6 +55,7 @@
                     }
                 </li>
             }
+            <!--Shows a message if the course has no quizzes -->
             @if (!course.Quizzes.Any())
             {
                 <li class="list-group-item text-muted">No quizzes yet.</li>
