@@ -1,8 +1,9 @@
-//Reads courses, quizzes, questions and the users attempts from the database through QuizDbContext,
-//and builds a DashboardViewModel for the DashboardController.
 using Microsoft.EntityFrameworkCore;
 using SubApp1.DAL;
 using SubApp1.ViewModels;
+
+//Reads courses, quizzes, questions and the users attempts from the database through QuizDbContext,
+//and builds a DashboardViewModel for the DashboardController.
 
 namespace SubApp1.Services;
 

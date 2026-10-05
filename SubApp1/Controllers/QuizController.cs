@@ -4,7 +4,6 @@ using SubApp1.Services;
 using SubApp1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Runtime.InteropServices;
 
 namespace SubApp1.Controllers;
 
@@ -12,7 +11,7 @@ public class QuizController : Controller
 {
     // dependency injection - controller looks to interface repository files
     private readonly IQuizRepository _quizRepository; // in DAL
-    private readonly ICourseRepository _courseRepository; // create in DAL
+    private readonly ICourseRepository _courseRepository; // in DAL
     private readonly IQuizService _quizService; // in Services
     private readonly ILogger<QuizController> _logger;
 
@@ -25,6 +24,7 @@ public class QuizController : Controller
     }
 
     // CREATE QUIZ
+
     // GET - the creation form
     [HttpGet]
     public async Task<IActionResult> Create()
@@ -36,7 +36,7 @@ public class QuizController : Controller
         return View(vm);
     }
 
-    // POST - submit the form (create the quiz)
+    // POST - submit the form -> create the quiz
     [HttpPost]
     public async Task<IActionResult> Create(QuizCreateViewModel vm)
     {
@@ -45,7 +45,7 @@ public class QuizController : Controller
         // must select an existing course
         if(!vm.CourseId.HasValue)
         {
-            // no course selected
+            // no selected course
             ModelState.AddModelError(nameof(vm.CourseId), "Please select a course.");
         }
         else if (!await _courseRepository.CourseExists(vm.CourseId.Value))
@@ -53,7 +53,6 @@ public class QuizController : Controller
             // course does not exist
             ModelState.AddModelError(
             nameof(vm.CourseId),
-            // error mssg displayed on the form-page
             "The selected course does not exist.");
         }
 
@@ -64,21 +63,20 @@ public class QuizController : Controller
         // error handling if the user tries to submit with an issue - e.g. empty questions
         if (!ModelState.IsValid)
         {
-            await LoadCourses(vm);       // dropdown list isn't posted back, so this reloads it
-            return View(vm);             // redisplay with the user's input and error messages
+            await LoadCourses(vm); // dropdown list isn't posted back, so this reloads it
+            return View(vm);      // redisplay with the user's input and error messages
         }
 
         // VALIDATION PASSED - QUIZ CREATION
 
-        // quiz details
         var quiz = new Quiz
         {
             Title = vm.Title,
             Description = vm.Description,
             CourseId = vm.CourseId!.Value,
-            CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
+            CreatedByStudentId = 1,      
+            // TODO: replace with logged-in student id when login exists!
             
-            // the questions
             Questions = vm.Questions.Select((q, i) => new QuizQuestion
             {
                 Prompt = q.Prompt.Trim(), // trims whitespace before grading
@@ -99,15 +97,16 @@ public class QuizController : Controller
 
     // TAKE QUIZ
     [HttpGet]
-    public async Task<IActionResult> Take(int id) // Loads quiz. Defaults to the sample quiz if id = 1
+    public async Task<IActionResult> Take(int id)
     {
         var quiz = await _quizService.GetQuizToTakeAsync(id);
         return quiz is null ? NotFound() : View(quiz);
     }
 
+    // Validate, grade and display results
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Submit(TakeQuizViewModel submission) // Validates, grades, and shows the result
+    public async Task<IActionResult> Submit(TakeQuizViewModel submission) 
     {
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
@@ -117,7 +116,8 @@ public class QuizController : Controller
 
         if (!ModelState.IsValid)
         {
-            foreach (var question in quiz.Questions) // Preserve answers when redisplaying validation errors
+            // Preserve answers when redisplaying validation errors
+            foreach (var question in quiz.Questions) 
             {
                 question.SubmittedAnswer = submission.Questions?
                     .FirstOrDefault(answer => answer.QuestionId == question.QuestionId)

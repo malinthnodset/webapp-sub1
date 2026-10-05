@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SubApp1.ViewModels;
 
-// represents the data the creation page needs
+// represents the content data the creation page needs
 
 // Quiz details
 public class QuizCreateViewModel
@@ -15,9 +15,8 @@ public class QuizCreateViewModel
     public string? Description { get; set; }
 
     [Required(ErrorMessage = "Choose a course")]
-    public int? CourseId { get; set; }   // int? so "nothing chosen" is distinguishable from 0
+    public int? CourseId { get; set; }
 
-    // the quiz questions (creation form below)
     [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")]
     public List<QuestionInput> Questions { get; set; } = [];
 

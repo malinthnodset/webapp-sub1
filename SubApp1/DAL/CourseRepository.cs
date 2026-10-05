@@ -5,7 +5,6 @@ namespace SubApp1.DAL;
 
 public class CourseRepository : ICourseRepository
 {
-    // dependency injection - db and logger
     private readonly QuizDbContext _db;
     private readonly ILogger<CourseRepository> _logger;
 
@@ -19,8 +18,7 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            // FindAsync would return an obj, we only need to know of existence -> AnySync
-            // AnySync returns a bool-value, therefore no need for if/else returning either true or false
+            // FindAsync would return an obj, we only need to know of existence -> AnySync (true/false)
             return await _db.Courses.AnyAsync(c => c.Id == id);
         } 
         catch (Exception e)

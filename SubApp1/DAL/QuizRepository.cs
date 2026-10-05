@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
 
 public class QuizRepository : IQuizRepository
 {
-    // dependency injection - db
     private readonly QuizDbContext _db;
     private readonly ILogger<QuizRepository> _logger;
 
@@ -16,7 +14,7 @@ public class QuizRepository : IQuizRepository
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Quiz>?> GetAllQuizzes() // Quizzes
+    public async Task<IEnumerable<Quiz>?> GetAllQuizzes()
     {
         try
         {
@@ -43,9 +41,7 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-
-// creates new quiz and saves it, return true if it is successful
-// and returns false if it fails
+    // Creates new quiz and saves it. Return true if successful, returns false if it fails
     public async Task<bool> Create(Quiz quiz)
     {
         try 
@@ -60,7 +56,7 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-// marks a quiz as updates and saves it, sme return true/false as create
+    // marks a quiz as updated and saves it, same return true/false as create
     public async Task<bool> Update(Quiz quiz)
     {
         try
@@ -76,8 +72,8 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-// searches for quiz by it's ID, if it doesn't exist it returns false
-// if it exists, it is deleted and the changes saved
+    // searches for quiz by it's ID, if it doesn't exist it returns false
+    // if it exists, it is deleted and the changes saved
     public async Task<bool> Delete(int id)
     {
         try
@@ -109,14 +105,14 @@ public class QuizRepository : IQuizRepository
             .SingleOrDefaultAsync(quiz => quiz.Id == id);
     }
 
-// method that saves a quiz attempt to the db
+    // Saves a quiz attempt to the db
     public async Task AddAttemptAsync(QuizAttempt attempt)
     {
         _db.QuizAttempts.Add(attempt);
         await _db.SaveChangesAsync();
     }
 
-// pulls student attempt history by studentId and quizId
+    // Pulls student attempt history by studentId and quizId
     public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
     {
         return await _db.QuizAttempts

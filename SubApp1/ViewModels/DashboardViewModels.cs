@@ -1,5 +1,9 @@
-//Defines the data shapes (DashboardViewModel, CourseSummaryViewModel, QuizSummaryViewModel) that carry the dashboard data from the service to the view, including the "checkmarks" completion logic
 namespace SubApp1.ViewModels;
+
+//Defines the data shapes (DashboardViewModel, CourseSummaryViewModel, QuizSummaryViewModel) '
+// that carry the dashboard data from the service to the view, including the "checkmarks" completion logic
+
+
 //Holds the list of courses passed to the dashboard view.
 public class DashboardViewModel 
 {

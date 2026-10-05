@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SubApp1.Models;
 
-// Calculates the % score of a quiz attempt (whole quiz completed)
+// Content of a result page after a quiz has been completed (belongs to an attempt)
 public class QuizResult
 {
 	public int Id { get; set; }
@@ -18,9 +18,8 @@ public class QuizResult
 
 	public int CorrectAnswers { get; set; }
 	public int TotalQuestions { get; set; }
-	// public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
 
-	// percentage score calculation
+	// Calculates the % score of a quiz attempt (whole quiz completed)
     public decimal Percentage => MaximumPoints <= 0
 		? 0
 		: Math.Round(PointsEarned / MaximumPoints * 100, 2);

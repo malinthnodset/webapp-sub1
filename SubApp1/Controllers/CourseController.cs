@@ -1,9 +1,5 @@
-using SubApp1.Models;
 using SubApp1.DAL;
-using SubApp1.Services;
-using SubApp1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SubApp1.Controllers;
 
@@ -19,9 +15,10 @@ public class CourseController : Controller
         _courseRepository = courseRepository;
     }
 
-    /* GOALS (later implementation):
-        Create a course - so GET course form and POST the created course
-        Update a course
-        Delete a course
+    /* TODO:
+        Get creation form
+        Create course
+        Update course
+        Delete course
      */
 }

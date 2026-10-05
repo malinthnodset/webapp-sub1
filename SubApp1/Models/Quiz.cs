@@ -24,7 +24,7 @@ public class Quiz
 	// public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	// public DateTime? UpdatedAt { get; set; }
 
-    // connect to questions and all taken attempts
+    // connect to questions and all taken attempts (for logged in student)
 	public ICollection<QuizQuestion> Questions { get; set; } = new List<QuizQuestion>();
 	public ICollection<QuizAttempt> Attempts { get; set; } = new List<QuizAttempt>();
 }

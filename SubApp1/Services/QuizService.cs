@@ -13,8 +13,8 @@ public class QuizService : IQuizService
         _quizRepository = quizRepository;
     }
 
-// searches for the quiz by it's Id, if it doesn't exist it returns null, if it does exist it maps 
-// the quiz and questions to a TakeQuizViewModel and returns it
+    // Searches for the quiz by it's Id, if it doesn't exist it returns null, if it does exist it maps 
+    // the quiz and questions to a TakeQuizViewModel and returns it
     public async Task<TakeQuizViewModel?> GetQuizToTakeAsync(int quizId)
     {
         var quiz = await _quizRepository.GetQuizForTakingAsync(quizId);
@@ -37,8 +37,8 @@ public class QuizService : IQuizService
         };
     }
 
-// grades the quiz by comparing the submitted answers to the correct answers, calculates the points 
-// earned, and saves the attempt and result to the database. then return the results of the quiz attempt 
+    // Grades the quiz by comparing the submitted answers to the correct answers, calculates the points 
+    // earned, and saves the attempt and result to the database. then return the results of the quiz attempt 
     public async Task<QuizResultViewModel?> GradeQuizAsync(TakeQuizViewModel submission, int studentId)
     {
         var quiz = await _quizRepository.GetQuizForTakingAsync(submission.QuizId);
