@@ -43,6 +43,9 @@ public class QuizRepository : IQuizRepository
         }
     }
 
+
+// creates new quiz and saves it, return true if it is successful
+// and returns false if it fails
     public async Task<bool> Create(Quiz quiz)
     {
         try 
@@ -57,6 +60,7 @@ public class QuizRepository : IQuizRepository
         }
     }
 
+// marks a quiz as updates and saves it, sme return true/false as create
     public async Task<bool> Update(Quiz quiz)
     {
         try
@@ -72,6 +76,8 @@ public class QuizRepository : IQuizRepository
         }
     }
 
+// searches for quiz by it's ID, if it doesn't exist it returns false
+// if it exists, it is deleted and the changes saved
     public async Task<bool> Delete(int id)
     {
         try
@@ -103,12 +109,14 @@ public class QuizRepository : IQuizRepository
             .SingleOrDefaultAsync(quiz => quiz.Id == id);
     }
 
+// method that saves a quiz attempt to the db
     public async Task AddAttemptAsync(QuizAttempt attempt)
     {
         _db.QuizAttempts.Add(attempt);
         await _db.SaveChangesAsync();
     }
 
+// pulls student attempt history by studentId and quizId
     public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
     {
         return await _db.QuizAttempts
