@@ -9,7 +9,7 @@
 <div class="create-quiz-page">
     <div class="create-quiz-shell">
         <header class="create-quiz-heading">
-            <a class="create-quiz-back" asp-controller="Dashboard" asp-action="Display">
+            <a class="create-quiz-back" asp-controller="Dashboard" asp-action="Index">
                 <span aria-hidden="true">&larr;</span> Back to dashboard
             </a>
             <p class="create-quiz-kicker">STUDY BUDDY</p>
@@ -20,6 +20,7 @@
         <form asp-action="Create" method="post" class="create-quiz-form" novalidate>
             <div asp-validation-summary="ModelOnly" class="create-quiz-summary" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></div>
 
+            <!-- Quiz details -->
             <section class="create-quiz-card quiz-details" aria-labelledby="quiz-details-heading">
                 <div class="create-quiz-section-heading">
                     <span class="create-quiz-step" aria-hidden="true">1</span>
@@ -50,6 +51,7 @@
                 </div>
             </section>
 
+            <!-- Quiz questions -->
             <section class="questions-section" aria-labelledby="questions-heading">
                 <div class="create-quiz-section-heading questions-heading">
                     <span class="create-quiz-step" aria-hidden="true">2</span>
@@ -92,8 +94,10 @@
             </section>
 
             <div class="create-quiz-actions">
-                <a class="cancel-quiz-link" asp-controller="Dashboard" asp-action="Display">Cancel</a>
+                <a class="cancel-quiz-link" asp-controller="Dashboard" asp-action="Index">Cancel</a>
+                <!-- TODO: add warning pop-up about data loss if leaving before -->
                 <button type="submit" class="save-quiz-button">Save quiz</button>
+                <!-- TODO: add system status update "creating quiz" -> "quiz succesfully created" -->
             </div>
         </form>
     </div>

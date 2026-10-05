@@ -89,9 +89,8 @@ public class QuizController : Controller
         };
 
         await _quizRepository.Create(quiz);
-        return RedirectToAction(nameof(Index));   // TODO: connect to created dashboard
+        return RedirectToAction("Index", "Dashboard");  // Index method in Dashboard controller
     }
-
     private async Task LoadCourses(QuizCreateViewModel vm)
     {
         var courses = await _courseRepository.GetAllCourses();
