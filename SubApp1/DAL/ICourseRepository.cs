@@ -8,6 +8,6 @@ public interface ICourseRepository
     Task<Quiz?> GetCourseById(int id); // ? in case the course does not exist
     Task<bool> CourseExists(int id); // checks that course exists
     Task<bool> Create(Course course); // setting datatype to bool = we get confirmation of success (true/false), so avoids silent failing
-    Task<bool> Update (Course course); 
-    Task<bool> Delete(int id);
+    Task<bool> Update (Course course); // edit course by id
+    Task<bool> Delete(int id); // delete course by id
 }

@@ -12,6 +12,6 @@ public interface IQuizRepository
     
     // Related to taking a quiz:
     Task<Quiz?> GetQuizForTakingAsync(int id);
-    Task AddAttemptAsync(QuizAttempt attempt);
-    Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId);
+    Task AddAttemptAsync(QuizAttempt attempt); // add a new attempt to the database
+    Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId); // get all attempts for a given student and quiz (check if they have already taken it)
 }
