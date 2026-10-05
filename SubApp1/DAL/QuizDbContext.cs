@@ -5,7 +5,7 @@ namespace SubApp1.DAL;
 
 public class QuizDbContext : DbContext
 {
-    // construvtor - create empty schema based on model (?)
+    // creates constructor that takes in options, and sends them to DbContext with :base(options)
     public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options)
     {
     }
@@ -19,16 +19,14 @@ public class QuizDbContext : DbContext
     public DbSet<QuizAttempt> QuizAttempts => Set<QuizAttempt>();
     public DbSet<QuizResult> QuizResults => Set<QuizResult>();
 
-    // Seed data (hard coded) for quiz generation (depends on exisiting courses and students/creators)
+// configures the model, runs once when EF buils the model of the db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
+    {
     base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<Student>().HasData(
-        new Student { Id = 1, Name = "Test Student", Email = "test@example.com" });
-
-    modelBuilder.Entity<Course>().HasData(
-        new Course { Id = 1, Name = "Web Applications", Code = "ITPE3200" },
-        new Course { Id = 2, Name = "Example Course", Code = "EX1000" });
-}
+    // ensures course code is unique
+    modelBuilder.Entity<Course>()
+        .HasIndex(c => c.Code)
+        .IsUnique();
+    }
 }

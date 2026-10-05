@@ -1,27 +1,122 @@
-@model SubApp1.ViewModel.QuizResultViewModel
+@model SubApp1.ViewModels.QuizResultViewModel
 
 @{
     ViewData["Title"] = "Quiz result"; // Set the shared layout's page title
 }
 
-<h1>@Model.Title: result</h1>
+<link rel="stylesheet" href="~/quiz-result.css" asp-append-version="true" />
 
-<p>
-    Score: @Model.PointsEarned / @Model.MaximumPoints points
-    (@Model.Percentage%)
-</p>
-<p>Correct answers: @Model.CorrectAnswers / @Model.TotalQuestions</p>
+<!-- HTML setup for the quiz itself -->
+<div class="row g-4">
+    <main class="col-lg-9">
+        <header class="card border-0 bg-primary-subtle mb-4">
+            <div class="card-body p-4">
+                <p class="text-uppercase fw-semibold mb-2">Quiz result</p>
+                <h1 class="h2 mb-1">@Model.Title</h1>
+                <p class="mb-3">@Model.CourseTitle <span class="text-muted">(Course @Model.CourseId)</span></p>
+                <div class="d-flex flex-wrap align-items-end gap-4">
+                    <p class="display-6 fw-bold mb-0">@Model.Percentage%</p>
+                    <p class="mb-1">@Model.PointsEarned / @Model.MaximumPoints points</p>
+                    <p class="mb-1">@Model.CorrectAnswers of @Model.TotalQuestions correct</p>
+                    <p class="mb-1">Attempt @Model.AttemptNumber</p>
+                </div>
+            </div>
+        </header>
 
-<ol>
-    @foreach (var answer in Model.Answers)
-    {
-        <li>
-            <h2>@answer.Prompt</h2>
-            <p>Your answer: @answer.SubmittedAnswer</p>
-            <p>Correct answer: @answer.CorrectAnswer</p>
-            <p>@(answer.IsCorrect ? "Correct" : "Incorrect")</p>
-        </li>
-    }
-</ol>
+        <h2 class="h4 mb-3">Question review</h2>
+        <div class="d-grid gap-3">
+            @foreach (var answer in Model.Answers)
+            {
+                <article class="card quiz-result-answer @(answer.IsCorrect ? "quiz-result-answer-correct" : "quiz-result-answer-incorrect")">
+                    <div class="card-header d-flex justify-content-between align-items-start gap-3">
+                        <h3 class="h5 mb-0">@answer.Prompt</h3>
+                        @if (answer.IsCorrect)
+                        {
+                            <span class="badge rounded-circle text-bg-success fs-5" aria-label="Correct">&#10003;</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-circle text-bg-danger fs-5" aria-label="Incorrect">&#10007;</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        @if (answer.Options.Count > 0)
+                        {
+                            <p class="small text-uppercase fw-semibold">Answer options</p>
+                            <ul class="list-group mb-3">
+                                @foreach (var option in answer.Options)
+                                {
+                                    var isSelected = string.Equals(option, answer.SubmittedAnswer, StringComparison.OrdinalIgnoreCase);
+                                    var isCorrectOption = string.Equals(option, answer.CorrectAnswer, StringComparison.OrdinalIgnoreCase);
+                                    var optionClass = isCorrectOption ? "list-group-item-success" : isSelected ? "list-group-item-danger" : string.Empty;
+                                    <li class="list-group-item d-flex justify-content-between align-items-center @optionClass">
+                                        <span>@option</span>
+                                        <span class="d-flex gap-2">
+                                            @if (isSelected)
+                                            {
+                                                <span class="badge text-bg-secondary">Your answer</span>
+                                            }
+                                            @if (isCorrectOption)
+                                            {
+                                                <span class="badge text-bg-success">Correct answer</span>
+                                            }
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <p class="small text-uppercase fw-semibold mb-1">Your answer</p>
+                                    <p class="mb-0">@(string.IsNullOrWhiteSpace(answer.SubmittedAnswer) ? "No answer submitted" : answer.SubmittedAnswer)</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="small text-uppercase fw-semibold mb-1">Correct answer</p>
+                                    <p class="mb-0">@answer.CorrectAnswer</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
 
-<a asp-action="Take" asp-route-id="1">Try again</a>
+        <div class="quiz-result-actions">
+            <a class="btn btn-primary" asp-action="Take" asp-route-id="@Model.QuizId">Try again</a>
+            <a class="btn btn-outline-secondary" asp-controller="Dashboard" asp-action="Index">Back to dashboard</a>
+        </div>
+    </main>
+
+<!-- the setup for the attempt history list -->
+    <aside class="col-lg-3">
+        <section class="card sticky-top">
+            <div class="card-header bg-body">
+                <h2 class="h5 mb-0">Attempt history</h2>
+            </div>
+            @if (Model.AttemptHistory.Count == 0)
+            {
+                <p class="card-body text-muted mb-0">No attempts recorded yet.</p>
+            }
+            else
+            {
+                <ol class="list-group list-group-flush">
+                    @foreach (var attempt in Model.AttemptHistory)
+                    {
+                        <li class="list-group-item @(attempt.AttemptNumber == Model.AttemptNumber ? "active" : string.Empty)">
+                            <div class="d-flex justify-content-between align-items-baseline gap-2">
+                                <strong>Attempt @attempt.AttemptNumber</strong>
+                                <span>@attempt.Percentage%</span>
+                            </div>
+                            <time datetime="@attempt.CompletedAt.ToString("O")" class="small">
+                                @attempt.CompletedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                            </time>
+                            <div class="small">@attempt.PointsEarned / @attempt.MaximumPoints points</div>
+                        </li>
+                    }
+                </ol>
+            }
+        </section>
+    </aside>
+</div>

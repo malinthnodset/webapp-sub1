@@ -1,4 +1,9 @@
 **/wwwroot/lib
 **/bin/
 **/obj/
+**/logs/
+
+# Database files
 *.db
+*.db-shm
+*.db-wal

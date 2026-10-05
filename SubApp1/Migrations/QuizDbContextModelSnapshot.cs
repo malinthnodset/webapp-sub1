@@ -24,6 +24,7 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -34,21 +35,10 @@ namespace SubApp1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.HasIndex("Code")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "ITPE3200",
-                            Name = "Web Applications"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "EX1000",
-                            Name = "Example Course"
-                        });
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("SubApp1.Models.Quiz", b =>
@@ -58,7 +48,6 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CourseId")
-                        .HasMaxLength(100)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CreatedByStudentId")
@@ -148,7 +137,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("CorrectAnswer")
                         .IsRequired()
-                        .HasMaxLength(2000)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Order")
@@ -159,7 +148,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("Prompt")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("QuizId")
@@ -220,14 +209,6 @@ namespace SubApp1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Students");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "test@example.com",
-                            Name = "Test Student"
-                        });
                 });
 
             modelBuilder.Entity("SubApp1.Models.Quiz", b =>

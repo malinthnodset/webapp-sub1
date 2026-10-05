@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SubApp1.Models;
 
+// as of now the only user group - later implementation will split into teachers and students
 public class Student
 {
 	public int Id { get; set; }
