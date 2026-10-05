@@ -9,10 +9,10 @@ namespace SubApp1.Services;
 public class DashboardService
 {
     private readonly QuizDbContext _db;
-
+    //(constructor) stores the database context that the service uses to query data.
     public DashboardService(QuizDbContext db) => _db = db;
 
-    /// <summary>Builds the dashboard: courses, their quizzes, and completion status.</summary>
+    //Loads all courses with their quizzes and questions, finds the users best percentage per quiz from their attempts, and maps everything into DashboardViewModel.
     public async Task<DashboardViewModel> GetDashboardAsync(string? userId)
     {
         var courses = await _db.Courses
