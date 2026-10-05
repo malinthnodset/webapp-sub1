@@ -1,61 +1,183 @@
-@model SubApp1.ViewModels.QuizCreateViewModel 
+@model SubApp1.ViewModels.QuizCreateViewModel
 
 @{
     ViewData["Title"] = "Create quiz";
 }
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<link rel="stylesheet" href="~/quiz-create.css" asp-append-version="true" />
 
-    <div class="mb-3">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+<div class="create-quiz-page">
+    <div class="create-quiz-shell">
+        <header class="create-quiz-heading">
+            <a class="create-quiz-back" asp-controller="Dashboard" asp-action="Display">
+                <span aria-hidden="true">&larr;</span> Back to dashboard
+            </a>
+            <p class="create-quiz-kicker">STUDY BUDDY</p>
+            <h1>Create a quiz</h1>
+            <p class="create-quiz-intro">Add the details, then write questions to help you study.</p>
+        </header>
 
-    <div class="mb-3">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
+        <form asp-action="Create" method="post" class="create-quiz-form" novalidate>
+            <div asp-validation-summary="ModelOnly" class="create-quiz-summary" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></div>
 
-    <div class="mb-3">
-        <label asp-for="CourseId"></label>
-        <select asp-for="CourseId" asp-items="Model.Courses" class="form-select">
-            <option value="">-- choose a course --</option>
-        </select>
-        <span asp-validation-for="CourseId" class="text-danger"></span>
-    </div>
+            <section class="create-quiz-card quiz-details" aria-labelledby="quiz-details-heading">
+                <div class="create-quiz-section-heading">
+                    <span class="create-quiz-step" aria-hidden="true">1</span>
+                    <div>
+                        <h2 id="quiz-details-heading">Quiz details</h2>
+                        <p>Give your quiz a name and choose a course.</p>
+                    </div>
+                </div>
 
-    <h2>Questions</h2>
-    <div id="questions">
-        @for (var i = 0; i < Model.Questions.Count; i++)
-        {
-            <div class="card p-3 mb-2 question-row">
-                <input asp-for="Questions[i].Prompt" class="form-control mb-2" placeholder="Question" />
-                <span asp-validation-for="Questions[i].Prompt" class="text-danger"></span>
-                <input asp-for="Questions[i].CorrectAnswer" class="form-control mb-2" placeholder="Correct answer" />
-                <input asp-for="Questions[i].Points" class="form-control" />
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Quiz title</label>
+                    <input asp-for="Title" class="form-control" placeholder="e.g. Introduction to biology" aria-describedby="Title-error" required />
+                    <span asp-validation-for="Title" id="Title-error" class="field-validation" aria-live="polite"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description <span class="optional-label">(optional)</span></label>
+                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="What will this quiz help you practise?" aria-describedby="Description-error"></textarea>
+                    <span asp-validation-for="Description" id="Description-error" class="field-validation" aria-live="polite"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CourseId" class="form-label">Course</label>
+                    <select asp-for="CourseId" asp-items="Model.Courses" class="form-select" aria-describedby="CourseId-error" required>
+                        <option value="">Choose a course</option>
+                    </select>
+                    <span asp-validation-for="CourseId" id="CourseId-error" class="field-validation" aria-live="polite"></span>
+                </div>
+            </section>
+
+            <section class="questions-section" aria-labelledby="questions-heading">
+                <div class="create-quiz-section-heading questions-heading">
+                    <span class="create-quiz-step" aria-hidden="true">2</span>
+                    <div>
+                        <h2 id="questions-heading">Your questions</h2>
+                        <p>Add a prompt, its correct answer, and how many points it is worth.</p>
+                    </div>
+                </div>
+
+                <div id="questions">
+                    @for (var i = 0; i < Model.Questions.Count; i++)
+                    {
+                        <div class="create-quiz-card question-row" role="group" aria-labelledby="question-heading-@i">
+                            <h3 class="question-legend" id="question-heading-@i">Question @(i + 1)</h3>
+                            <p class="question-type-label">Text question</p>
+                            <div class="mb-3">
+                                <label asp-for="Questions[i].Prompt" class="form-label">Question prompt</label>
+                                <input asp-for="Questions[i].Prompt" class="form-control" placeholder="Write your question..." aria-describedby="Questions_@(i)__Prompt-error" required />
+                                <span asp-validation-for="Questions[i].Prompt" id="Questions_@(i)__Prompt-error" class="field-validation" aria-live="polite"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Questions[i].CorrectAnswer" class="form-label">Correct answer</label>
+                                <input asp-for="Questions[i].CorrectAnswer" class="form-control" placeholder="Enter the correct answer" aria-describedby="Questions_@(i)__CorrectAnswer-error" required />
+                                <span asp-validation-for="Questions[i].CorrectAnswer" id="Questions_@(i)__CorrectAnswer-error" class="field-validation" aria-live="polite"></span>
+                            </div>
+                            <div class="points-field">
+                                <label asp-for="Questions[i].Points" class="form-label">Points</label>
+                                <input asp-for="Questions[i].Points" class="form-control" min="0.01" max="10" step="0.01" aria-describedby="Questions_@(i)__Points-help Questions_@(i)__Points-error" required />
+                                <span id="Questions_@(i)__Points-help" class="visually-hidden">Enter a value between 0.01 and 10 points.</span>
+                                <span asp-validation-for="Questions[i].Points" id="Questions_@(i)__Points-error" class="field-validation" aria-live="polite"></span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <button type="button" id="add-question" class="add-question-button" aria-controls="questions">
+                    <span aria-hidden="true">+</span> Add a question
+                </button>
+                <p id="question-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+            </section>
+
+            <div class="create-quiz-actions">
+                <a class="cancel-quiz-link" asp-controller="Dashboard" asp-action="Display">Cancel</a>
+                <button type="submit" class="save-quiz-button">Save quiz</button>
             </div>
-        }
+        </form>
     </div>
-
-    <button type="button" id="add-question" class="btn btn-secondary mb-3">+ Add question</button>
-    <br />
-    <button type="submit" class="btn btn-primary">Save quiz</button>
-</form>
+</div>
 
 @section Scripts {
 <script>
     let nextIndex = @Model.Questions.Count;
 
+    document.querySelector(".create-quiz-summary.validation-summary-errors")?.focus();
+
+    const form = document.querySelector(".create-quiz-form");
+    const questionAnnouncement = document.getElementById("question-announcement");
+
+    const validateField = (field) => {
+        const container = field.closest(".mb-3, .points-field");
+        const error = container?.querySelector(".field-validation");
+        if (!error) return true;
+
+        let message = "";
+        if (field.required && !field.value.trim()) {
+            message = field.name === "CourseId"
+                ? "Please select a course."
+                : "Please fill out this field.";
+        } else if (field.validity.rangeUnderflow || field.validity.rangeOverflow || field.validity.stepMismatch) {
+            message = "Enter a value between 0.01 and 10 points.";
+        } else if (field.validity.badInput) {
+            message = "Enter a valid number of points.";
+        }
+
+        error.textContent = message;
+        field.setAttribute("aria-invalid", message ? "true" : "false");
+        return message === "";
+    };
+
+    form.addEventListener("input", (event) => {
+        if (event.target.matches("input, textarea, select")) {
+            validateField(event.target);
+        }
+    });
+
+    form.addEventListener("change", (event) => {
+        if (event.target.matches("input, textarea, select")) {
+            validateField(event.target);
+        }
+    });
+
+    form.addEventListener("submit", (event) => {
+        const fields = Array.from(form.querySelectorAll(
+            'input[name="Title"], select[name="CourseId"], input[name$=".Prompt"], input[name$=".CorrectAnswer"], input[name$=".Points"]'
+        ));
+        const invalidFields = fields.filter((field) => !validateField(field));
+
+        if (invalidFields.length > 0) {
+            event.preventDefault();
+            invalidFields[0].focus();
+        }
+    });
+
     document.getElementById("add-question").addEventListener("click", function () {
         const row = `
-            <div class="card p-3 mb-2 question-row">
-                <input name="Questions[${nextIndex}].Prompt" class="form-control mb-2" placeholder="Question" />
-                <input name="Questions[${nextIndex}].CorrectAnswer" class="form-control mb-2" placeholder="Correct answer" />
-                <input name="Questions[${nextIndex}].Points" value="1" class="form-control" />
+            <div class="create-quiz-card question-row" role="group" aria-labelledby="question-heading-${nextIndex}">
+                <h3 class="question-legend" id="question-heading-${nextIndex}">Question ${nextIndex + 1}</h3>
+                <p class="question-type-label">Text question</p>
+                <div class="mb-3">
+                    <label for="Questions_${nextIndex}__Prompt" class="form-label">Question prompt</label>
+                    <input id="Questions_${nextIndex}__Prompt" name="Questions[${nextIndex}].Prompt" class="form-control" placeholder="Write your question..." aria-describedby="Questions_${nextIndex}__Prompt-error" required />
+                    <span id="Questions_${nextIndex}__Prompt-error" class="field-validation" aria-live="polite"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="Questions_${nextIndex}__CorrectAnswer" class="form-label">Correct answer</label>
+                    <input id="Questions_${nextIndex}__CorrectAnswer" name="Questions[${nextIndex}].CorrectAnswer" class="form-control" placeholder="Enter the correct answer" aria-describedby="Questions_${nextIndex}__CorrectAnswer-error" required />
+                    <span id="Questions_${nextIndex}__CorrectAnswer-error" class="field-validation" aria-live="polite"></span>
+                </div>
+                <div class="points-field">
+                    <label for="Questions_${nextIndex}__Points" class="form-label">Points</label>
+                    <input id="Questions_${nextIndex}__Points" name="Questions[${nextIndex}].Points" value="1" type="number" min="0.01" max="10" step="0.01" aria-describedby="Questions_${nextIndex}__Points-help Questions_${nextIndex}__Points-error" class="form-control" required />
+                    <span id="Questions_${nextIndex}__Points-help" class="visually-hidden">Enter a value between 0.01 and 10 points.</span>
+                    <span id="Questions_${nextIndex}__Points-error" class="field-validation" aria-live="polite"></span>
+                </div>
             </div>`;
         document.getElementById("questions").insertAdjacentHTML("beforeend", row);
+        document.getElementById(`Questions_${nextIndex}__Prompt`).focus();
+        questionAnnouncement.textContent = `Question ${nextIndex + 1} added.`;
         nextIndex++;
     });
 </script>

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SubApp1.Models;
 
+// For text answers
 public class QuizQuestion
 {
 	public int Id { get; set; }

@@ -8,14 +8,14 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SubApp1.Tests;
 
-public class DatabaseQuizServiceTests
+public class QuizServiceTests
 {
     private readonly FakeQuizRepository _repository = new();
-    private readonly DatabaseQuizService _service;
+    private readonly QuizService _service;
 
-    public DatabaseQuizServiceTests()
+    public QuizServiceTests()
     {
-        _service = new DatabaseQuizService(_repository);
+        _service = new QuizService(_repository);
     }
 
     [Fact]
@@ -135,8 +135,31 @@ public class DatabaseQuizServiceTests
         await using var db = new QuizDbContext(options);
         await db.Database.EnsureCreatedAsync();
 
+// sees the database is empty, so we seed it with a quiz with 10 questions
+var course = new Course("ITPE3200", "Web applications");
+var student = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
+
+db.Quizzes.Add(new Quiz
+{
+    Id = 1000,
+    Title = "Web basics",
+    Description = "Test quiz",
+    Course = course,
+    CreatedByStudent = student,
+    Questions = Enumerable.Range(1, 10)
+        .Select(i => new QuizQuestion
+        {
+            Prompt = $"Question {i}",
+            CorrectAnswer = $"Answer {i}",
+            Points = 1,
+            Order = i
+        })
+        .ToList()
+});
+await db.SaveChangesAsync();
+
         var repository = new QuizRepository(db, NullLogger<QuizRepository>.Instance);
-        var service = new DatabaseQuizService(repository);
+        var service = new QuizService(repository);
         var quiz = await service.GetQuizToTakeAsync(1000);
         var questions = await db.QuizQuestions
             .Where(question => question.QuizId == 1000)

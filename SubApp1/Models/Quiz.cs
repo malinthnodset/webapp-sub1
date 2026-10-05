@@ -16,7 +16,7 @@ public class Quiz
 	public int CourseId { get; set; }
 	public Course Course { get; set; } = null!; // must belong to a course
 
-    // creator of the quiz
+    // creator of the quiz (FK)
 	public int CreatedByStudentId { get; set; }
 	public Student CreatedByStudent { get; set; } = null!;
 
