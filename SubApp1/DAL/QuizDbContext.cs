@@ -13,6 +13,8 @@ public class QuizDbContext : DbContext // [LEARN] EF Core database context
     // [LEARN] db tables
     public DbSet<Course> Courses => Set<Course>(); // [LEARN] Courses table
     public DbSet<Student> Students => Set<Student>(); // [LEARN] Students table
+
+        public DbSet<Student> Teachers => Set<Teacher>(); // [LEARN] Students table
     public DbSet<Quiz> Quizzes => Set<Quiz>(); // [LEARN] Quizzes table
     public DbSet<QuizQuestion> QuizQuestions => Set<QuizQuestion>(); // [LEARN] Questions table
     public DbSet<QuizAnswer> QuizAnswers => Set<QuizAnswer>(); // [LEARN] Answers table
