@@ -1,20 +1,27 @@
+<!-- [LEARN] Dynamic model -->
 @model IEnumerable<dynamic>
 
 <div class="course-modules">
+<!-- [LEARN] Container -->
     @if (Model != null)
     {
         foreach (var module in Model)
         {
             <details class="course-module">
+            <!-- [LEARN] Collapsible -->
                 <summary class="course-module__title">@module.Title</summary>
+                <!-- [LEARN] Title -->
                 <div class="course-module__quizzes">
+                <!-- [LEARN] Quizzes -->
                     @foreach (var quiz in module.Quizzes)
                     {
                         <a class="course-module__quiz"
                            asp-controller="Quiz"
                            asp-action="Details"
                            asp-route-id="@quiz.Id">
+                        <!-- [LEARN] Quiz link -->
                             @quiz.Title
+                            <!-- [LEARN] Title -->
                         </a>
                     }
                 </div>
@@ -24,7 +31,9 @@
 </div>
 
 <style>
+/* [LEARN] Inline CSS */
     .course-module {
+    /* [LEARN] Module */
         margin-bottom: .75rem;
         border: 1px solid #d1d5db;
         border-radius: .5rem;
@@ -32,6 +41,7 @@
     }
 
     .course-module__title {
+    /* [LEARN] Title */
         padding: 1rem;
         background: #f3f4f6;
         cursor: pointer;
@@ -39,6 +49,7 @@
     }
 
     .course-module__quizzes {
+    /* [LEARN] Quizzes */
         display: flex;
         flex-wrap: wrap;
         gap: .75rem;
@@ -46,6 +57,7 @@
     }
 
     .course-module__quiz {
+    /* [LEARN] Quiz link */
         flex: 1 1 180px;
         padding: .85rem 1rem;
         border: 1px solid #d1d5db;
@@ -55,6 +67,7 @@
     }
 
     .course-module__quiz:hover {
+    /* [LEARN] Hover */
         background: #f9fafb;
     }
 </style>

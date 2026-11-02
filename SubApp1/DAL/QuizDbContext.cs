@@ -1,32 +1,32 @@
-using Microsoft.EntityFrameworkCore;
-using SubApp1.Models;
+using Microsoft.EntityFrameworkCore; // [LEARN] EF Core
+using SubApp1.Models; // [LEARN] Entities
 
-namespace SubApp1.DAL;
+namespace SubApp1.DAL; // [LEARN] Data access namespace
 
-public class QuizDbContext : DbContext
+public class QuizDbContext : DbContext // [LEARN] EF Core database context
 {
-    // Creates constructor that takes in options, and sends them to DbContext with :base(options)
-    public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options)
+    // [LEARN] Creates constructor that takes in options, and sends them to DbContext with :base(options)
+    public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options) // [LEARN] Constructor
     {
     }
 
-    // db tables
-    public DbSet<Course> Courses => Set<Course>();
-    public DbSet<Student> Students => Set<Student>();
-    public DbSet<Quiz> Quizzes => Set<Quiz>();
-    public DbSet<QuizQuestion> QuizQuestions => Set<QuizQuestion>();
-    public DbSet<QuizAnswer> QuizAnswers => Set<QuizAnswer>();
-    public DbSet<QuizAttempt> QuizAttempts => Set<QuizAttempt>();
-    public DbSet<QuizResult> QuizResults => Set<QuizResult>();
+    // [LEARN] db tables
+    public DbSet<Course> Courses => Set<Course>(); // [LEARN] Courses table
+    public DbSet<Student> Students => Set<Student>(); // [LEARN] Students table
+    public DbSet<Quiz> Quizzes => Set<Quiz>(); // [LEARN] Quizzes table
+    public DbSet<QuizQuestion> QuizQuestions => Set<QuizQuestion>(); // [LEARN] Questions table
+    public DbSet<QuizAnswer> QuizAnswers => Set<QuizAnswer>(); // [LEARN] Answers table
+    public DbSet<QuizAttempt> QuizAttempts => Set<QuizAttempt>(); // [LEARN] Attempts table
+    public DbSet<QuizResult> QuizResults => Set<QuizResult>(); // [LEARN] Results table
 
-    // Configures the model, runs once when EF buils the model of the db
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    // [LEARN] Configures the model, runs once when EF buils the model of the db
+    protected override void OnModelCreating(ModelBuilder modelBuilder) // [LEARN] Model configuration
     {
-    base.OnModelCreating(modelBuilder);
+    base.OnModelCreating(modelBuilder); // [LEARN] Base config
 
-    // ensures course code is unique
-    modelBuilder.Entity<Course>()
-        .HasIndex(c => c.Code)
-        .IsUnique();
+    // [LEARN] ensures course code is unique
+    modelBuilder.Entity<Course>() // [LEARN] Course entity
+        .HasIndex(c => c.Code) // [LEARN] Index on Code
+        .IsUnique(); // [LEARN] Unique constraint
     }
 }

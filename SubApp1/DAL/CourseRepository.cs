@@ -1,64 +1,64 @@
-using Microsoft.EntityFrameworkCore;
-using SubApp1.Models;
+using Microsoft.EntityFrameworkCore; // [LEARN] EF Core
+using SubApp1.Models; // [LEARN] Entities
 
-namespace SubApp1.DAL;
+namespace SubApp1.DAL; // [LEARN] Data access namespace
 
-public class CourseRepository : ICourseRepository
+public class CourseRepository : ICourseRepository // [LEARN] Repository for courses
 {
-    private readonly QuizDbContext _db;
-    private readonly ILogger<CourseRepository> _logger;
+    private readonly QuizDbContext _db; // [LEARN] EF context
+    private readonly ILogger<CourseRepository> _logger; // [LEARN] Logger
 
-    public CourseRepository(QuizDbContext db, ILogger<CourseRepository> logger)
+    public CourseRepository(QuizDbContext db, ILogger<CourseRepository> logger) // [LEARN] Constructor via DI
     {
-        _db = db;
-        _logger = logger;
+        _db = db; // [LEARN] Store context
+        _logger = logger; // [LEARN] Store logger
     }
 
-    public async Task<bool> CourseExists(int id)
+    public async Task<bool> CourseExists(int id) // [LEARN] Check if course exists
     {
-        try
+        try // [LEARN] Try
         {
-            // FindAsync would return an obj, we only need to know of existence -> AnySync (true/false)
-            return await _db.Courses.AnyAsync(c => c.Id == id);
+            // [LEARN] FindAsync would return an obj, we only need to know of existence -> AnySync (true/false)
+            return await _db.Courses.AnyAsync(c => c.Id == id); // [LEARN] True if exists
         } 
-        catch (Exception e)
+        catch (Exception e) // [LEARN] Handle errors
         {
-            _logger.LogError("[CourseRepository] Failed to check whether CourseId {CourseId} exists, error message: {e}", id, e.Message);
-            return false;
+            _logger.LogError("[CourseRepository] Failed to check whether CourseId {CourseId} exists, error message: {e}", id, e.Message); // [LEARN] Log error
+            return false; // [LEARN] Assume not exists on error
         }
     }
 
-        public async Task<IEnumerable<Course>?> GetAllCourses()
+        public async Task<IEnumerable<Course>?> GetAllCourses() // [LEARN] Get all courses
     {
-        try 
+        try  // [LEARN] Try
         {
-            return await _db.Courses.ToListAsync();
+            return await _db.Courses.ToListAsync(); // [LEARN] Query all courses
         } 
-        catch (Exception e)
+        catch (Exception e) // [LEARN] Handle errors
         {
-            _logger.LogError("[QuizRepository] courses ToListAsync() failed when GetAllCourses(), error message: {e}", e.Message);
-            return null;
+            _logger.LogError("[QuizRepository] courses ToListAsync() failed when GetAllCourses(), error message: {e}", e.Message); // [LEARN] Log error
+            return null; // [LEARN] Null on error
         }
     }
 
-    // NOT YET IMPLEMENTED
-    public Task<Quiz?> GetCourseById(int id)
+    // [LEARN] NOT YET IMPLEMENTED
+    public Task<Quiz?> GetCourseById(int id) // [LEARN] Not implemented
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // [LEARN] TODO
     }
 
-    public Task<bool> Create(Course course)
+    public Task<bool> Create(Course course) // [LEARN] Not implemented
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // [LEARN] TODO
     }
 
-    public Task<bool> Update(Course course)
+    public Task<bool> Update(Course course) // [LEARN] Not implemented
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // [LEARN] TODO
     }
 
-    public Task<bool> Delete(int id)
+    public Task<bool> Delete(int id) // [LEARN] Not implemented
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // [LEARN] TODO
     }
 }

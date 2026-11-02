@@ -1,40 +1,40 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations; // [LEARN] Validation attributes
+using Microsoft.AspNetCore.Mvc.Rendering; // [LEARN] SelectList
 
-namespace SubApp1.ViewModels;
+namespace SubApp1.ViewModels; // [LEARN] View models namespace
 
-// represents the content data the creation page needs
+// [LEARN] represents the content data the creation page needs
 
-// Quiz details
-public class QuizCreateViewModel
+// [LEARN] Quiz details
+public class QuizCreateViewModel // [LEARN] Create quiz view model
 {
-    [Required, StringLength(200)]
-    public string Title { get; set; } = string.Empty;
+    [Required, StringLength(200)] // [LEARN] Validation
+    public string Title { get; set; } = string.Empty; // [LEARN] Title
 
-    [StringLength(2000)]
-    public string? Description { get; set; }
+    [StringLength(2000)] // [LEARN] Validation
+    public string? Description { get; set; } // [LEARN] Description
 
-    [Required(ErrorMessage = "Choose a course")]
-    public int? CourseId { get; set; }
+    [Required(ErrorMessage = "Choose a course")] // [LEARN] Validation
+    public int? CourseId { get; set; } // [LEARN] Course id
 
-    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")]
-    public List<QuestionInput> Questions { get; set; } = [];
+    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")] // [LEARN] Validation
+    public List<QuestionInput> Questions { get; set; } = []; // [LEARN] Questions list
 
-    // for the course dropdown menu
-    public IEnumerable<SelectListItem>? Courses { get; set; }   
+    // [LEARN] for the course dropdown menu
+    public IEnumerable<SelectListItem>? Courses { get; set; }   // [LEARN] Dropdown items
 }
 
-// Quiz questions - for text answer with 1 correct reply
-public class QuestionInput
+// [LEARN] Quiz questions - for text answer with 1 correct reply
+public class QuestionInput // [LEARN] Question input
 {
-    [Required, StringLength(250)]
-    public string Prompt { get; set; } = string.Empty;
+    [Required, StringLength(250)] // [LEARN] Validation
+    public string Prompt { get; set; } = string.Empty; // [LEARN] Prompt
 
-    [Required, StringLength(250)]
-    public string CorrectAnswer { get; set; } = string.Empty;
+    [Required, StringLength(250)] // [LEARN] Validation
+    public string CorrectAnswer { get; set; } = string.Empty; // [LEARN] Correct answer
 
-    [Range(0.01, 10)]
-    public decimal Points { get; set; } = 1;
+    [Range(0.01, 10)] // [LEARN] Validation
+    public decimal Points { get; set; } = 1; // [LEARN] Points
 }
 
-// TODO: add a multiple choice Q option
+// [LEARN] TODO: add a multiple choice Q option

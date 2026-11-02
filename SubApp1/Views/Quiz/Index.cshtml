@@ -1,0 +1,31 @@
+@model IEnumerable<SubApp1.Models.Quiz>
+
+@{
+    ViewData["Title"]="All Quizzes";
+}
+
+<h1>All Quizzes</h1>
+
+@if (Model == null || Model.Any())
+{
+    <p class="text-muted">No Quizzes</p>
+} 
+else
+{
+    <ul class="list-group">@foreach (var quiz in Model)
+    {
+        <li class="list-group-item d-flex justify-content-between-align-items-center">
+        <div>
+            <strong>@quiz.Title</strong>
+            <span class="text-muted"> - @quiz.Course.Name</span>
+        </div>
+        
+        <div>
+            <strong>@quiz.Title</strong>
+            <span class="badge bg-secondary me-2">@quiz.Questions.Count questions</span>
+            <a class="btn btn-sm btn-primary" asp-action="Take" asp-route-id="@quiz.Id">Take</a>
+        </div>
+        </li>
+    }
+    </ul>
+}

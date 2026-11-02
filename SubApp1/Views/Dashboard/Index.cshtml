@@ -1,63 +1,89 @@
-<!--Displays the DashboardViewModel as course accordion with quiz links, and each quiz link currently points to QuizController.Take-->
-@model SubApp1.ViewModels.DashboardViewModel;
-@{ ViewData["Title"] = "Dashboard"; }
+<!-- [LEARN] Displays the DashboardViewModel as course accordion with quiz links -->
+@model SubApp1.ViewModels.DashboardViewModel
 
+@{
+    // [LEARN] Set page title
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- [LEARN] Page heading -->
 <h1 class="mb-4">My Courses</h1>
 
-<!--displays error alert if the controller stored an error message-->
+<!-- [LEARN] displays error alert if the controller stored an error message -->
 @if (TempData["Error"] != null)
 {
+    <!-- [LEARN] Show error -->
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
+<!-- [LEARN] Accordion container -->
 <div class="accordion" id="courseAccordion">
-<!--Course items: loops over every course and renders each one as collapsible accordion item with its quiz count and a "checkmark" completion badge-->
+<!-- [LEARN] Course items: loops over every course -->
 @foreach (var course in Model.Courses)
 {
     var collapseId = $"course-{course.Id}";
+    <!-- [LEARN] Unique collapse id -->
     <div class="accordion-item shadow-sm mb-3">
+    <!-- [LEARN] Accordion item -->
         <h2 class="accordion-header">
+        <!-- [LEARN] Header -->
             <button class="accordion-button collapsed" type="button"
                     data-bs-toggle="collapse" data-bs-target="#@collapseId">
+            <!-- [LEARN] Toggle button -->
                 <span class="flex-grow-1 fw-semibold">@course.Title</span>
+                <!-- [LEARN] Course title -->
                 <span class="badge bg-secondary me-3">@course.QuizCount Quiz to complete</span>
+                <!-- [LEARN] Quiz count -->
                 @if (course.IsCompleted)
                 {
-                    <span class="badge bg-success fs-6">✓</span>
+                    <!-- [LEARN] Completed -->
+                    <span class="badge bg-success fs-6">?</span>
                 }
                 else
                 {
-                    <span class="badge bg-danger fs-6">✗</span>
+                    <!-- [LEARN] Not completed -->
+                    <span class="badge bg-danger fs-6">?</span>
                 }
             </button>
         </h2>
         <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#courseAccordion">
+        <!-- [LEARN] Collapsible body -->
             <ul class="list-group list-group-flush">
-            <!--Quiz items: loops over a courses quizzes and renders each one as a list row with a link to the quiz, its question count, and completion status-->
+            <!-- [LEARN] Quiz list -->
+            <!-- [LEARN] Quiz items: loops over a courses quizzes -->
             @foreach (var quiz in course.Quizzes)
-            { //Link to quiz
+            {
+                <!-- [LEARN] Link to quiz -->
                 <li class="list-group-item d-flex align-items-center">
+                <!-- [LEARN] Quiz row -->
                     <a asp-controller="Quiz"
                         asp-action="Take"
                         asp-route-id="@quiz.Id"
                         class="flex-grow-1 text-decoration-none">
+                    <!-- [LEARN] Link to Take -->
                         @quiz.Title
+                        <!-- [LEARN] Quiz title -->
                     </a>
                     <span class="badge bg-light text-dark border me-3">@quiz.QuestionCount Questions</span>
+                    <!-- [LEARN] Question count -->
                     <span class="text-muted small me-3">@quiz.BestPercentage.ToString("0")%</span>
+                    <!-- [LEARN] Best % -->
                     @if (quiz.IsCompleted)
                     {
-                        <span class="badge bg-success">✓</span>
+                        <!-- [LEARN] Completed -->
+                        <span class="badge bg-success">?</span>
                     }
                     else
                     {
-                        <span class="badge bg-danger">✗</span>
+                        <!-- [LEARN] Not completed -->
+                        <span class="badge bg-danger">?</span>
                     }
                 </li>
             }
-            <!--Shows a message if the course has no quizzes -->
+            <!-- [LEARN] Shows a message if the course has no quizzes -->
             @if (!course.Quizzes.Any())
             {
+                <!-- [LEARN] Empty message -->
                 <li class="list-group-item text-muted">No quizzes yet.</li>
             }
             </ul>

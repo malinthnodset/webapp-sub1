@@ -1,43 +1,70 @@
-<!--The page frame (navbar with Dashboard and Create quiz links) that wraps every view through attRenderBody()-->
+<!-- [LEARN] The page frame (navbar with Dashboard and Create quiz links) that wraps every view through RenderBody() -->
 
 <!DOCTYPE html>
+<!-- [LEARN] HTML5 doctype -->
 <html lang="en">
+<!-- [LEARN] Root element -->
 <head>
+<!-- [LEARN] Head section -->
     <meta charset="utf-8" />
+    <!-- [LEARN] Character encoding -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [LEARN] Responsive viewport -->
     <title>@ViewData["Title"] - Study Buddy</title>
+    <!-- [LEARN] Page title -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- [LEARN] Bootstrap CSS -->
     <script src="~/lib/jquery/dist/jquery.min.js" defer></script>
+    <!-- [LEARN] jQuery (deferred) -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <!-- [LEARN] Bootstrap JS (deferred) -->
 </head>
 <body>
+<!-- [LEARN] Body -->
     <header>
+    <!-- [LEARN] Header -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <!-- [LEARN] Navbar -->
             <div class="container-fluid">
+            <!-- [LEARN] Container -->
                 <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">Study Buddy</a>
+                <!-- [LEARN] Brand link -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
+                <!-- [LEARN] Mobile toggle -->
                     <span class="navbar-toggler-icon"></span>
+                    <!-- [LEARN] Toggle icon -->
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <!-- [LEARN] Nav links container -->
                     <ul class="navbar-nav flex-grow-1">
+                    <!-- [LEARN] Nav list -->
                         <li class="nav-item">
+                        <!-- [LEARN] Dashboard link -->
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Quiz" asp-action="Create">Create quiz</a>                        
-                        </li>                       
+                        <!-- [LEARN] Create quiz link -->
+                            <a class="nav-link text-dark" asp-controller="Quiz" asp-action="Create">Create quiz</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Quiz" asp-action="Index">All quizzes</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <!-- Main page content -->
+    <!-- [LEARN] Main page content -->
     <main class="container">
+    <!-- [LEARN] Main content -->
         <section role="main" class="pb-3">
+        <!-- [LEARN] Section -->
             @RenderBody()
+            <!-- [LEARN] Render view content here -->
         </section>
     </main>
     @await RenderSectionAsync("Scripts", required: false)
+    <!-- [LEARN] Render Scripts section if defined -->
 </body>
 </html>
