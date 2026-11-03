@@ -19,9 +19,29 @@ public class CourseController : Controller
         _courseRepository = courseRepository;
     }
 
-    /* GOALS (later implementation):
-        Create a course - so GET course form and POST the created course
-        Update a course
-        Delete a course
-     */
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View(); // TODO: return course creation page (form)
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Course course)
+    {
+        if (ModelState.IsValid)
+        {
+            bool returnOk = await _courseRepository.Create(course);
+            if (returnOk)
+            {
+                _logger.LogInformation("New course {@course} was created", course);
+                return View(); // TODO: where to return?
+            }
+        }
+        _logger.LogWarning("Course creation failed for course {@course}", course);
+        return View(); // TODO: what to return?  
+    }
+
+    // TODO: Update course (optional)
+
+    // TODO: Delete course (optional)
 }
