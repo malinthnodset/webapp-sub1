@@ -11,10 +11,10 @@ public static class DBInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<QuizDbContext>();
 
-        // migration - creates/updates the schema
+        // Migration - creates/updates the schema
         context.Database.Migrate();
 
-        // everything is seeded together, so if courses exist -> the seed has already run
+        // Everything is seeded together, so if Courses exist -> the seed has already run
         if (context.Courses.Any()) return;
 
         // create courses
@@ -25,7 +25,7 @@ public static class DBInit
         var alice = new Student { Name = "Alice Hansen", Email = "alice@hansen.no" };
         var bob = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
 
-        // create quiz + it's questions
+        // create quiz with questions
         context.Quizzes.AddRange(
             new Quiz
             {

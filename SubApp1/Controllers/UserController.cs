@@ -1,6 +1,8 @@
 namespace SubApp1.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using SubApp1.DAL;
+using SubApp1.Models;
 
 // applies to students and professors, shared methods
 public class UserController : Controller
@@ -22,11 +24,20 @@ public class UserController : Controller
     }
 
     // Create user
-    public async Task<IActionResult> Create(User user) { }
+    public async Task<IActionResult> Create(User user)
+    {
+        throw new NotImplementedException();
+    }
 
     // Update user-information
-    public async Task<IActionResult> Update(User user) { }
+    public async Task<IActionResult> Update(User user)
+    {
+        throw new NotImplementedException();
+    }
 
     // Delete user
-    public async Task<IActionResult> Delete(int id) { }
+    public async Task<IActionResult> Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
 }

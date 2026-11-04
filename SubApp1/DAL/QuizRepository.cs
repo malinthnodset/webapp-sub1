@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
 
 public class QuizRepository : IQuizRepository
 {
-    // dependency injection - db
     private readonly QuizDbContext _db;
     private readonly ILogger<QuizRepository> _logger;
 
@@ -121,7 +119,7 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-    // method that saves a quiz attempt to the db
+    // Saves a quiz attempt to the db
     public async Task AddAttemptAsync(QuizAttempt attempt)
     {
         try
@@ -136,7 +134,7 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-    // pulls student attempt history by studentId and quizId
+    // Pulls student attempt history by studentId and quizId
     public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
     {
         try

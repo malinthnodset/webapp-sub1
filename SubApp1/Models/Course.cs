@@ -4,7 +4,7 @@ namespace SubApp1.Models;
 
 public class Course
 {
-    // constructor - ensure a course cannot be created without a course code and name
+    // Constructor - ensure a course cannot be created without a course code and name
     public Course(String code, String name) {
         this.Code = code;
         this.Name = name;
@@ -14,7 +14,6 @@ public class Course
     [Required(ErrorMessage = "Course must have a course code")] 
     [StringLength(10)]
     public string Code { get; set; } = string.Empty; // allows course code to be "" - handled with constructor
-
     
     [Required(ErrorMessage = "Course must have a name")] 
     [StringLength(200)]

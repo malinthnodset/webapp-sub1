@@ -3,16 +3,14 @@ using SubApp1.DAL;
 using SubApp1.Services;
 using Serilog;
 using Serilog.Events;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // services (ASP.NET components) for handling controllers and views to dependency injection container 
 // sets up the MVC pattern for handling HTTP requests
 builder.Services.AddControllersWithViews();
-//builder.Services.AddScoped<SubApp1.Services.IQuizService, SubApp1.Services.DatabaseQuizService>();
-builder.Services.AddScoped<SubApp1.Services.DashboardService>();
-builder.Services.AddScoped<SubApp1.Services.IQuizService, SubApp1.Services.QuizService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<IQuizService, QuizService>();
 
 // DATABASE
 
@@ -45,10 +43,10 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.MapStaticAssets(); // Enable static assets from wwwroot (images, JS, CSS)
+// Enable static assets from wwwroot (images, JS, CSS)
+app.MapStaticAssets(); 
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");
-
 app.Run();
