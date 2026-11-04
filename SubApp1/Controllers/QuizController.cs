@@ -40,6 +40,7 @@ public class QuizController : Controller
 
     // Submit the form to create the quiz
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(QuizCreateViewModel vm)
     {
         if (ModelState.IsValid)
