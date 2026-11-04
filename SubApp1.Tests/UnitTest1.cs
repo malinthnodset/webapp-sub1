@@ -224,7 +224,7 @@ await db.SaveChangesAsync();
 
         public List<QuizAttempt> SavedAttempts { get; } = new();
 
-        public Task<IEnumerable<Quiz>?> GetAllQuizzes() => Task.FromResult<IEnumerable<Quiz>?>(new[] { _quiz });
+        public Task<IEnumerable<Quiz>> GetAllQuizzes() => Task.FromResult<IEnumerable<Quiz>>(new[] { _quiz });
 
         public Task<Quiz?> GetQuizById(int id) => Task.FromResult<Quiz?>(id == _quiz.Id ? _quiz : null);
 

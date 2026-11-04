@@ -11,11 +11,15 @@ public class Course
     }
     public int Id { get; set; }
 
-    [Required, StringLength(50)]
-    public string Code { get; set; } = string.Empty; // Allows course code to be "" - handled with constructor
-
-    [Required, StringLength(200)]
+    [Required(ErrorMessage = "Course must have a course code")] 
+    [StringLength(10)]
+    public string Code { get; set; } = string.Empty; // allows course code to be "" - handled with constructor
+    
+    [Required(ErrorMessage = "Course must have a name")] 
+    [StringLength(200)]
     public string Name { get; set; } = string.Empty;
+
+    // Connect quizzes to the course
     public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
 
 }

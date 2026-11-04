@@ -30,7 +30,7 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
         .WriteTo.Console() // can be commented out for less noise in console
         .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log")
         // filter out info-level EF db execution logs
-        .Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContexT", out var value) &&
+        .Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
             e.Level == LogEventLevel.Information &&
             e.MessageTemplate.Text.Contains("Executed DbCommand"));
 });

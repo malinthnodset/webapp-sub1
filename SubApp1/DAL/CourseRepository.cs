@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
@@ -18,47 +19,96 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            // FindAsync would return an obj, we only need to know of existence -> AnySync (true/false)
-            return await _db.Courses.AnyAsync(c => c.Id == id);
-        } 
+            // FindAsync would return an obj, we only need to know of existence -> AnySync
+            // AnySync returns a bool-value, therefore no need for if/else returning either true or false
+            return await _db.Courses.AnyAsync(course => course.Id == id); // returns true is any is found, otherwise false
+        }
         catch (Exception e)
         {
             _logger.LogError("[CourseRepository] Failed to check whether CourseId {CourseId} exists, error message: {e}", id, e.Message);
-            return false;
+            throw;
         }
     }
 
-        public async Task<IEnumerable<Course>?> GetAllCourses()
+    public async Task<IEnumerable<Course>> GetAllCourses()
     {
-        try 
+        try
         {
             return await _db.Courses.ToListAsync();
-        } 
+        }
         catch (Exception e)
         {
             _logger.LogError("[QuizRepository] courses ToListAsync() failed when GetAllCourses(), error message: {e}", e.Message);
-            return null;
+            throw;
         }
     }
 
-    // NOT YET IMPLEMENTED
-    public Task<Quiz?> GetCourseById(int id)
+    public async Task<Course> GetCourseById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _db.Courses.FindAsync(id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[QuizRepository] GetCourseById for course {@id} failed, error message: {e}", id, e.Message);
+            throw;
+        }
     }
 
-    public Task<bool> Create(Course course)
+    public async Task<bool> Create(Course course)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _db.Courses.Add(course);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] course creation failed for {@course}, error message: {e}", course, e.Message);
+            throw;
+        }
     }
 
-    public Task<bool> Update(Course course)
+    public async Task<bool> Update(Course course)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingCourse = await _db.Courses.FindAsync(course);
+            if (existingCourse == null)
+            {
+                return false; // Course does not exist
+            }
+            _db.Courses.Update(existingCourse);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] , error message {e}:", course, e.Message);
+            throw;
+        }
     }
 
-    public Task<bool> Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingCourse = await _db.Courses.FindAsync(id);
+            if (existingCourse is null)
+            {
+                return false;
+            }
+
+            _db.Courses.Remove(existingCourse);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to delete course {@id}, error message: {@e}", id, e.Message);
+            throw;
+        }
     }
 }

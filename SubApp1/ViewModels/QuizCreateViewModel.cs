@@ -21,7 +21,7 @@ public class QuizCreateViewModel
     public List<QuestionInput> Questions { get; set; } = [];
 
     // for the course dropdown menu
-    public IEnumerable<SelectListItem>? Courses { get; set; }   
+    public IEnumerable<SelectListItem>? Courses { get; set; }
 }
 
 // Quiz questions - for text answer with 1 correct reply
@@ -33,7 +33,7 @@ public class QuestionInput
     [Required, StringLength(250)]
     public string CorrectAnswer { get; set; } = string.Empty;
 
-    [Range(0.01, 10)]
+    [Range(0, 10)]
     public decimal Points { get; set; } = 1;
 }
 
