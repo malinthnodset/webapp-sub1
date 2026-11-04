@@ -22,7 +22,7 @@ public class CourseRepository : ICourseRepository
             // FindAsync would return an obj, we only need to know of existence -> AnySync
             // AnySync returns a bool-value, therefore no need for if/else returning either true or false
             return await _db.Courses.AnyAsync(c => c.Id == id);
-        } 
+        }
         catch (Exception e)
         {
             _logger.LogError("[CourseRepository] Failed to check whether CourseId {CourseId} exists, error message: {e}", id, e.Message);
@@ -30,12 +30,12 @@ public class CourseRepository : ICourseRepository
         }
     }
 
-        public async Task<IEnumerable<Course>?> GetAllCourses()
+    public async Task<IEnumerable<Course>?> GetAllCourses()
     {
-        try 
+        try
         {
             return await _db.Courses.ToListAsync();
-        } 
+        }
         catch (Exception e)
         {
             _logger.LogError("[QuizRepository] courses ToListAsync() failed when GetAllCourses(), error message: {e}", e.Message);
@@ -44,7 +44,7 @@ public class CourseRepository : ICourseRepository
     }
 
     // NOT YET IMPLEMENTED
-    public Task<Quiz?> GetCourseById(int id)
+    public Task<Course?> GetCourseById(int id)
     {
         throw new NotImplementedException();
     }

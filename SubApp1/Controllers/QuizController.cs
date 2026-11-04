@@ -40,11 +40,27 @@ public class QuizController : Controller
 
     // Submit the form to create the quiz
     [HttpPost]
-    public async Task<IActionResult> Create(Quiz quiz)
+    public async Task<IActionResult> Create(QuizCreateViewModel vm)
     {
-        var vm = new QuizCreateViewModel();
         if (ModelState.IsValid)
         {
+            var quiz = new Quiz
+            {
+                Title = vm.Title,
+                Description = vm.Description,
+                CourseId = vm.CourseId!.Value,
+                CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
+
+                // the questions
+                Questions = vm.Questions.Select((q, i) => new QuizQuestion
+                {
+                    Prompt = q.Prompt.Trim(), // trims whitespace before grading
+                    CorrectAnswer = q.CorrectAnswer,
+                    Points = q.Points,
+                    Order = i + 1 // to make it start with Q1 instead of Q0
+                }).ToList()
+            };
+
             bool returnOk = await _quizRepository.Create(quiz);
             if (returnOk)
             {
@@ -52,30 +68,12 @@ public class QuizController : Controller
             }
         }
         // if modelstat invalid or creation in db failed
-        _logger.LogWarning("[QuizController] Quiz creation failed {@quiz}", quiz);
+        _logger.LogWarning("[QuizController] Quiz creation failed {@vm}", vm);
         await LoadCourses(vm);       // dropdown list isn't posted back, so this reloads it
-        return View(quiz);           // redisplay with the user's input and error messages
-
-        // quiz details
-        // var quiz = new Quiz
-        // {
-        //     Title = vm.Title,
-        //     Description = vm.Description,
-        //     CourseId = vm.CourseId!.Value,
-        //     CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
-
-        //     // the questions
-        //     Questions = vm.Questions.Select((q, i) => new QuizQuestion
-        //     {
-        //         Prompt = q.Prompt.Trim(), // trims whitespace before grading
-        //         CorrectAnswer = q.CorrectAnswer,
-        //         Points = q.Points,
-        //         Order = i + 1 // to make it start with Q1 instead of Q0
-        //     }).ToList()
-        // };
+        return View(vm);           // redisplay with the user's input and error messages
     }
 
-    // Used by drop down menu on the create quiz-page
+    // Helper method - Used by drop down menu on the create quiz-page
     private async Task LoadCourses(QuizCreateViewModel vm)
     {
         var courses = await _courseRepository.GetAllCourses();
@@ -96,28 +94,35 @@ public class QuizController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken] // ?
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(TakeQuizViewModel submission) // Validates, grades, and shows the result
     {
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
         {
-            _logger.LogError("[QuizController] Quiz id {@quiz} for submission not found", quiz); // Or should it be id?
+            _logger.LogError("[QuizController] Quiz id {@QuizId} for submission not found", submission.QuizId); // Or should it be id?
             return NotFound();
         }
 
         if (!ModelState.IsValid)
         {
-            _logger.LogWarning("[QuizController] Quiz submission {@submission} failed. Modelstate not valid.", submission);
-            foreach (var question in quiz.Questions) // Preserve answers when redisplaying validation errors
+            _logger.LogWarning("[QuizController] Quiz submission {@QuizId} failed. Modelstate not valid.", submission.QuizId);
+
+            // Preserve answers when reloading quiz to display validation errors
+            foreach (var question in quiz.Questions)
             {
-                question.SubmittedAnswer = submission.Questions?
-                    .FirstOrDefault(answer => answer.QuestionId == question.QuestionId)
-                    ?.SubmittedAnswer;
+                // find a submission with the same question id as the quiz' question id
+                var match = submission.Questions? // make the whole expression null if there's nothing posted
+                    .FirstOrDefault(answer => answer.QuestionId == question.QuestionId);
+
+                // is match != null, store the answer so it can be redisplayed
+                question.SubmittedAnswer = match?.SubmittedAnswer;
             }
 
             return View("Take", quiz);
         }
+
+        // If modelstate is valid, save and grade the attempt:
 
         // TODO: add logged in students ID 
         var studentId = 1;
