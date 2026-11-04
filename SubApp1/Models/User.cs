@@ -1,26 +1,23 @@
-namespace SubApp1.Models;
-
 using System.ComponentModel.DataAnnotations;
+
+namespace SubApp1.Models;
 
 // abstract class for shared attributed between student and teacher
 
 public abstract class User
 {
-    private int Id; // set by DB
+    public int Id { get; set; } // set by DB
 
     [Required(ErrorMessage = "Firstname cannot be empty")]
-    private String FirstName { get; set; }
-
-    [Required(ErrorMessage = "Last name cannot be empty")]
-    private String LastName { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Email cannot be empyt"), EmailAddress]
-    private String Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     // password
 
     [Required(ErrorMessage = "Choose a role")]
-    private Role Role { get; set; }
+    public Role Role { get; set; }
 
     // TODO: include study program or faculty?
 }
