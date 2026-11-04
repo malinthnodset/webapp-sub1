@@ -5,7 +5,7 @@ namespace SubApp1.DAL;
 
 public class QuizDbContext : DbContext
 {
-    // creates constructor that takes in options, and sends them to DbContext with :base(options)
+    // Creates constructor that takes in options, and sends them to DbContext with :base(options)
     public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options)
     {
     }
@@ -19,7 +19,7 @@ public class QuizDbContext : DbContext
     public DbSet<QuizAttempt> QuizAttempts => Set<QuizAttempt>();
     public DbSet<QuizResult> QuizResults => Set<QuizResult>();
 
-// configures the model, runs once when EF buils the model of the db
+    // Configures the model, runs once when EF buils the model of the db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
     base.OnModelCreating(modelBuilder);

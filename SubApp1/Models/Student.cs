@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SubApp1.Models;
 
-// as of now the only user group 
-// TODO: later implementation will split into teacher and student roles
+// As of now the only user group - later implementation will split into teachers and students
 public class Student
 {
 	public int Id { get; set; }
@@ -15,7 +14,7 @@ public class Student
 	[Required(ErrorMessage = "Email address cannot be empty."), EmailAddress, StringLength(320)]
 	public string Email { get; set; } = string.Empty;
 
-	// Connect to the quizez they have created and taken
+	// Connect to the quizzes they have created and taken
 	public ICollection<Quiz> CreatedQuizzes { get; set; } = new List<Quiz>();
 	public ICollection<QuizAttempt> QuizAttempts { get; set; } = new List<QuizAttempt>();
 

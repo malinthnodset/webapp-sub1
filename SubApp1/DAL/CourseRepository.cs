@@ -6,7 +6,6 @@ namespace SubApp1.DAL;
 
 public class CourseRepository : ICourseRepository
 {
-    // dependency injection - db and logger
     private readonly QuizDbContext _db;
     private readonly ILogger<CourseRepository> _logger;
 

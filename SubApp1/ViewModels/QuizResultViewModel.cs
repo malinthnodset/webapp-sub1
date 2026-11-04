@@ -1,6 +1,7 @@
 namespace SubApp1.ViewModels;
 
-public class QuizResultViewModel // Overall score and per-question feedback
+// Overall score and per-question feedback
+public class QuizResultViewModel 
 {
     public int QuizId { get; set; }
 
@@ -31,7 +32,8 @@ public class QuizResultViewModel // Overall score and per-question feedback
     public List<QuizAnswerResultViewModel> Answers { get; set; } = new();
 }
 
-public class QuizAnswerResultViewModel // Grading feedback for one answer
+// Grading feedback for one answer
+public class QuizAnswerResultViewModel 
 {
     public string Prompt { get; set; } = string.Empty;
 
@@ -46,7 +48,8 @@ public class QuizAnswerResultViewModel // Grading feedback for one answer
     public decimal PointsAwarded { get; set; }
 }
 
-public class QuizAttemptHistoryViewModel // Summary shown in the attempt history panel
+// Summary shown in the attempt history panel
+public class QuizAttemptHistoryViewModel 
 {
     public int AttemptNumber { get; set; }
 

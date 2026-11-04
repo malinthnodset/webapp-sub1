@@ -4,7 +4,6 @@ using SubApp1.Services;
 using SubApp1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Runtime.InteropServices;
 
 namespace SubApp1.Controllers;
 
@@ -83,7 +82,7 @@ public class QuizController : Controller
 
     // TAKE QUIZ
     [HttpGet]
-    public async Task<IActionResult> Take(int id) // Loads quiz
+    public async Task<IActionResult> Take(int id)
     {
         var quiz = await _quizService.GetQuizToTakeAsync(id);
         if (quiz == null)
@@ -94,9 +93,10 @@ public class QuizController : Controller
         return View(quiz);
     }
 
+    // Validate, grade and display results
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Submit(TakeQuizViewModel submission) // Validates, grades, and shows the result
+    public async Task<IActionResult> Submit(TakeQuizViewModel submission) 
     {
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
