@@ -4,7 +4,7 @@ namespace SubApp1.DAL;
 
 public interface IQuizRepository
 {
-    Task<IEnumerable<Quiz>?> GetAllQuizzes();
+    Task<IEnumerable<Quiz>> GetAllQuizzes();
     Task<Quiz?> GetQuizById(int id);
     Task<bool> Create(Quiz quiz);
     Task<bool> Update(Quiz quiz);

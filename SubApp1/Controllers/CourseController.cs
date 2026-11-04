@@ -26,6 +26,7 @@ public class CourseController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Course course)
     {
         if (ModelState.IsValid)

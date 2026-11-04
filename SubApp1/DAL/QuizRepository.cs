@@ -16,115 +16,143 @@ public class QuizRepository : IQuizRepository
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Quiz>?> GetAllQuizzes() // Quizzes
+    public async Task<IEnumerable<Quiz>> GetAllQuizzes()
     {
         try
         {
             return await _db.Quizzes.ToListAsync();
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            // in case of error - display error mssg and return null
             _logger.LogError("[QuizRepository] quizzes ToListAsync() failed when GetAll(), error message: {e}", e.Message);
-            return null;
+            throw;
         }
     }
 
     public async Task<Quiz?> GetQuizById(int id)
     {
-        try 
+        try
         {
             return await _db.Quizzes.FindAsync(id);
-        } 
-        catch (Exception e) {
-            // if we cannot find and return the quiz by id
-            _logger.LogError("[QuizRepository] quiz FindAsync(id) failed when GetQuizById for QuizId {QuizId:0000}, error message:", e.Message);
-            return null;
         }
-    }
-
-
-// creates new quiz and saves it, return true if it is successful
-// and returns false if it fails
-    public async Task<bool> Create(Quiz quiz)
-    {
-        try 
+        catch (Exception e)
         {
-            _db.Quizzes.Add(quiz);
-            await _db.SaveChangesAsync();
-            return true;
-        } 
-        catch (Exception e) {
-            _logger.LogError("[QuizRepository] quiz creation failed for quiz {@quiz}, error message:", e.Message);
-            return false;
+            _logger.LogError("[QuizRepository] quiz FindAsync(id) failed when GetQuizById for QuizId {QuizId:0000}, error message:", e.Message);
+            throw;
         }
     }
 
-// marks a quiz as updates and saves it, sme return true/false as create
-    public async Task<bool> Update(Quiz quiz)
+    // Creates and saves a quiz. Database errors propagate to the caller.
+    public async Task<bool> Create(Quiz quiz)
     {
         try
         {
-            _db.Quizzes.Update(quiz);
+            _db.Quizzes.Add(quiz);
             await _db.SaveChangesAsync();
             return true;
         }
         catch (Exception e)
         {
-            _logger.LogError("[QuizRepository] quiz FindAsync(id) failed when updateing the QuizId {QuizId:0000}, error message {e}:", quiz, e.Message);
-            return false; 
+            _logger.LogError("[QuizRepository] quiz creation failed for quiz {@quiz}, error message:", e.Message);
+            throw;
         }
     }
 
-// searches for quiz by it's ID, if it doesn't exist it returns false
-// if it exists, it is deleted and the changes saved
-    public async Task<bool> Delete(int id)
+    // Updates and saves a quiz. Database errors propagate to the caller.
+    public async Task<bool> Update(Quiz quiz)
     {
         try
         {
-            var quiz = await _db.Quizzes.FindAsync(id);
-            if (quiz is null)
+            var existingQuiz = await _db.Quizzes.FindAsync(quiz);
+            if (existingQuiz is null)
             {
                 return false;
             }
 
-            _db.Quizzes.Remove(quiz);
+            _db.Quizzes.Update(existingQuiz);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[QuizRepository] failed to update quiz of QuizId {@Id}, error message {e}:", quiz.Id, e.Message);
+            throw;
+        }
+    }
+
+    // searches for quiz by it's ID, if it doesn't exist it returns false
+    // if it exists, it is deleted and the changes saved
+    public async Task<bool> Delete(int id)
+    {
+        try
+        {
+            var existingQuiz = await _db.Quizzes.FindAsync(id);
+            if (existingQuiz is null)
+            {
+                return false;
+            }
+
+            _db.Quizzes.Remove(existingQuiz);
             await _db.SaveChangesAsync();
             return true;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to delete quiz {QuizId}", id);
-            return false;
+            throw;
         }
     }
 
     // TAKE QUIZ METHODS
     public async Task<Quiz?> GetQuizForTakingAsync(int id)
     {
-        return await _db.Quizzes
-            .AsNoTracking()
-            .Include(quiz => quiz.Course)
-            .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
-            .SingleOrDefaultAsync(quiz => quiz.Id == id);
+        try
+        {
+            return await _db.Quizzes
+                .AsNoTracking()
+                .Include(quiz => quiz.Course)
+                .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
+                .SingleOrDefaultAsync(quiz => quiz.Id == id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[QuizRepository] Could not get quiz {@GetQuizById} for taking, error message; {e}", GetQuizById, e.Message);
+            throw;
+        }
     }
 
-// method that saves a quiz attempt to the db
+    // method that saves a quiz attempt to the db
     public async Task AddAttemptAsync(QuizAttempt attempt)
     {
-        _db.QuizAttempts.Add(attempt);
-        await _db.SaveChangesAsync();
+        try
+        {
+            _db.QuizAttempts.Add(attempt);
+            await _db.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[QuizRepository] Could not add the quiz attempt for quiz {@QuizId}, error message: {@e}", attempt.QuizId, e.Message);
+            throw;
+        }
     }
 
-// pulls student attempt history by studentId and quizId
+    // pulls student attempt history by studentId and quizId
     public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
     {
-        return await _db.QuizAttempts
-            .AsNoTracking()
-            .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
-            .Include(attempt => attempt.Result)
-            .OrderBy(attempt => attempt.CompletedAt)
-            .ThenBy(attempt => attempt.Id)
-            .ToListAsync();
+        try
+        {
+            return await _db.QuizAttempts
+                .AsNoTracking()
+                .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
+                .Include(attempt => attempt.Result)
+                .OrderBy(attempt => attempt.CompletedAt)
+                .ThenBy(attempt => attempt.Id)
+                .ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[QuizRepository] GetAttemptsForStudent for quiz {@quizId} failed, error message: {@e}", quizId, e.Message);
+            throw;
+        }
     }
 }
