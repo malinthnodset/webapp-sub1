@@ -11,14 +11,14 @@ using SubApp1.DAL;
 namespace SubApp1.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    [Migration("20261001195534_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261104201008_AddUserRole")]
+    partial class AddUserRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.14");
 
             modelBuilder.Entity("SubApp1.Models.Course", b =>
                 {
@@ -27,7 +27,8 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
-                        .HasMaxLength(50)
+                        .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -36,6 +37,9 @@ namespace SubApp1.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Courses");
                 });
@@ -47,14 +51,13 @@ namespace SubApp1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CourseId")
-                        .HasMaxLength(2000)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CreatedByStudentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
+                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -137,7 +140,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("CorrectAnswer")
                         .IsRequired()
-                        .HasMaxLength(2000)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Order")
@@ -148,7 +151,7 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("Prompt")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("QuizId")
@@ -198,13 +201,14 @@ namespace SubApp1.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(320)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

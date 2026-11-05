@@ -1,0 +1,223 @@
+.take-quiz-page {
+    min-height: calc(100vh - 5rem);
+    padding: 3.5rem 1rem;
+    background: #f2f7f5;
+    color: #193a35;
+}
+
+.take-quiz-shell {
+    width: min(100%, 48rem);
+    margin: 0 auto;
+}
+
+.take-quiz-heading {
+    margin-bottom: 1.5rem;
+}
+
+.take-quiz-kicker,
+.question-card-topline {
+    color: #46766e;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.take-quiz-heading h1 {
+    margin: 0 0 1.5rem;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.take-quiz-progress-copy {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    color: #526c67;
+    font-size: 0.875rem;
+}
+
+.take-quiz-progress {
+    height: 0.5rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #d7e6e1;
+}
+
+.take-quiz-progress-bar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: #168478;
+    transition: width 180ms ease;
+}
+
+.take-quiz-summary:empty {
+    display: none;
+}
+
+.take-quiz-summary:not(:empty) {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #c94f45;
+    background: #fff0ee;
+    color: #802e29;
+}
+
+.question-card {
+    display: none;
+    min-height: 22rem;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid #d8e6e1;
+    border-top: 4px solid #e39a55;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 1rem 2.5rem rgb(25 58 53 / 8%);
+}
+
+.question-card.is-active {
+    display: block;
+    animation: question-enter 180ms ease-out;
+}
+
+.question-card-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.question-card-topline span:last-child {
+    color: #718782;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.question-prompt {
+    margin-bottom: 2rem;
+    color: #193a35;
+    font-size: 1.5rem;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+.answer-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 650;
+}
+
+.answer-input {
+    min-height: 8rem;
+    border-color: #c9d9d4;
+    border-radius: 0.5rem;
+    resize: vertical;
+}
+
+.answer-input:focus {
+    border-color: #168478;
+    box-shadow: 0 0 0 0.2rem rgb(22 132 120 / 16%);
+}
+
+.field-validation,
+.question-client-error {
+    display: block;
+    min-height: 1.4rem;
+    margin: 0.5rem 0 0;
+    color: #a5352e;
+    font-size: 0.875rem;
+}
+
+.take-quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.quiz-nav-next-group {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.quiz-nav-button {
+    display: inline-flex;
+    min-height: 2.875rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    padding: 0.65rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    font-weight: 650;
+    transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.quiz-nav-button:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+.quiz-nav-previous {
+    border-color: #b8ccc6;
+    background: #fff;
+    color: #28584f;
+}
+
+.quiz-nav-previous:hover:not(:disabled) {
+    background: #e8f2ef;
+}
+
+.quiz-nav-previous:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+}
+
+.quiz-nav-next,
+.quiz-nav-submit {
+    background: #176f64;
+    color: #fff;
+}
+
+.quiz-nav-next:hover,
+.quiz-nav-submit:hover {
+    background: #10574e;
+    color: #fff;
+}
+
+@keyframes question-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .take-quiz-progress-bar,
+    .quiz-nav-button {
+        transition: none;
+    }
+
+    .question-card.is-active {
+        animation: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .take-quiz-page {
+        padding: 2rem 0.75rem;
+    }
+
+    .take-quiz-progress-copy span:last-child {
+        display: none;
+    }
+
+    .question-card {
+        min-height: 19rem;
+    }
+}
