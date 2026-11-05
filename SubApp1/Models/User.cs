@@ -8,7 +8,7 @@ public abstract class User
 {
     public int Id { get; set; } // set by DB
 
-    [Required(ErrorMessage = "Firstname cannot be empty")]
+    [Required(ErrorMessage = "Name cannot be empty")]
     public string Name { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Email cannot be empyt"), EmailAddress]
