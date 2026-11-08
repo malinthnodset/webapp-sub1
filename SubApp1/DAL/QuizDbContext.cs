@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
 
-public class QuizDbContext : DbContext
+public class QuizDbContext : IdentityDbContext
 {
     // Creates constructor that takes in options, and sends them to DbContext with :base(options)
     public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options)
