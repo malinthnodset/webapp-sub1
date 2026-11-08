@@ -41,6 +41,7 @@ public class QuizService : IQuizService
     // earned, and saves the attempt and result to the database. then return the results of the quiz attempt 
     public async Task<QuizResultViewModel?> GradeQuizAsync(TakeQuizViewModel submission, int studentId)
     {
+        //checks that the quiz exists, number of questions is correct and that question ids are in unique
         var quiz = await _quizRepository.GetQuizForTakingAsync(submission.QuizId);
         if (quiz is null ||
             submission.Questions is null ||
@@ -56,15 +57,15 @@ public class QuizService : IQuizService
             return null;
         }
 
-        var startedAt = DateTime.UtcNow;
+        var startedAt = DateTime.UtcNow;    //// TODO: StartedAt is currently the same as CompletedAt, real start time not tracked yet
         var completedAt = DateTime.UtcNow;
         var answers = quiz.Questions.Select(question =>
         {
-            var submittedAnswer = submittedQuestions[question.Id].SubmittedAnswer?.Trim() ?? string.Empty;
+            var submittedAnswer = submittedQuestions[question.Id].SubmittedAnswer?.Trim() ?? string.Empty; //trims whitespace
             var isCorrect = string.Equals(
                 submittedAnswer,
                 question.CorrectAnswer,
-                StringComparison.OrdinalIgnoreCase);
+                StringComparison.OrdinalIgnoreCase);    //ignores case when comparing answers
 
             return new QuizAnswerResultViewModel
             {
@@ -76,6 +77,7 @@ public class QuizService : IQuizService
             };
         }).ToList();
 
+//saves a quiz attempt and result in the database
         var pointsEarned = answers.Sum(answer => answer.PointsAwarded);
         var maximumPoints = quiz.Questions.Sum(question => question.Points);
         var attempt = new QuizAttempt
@@ -104,6 +106,7 @@ public class QuizService : IQuizService
             TotalQuestions = answers.Count
         };
 
+//builds the result page with the attempt history and the current attempt's results
         await _quizRepository.AddAttemptAsync(attempt);
         var attempts = await _quizRepository.GetAttemptsForStudentAsync(quiz.Id, studentId);
         var orderedAttempts = attempts

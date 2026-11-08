@@ -55,7 +55,7 @@ public class QuizController : Controller
                 Questions = vm.Questions.Select((q, i) => new QuizQuestion
                 {
                     Prompt = q.Prompt.Trim(), // trims whitespace before grading
-                    CorrectAnswer = q.CorrectAnswer,
+                    CorrectAnswer = q.CorrectAnswer.Trim(), // trims whitespace of correct answer
                     Points = q.Points,
                     Order = i + 1 // to make it start with Q1 instead of Q0
                 }).ToList()
@@ -87,7 +87,7 @@ public class QuizController : Controller
         var quiz = await _quizService.GetQuizToTakeAsync(id);
         if (quiz == null)
         {
-            _logger.LogError("[QuizController] Quiz id {@quiz} not found", quiz); // Or should it be id?
+            _logger.LogError("[QuizController] Quiz id {@quiz} not found", id);
             return NotFound();
         }
         return View(quiz);
@@ -101,13 +101,13 @@ public class QuizController : Controller
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
         {
-            _logger.LogError("[QuizController] Quiz id {@QuizId} for submission not found", submission.QuizId); // Or should it be id?
+            _logger.LogError("[QuizController] Quiz id {QuizId} for submission not found", submission.QuizId);
             return NotFound();
         }
 
         if (!ModelState.IsValid)
         {
-            _logger.LogWarning("[QuizController] Quiz submission {@QuizId} failed. Modelstate not valid.", submission.QuizId);
+            _logger.LogWarning("[QuizController] Quiz submission {QuizId} failed. Modelstate not valid.", submission.QuizId);
 
             // Preserve answers when reloading quiz to display validation errors
             foreach (var question in quiz.Questions)
@@ -116,7 +116,7 @@ public class QuizController : Controller
                 var match = submission.Questions? // make the whole expression null if there's nothing posted
                     .FirstOrDefault(answer => answer.QuestionId == question.QuestionId);
 
-                // is match != null, store the answer so it can be redisplayed
+                // if match != null, store the answer so it can be redisplayed
                 question.SubmittedAnswer = match?.SubmittedAnswer;
             }
 
@@ -131,9 +131,24 @@ public class QuizController : Controller
         var result = await _quizService.GradeQuizAsync(submission, studentId);
         if (result == null)
         {
-            _logger.LogWarning("[QuizController] Quiz not found when attempting to submit the attempt {@submission}", submission);
+            _logger.LogWarning("[QuizController] Invalid submission for quiz {QuizId}", submission);
             return BadRequest();
         }
         return View("Result", result);
     }
+
+    //SHOW RESULT - TODO: implement GetQuizResultAsync(attemptId)
+    //[HttpGet] // Creation form
+    //            public async Task<IActionResult> Result(int attemptId)
+    //{
+    //    var result = await _quizService.GetQuizResultAsync(attemptId);
+    //    if (result == null)
+    //    {
+    //        _logger.LogError("[QuizController] Quiz attempt id {AttemptId} not found", attemptId);
+    //        return NotFound();
+    //    }
+    //    return View(result);
+    //}
+
+
 }
