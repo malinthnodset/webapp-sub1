@@ -4,12 +4,6 @@ namespace SubApp1.Models;
 
 public class Course
 {
-    public Course(string code, string name)
-    {
-        Code = code;
-        Name = name;
-    }
-
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Course must have a course code")]
@@ -22,5 +16,4 @@ public class Course
 
     // Connect quizzes to the course
     public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
-
 }
