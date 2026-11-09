@@ -6,7 +6,7 @@ namespace SubApp1.ViewModels;
 // represents the content data the creation page needs
 
 // Quiz details
-public class QuizCreateViewModel
+public class CreateQuizViewModel
 {
     [Required(ErrorMessage = "The quiz must have a name.")]
     [StringLength(200)]
@@ -22,12 +22,12 @@ public class QuizCreateViewModel
     public IEnumerable<SelectListItem>? Courses { get; set; }
 
     [MinLength(1, ErrorMessage = "A quiz must have at least one question.")]
-    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")]
-    public List<Questions> Questions { get; set; } = [];
+    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 Question.")]
+    public List<Question> Question { get; set; } = [];
 }
 
-// Quiz questions - for text answer questions with 1 correct answer
-public class Questions
+// Quiz Question - for text answer Question with 1 correct answer
+public class Question
 {
     [Required(ErrorMessage = "Please add a question.")]
     [StringLength(250)]
