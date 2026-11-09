@@ -8,29 +8,33 @@ namespace SubApp1.ViewModels;
 // Quiz details
 public class QuizCreateViewModel
 {
-    [Required, StringLength(200)]
+    [Required(ErrorMessage = "The quiz must have a name.")]
+    [StringLength(200)]
     public string Title { get; set; } = string.Empty;
 
     [StringLength(2000)]
     public string? Description { get; set; }
 
-    [Required(ErrorMessage = "Choose a course")]
+    [Required(ErrorMessage = "Choose a course.")]
     public int? CourseId { get; set; }
-
-    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")]
-    public List<QuestionInput> Questions { get; set; } = [];
 
     // for the course dropdown menu
     public IEnumerable<SelectListItem>? Courses { get; set; }
+
+    [MinLength(1, ErrorMessage = "A quiz must have at least one question.")]
+    [MaxLength(50, ErrorMessage = "A quiz can have at most 50 questions.")]
+    public List<Questions> Questions { get; set; } = [];
 }
 
-// Quiz questions - for text answer with 1 correct reply
-public class QuestionInput
+// Quiz questions - for text answer questions with 1 correct answer
+public class Questions
 {
-    [Required, StringLength(250)]
+    [Required(ErrorMessage = "Please add a question.")]
+    [StringLength(250)]
     public string Prompt { get; set; } = string.Empty;
 
-    [Required, StringLength(250)]
+    [Required(ErrorMessage = "Write the correct answer.")]
+    [StringLength(250)]
     public string CorrectAnswer { get; set; } = string.Empty;
 
     [Range(0, 10)]

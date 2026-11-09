@@ -31,7 +31,7 @@ public class QuizController : Controller
         // for loop to start with 3 questions upon creation - more can be added in UI
         for (int i = 0; i < 3; i++)
         {
-            vm.Questions.Add(new QuestionInput());
+            vm.Questions.Add(new Questions());
         }
         await LoadCourses(vm);
         return View(vm);
@@ -42,13 +42,18 @@ public class QuizController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(QuizCreateViewModel vm)
     {
+        if (vm.CourseId.HasValue && !await _courseRepository.CourseExists(vm.CourseId.Value))
+        {
+            ModelState.AddModelError(nameof(vm.CourseId), "Choose an existing course.");
+        }
+
         if (ModelState.IsValid)
         {
             var quiz = new Quiz
             {
                 Title = vm.Title,
                 Description = vm.Description,
-                CourseId = vm.CourseId!.Value,
+                CourseId = vm.CourseId.GetValueOrDefault(),
                 CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
 
                 // the questions
@@ -77,7 +82,7 @@ public class QuizController : Controller
     private async Task LoadCourses(QuizCreateViewModel vm)
     {
         var courses = await _courseRepository.GetAllCourses();
-        vm.Courses = new SelectList(courses, "Id", "Name"); // ?
+        vm.Courses = new SelectList(courses, "Id", "Code");
     }
 
     // TAKE QUIZ
@@ -96,7 +101,7 @@ public class QuizController : Controller
     // Validate, grade and display results
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Submit(TakeQuizViewModel submission) 
+    public async Task<IActionResult> Submit(TakeQuizViewModel submission)
     {
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)

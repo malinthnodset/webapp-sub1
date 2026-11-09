@@ -18,8 +18,8 @@ public static class DBInit
         if (context.Courses.Any()) return;
 
         // create courses
-        var testCourse = new Course( "TEST1001", "Test course" );
-        var webCourse = new Course( "ITPE3200", "Web applications" );
+        var testCourse = new Course("TEST1001", "Test course");
+        var webCourse = new Course("ITPE3200", "Web applications");
 
         // create students
         var alice = new Student { Name = "Alice Hansen", Email = "alice@hansen.no" };

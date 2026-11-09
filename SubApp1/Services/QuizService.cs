@@ -27,6 +27,7 @@ public class QuizService : IQuizService
         {
             QuizId = quiz.Id,
             Title = quiz.Title,
+            CourseCode = quiz.Course.Code,
             Questions = quiz.Questions
                 .Select(question => new TakeQuizQuestionViewModel
                 {
@@ -77,7 +78,7 @@ public class QuizService : IQuizService
             };
         }).ToList();
 
-//saves a quiz attempt and result in the database
+        //saves a quiz attempt and result in the database
         var pointsEarned = answers.Sum(answer => answer.PointsAwarded);
         var maximumPoints = quiz.Questions.Sum(question => question.Points);
         var attempt = new QuizAttempt
@@ -106,7 +107,7 @@ public class QuizService : IQuizService
             TotalQuestions = answers.Count
         };
 
-//builds the result page with the attempt history and the current attempt's results
+        //builds the result page with the attempt history and the current attempt's results
         await _quizRepository.AddAttemptAsync(attempt);
         var attempts = await _quizRepository.GetAttemptsForStudentAsync(quiz.Id, studentId);
         var orderedAttempts = attempts
@@ -120,7 +121,7 @@ public class QuizService : IQuizService
         {
             QuizId = quiz.Id,
             Title = quiz.Title,
-            CourseId = quiz.CourseId,
+            CourseCode = quiz.Course.Code,
             CourseTitle = quiz.Course.Name,
             AttemptNumber = currentAttemptNumber,
             CompletedAt = ToUtcOffset(completedAt),
