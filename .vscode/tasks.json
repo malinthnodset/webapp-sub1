@@ -12,7 +12,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/SuApp1.csproj"
+				"${workspaceFolder}/SubApp1.csproj"
 			],
 			"problemMatcher": "$msCompile"
 		}
