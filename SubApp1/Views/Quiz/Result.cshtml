@@ -13,7 +13,7 @@
             <div class="card-body p-4">
                 <p class="text-uppercase fw-semibold mb-2">Quiz result</p>
                 <h1 class="h2 mb-1">@Model.Title</h1>
-                <p class="mb-3">@Model.CourseTitle <span class="text-muted">(Course @Model.CourseId)</span></p>
+                <p class="mb-3">@Model.CourseTitle <span class="text-muted">(@Model.CourseCode)</span></p>
                 <div class="d-flex flex-wrap align-items-end gap-4">
                     <p class="display-6 fw-bold mb-0">@Model.Percentage%</p>
                     <p class="mb-1">@Model.PointsEarned / @Model.MaximumPoints points</p>
@@ -120,3 +120,7 @@
         </section>
     </aside>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

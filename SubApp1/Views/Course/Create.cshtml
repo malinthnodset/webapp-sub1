@@ -1,0 +1,35 @@
+@model SubApp1.ViewModels.CreateCourseViewModel
+
+@{
+    ViewData["Title"] = "Create course";
+}
+
+<h2>Create a new course</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
+            <div asp-validation-summary="ModelOnly" class="create-summary" aria-live="assertive" aria-atomic="true"
+                 tabindex="-1"></div>
+
+            <div class="mb-3">
+                <label asp-for="CourseCode" class="form-label"></label>
+                <input asp-for="CourseCode" class="form-control" required />
+                <span asp-validation-for="CourseCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CourseName" class="form-label"></label>
+                <input asp-for="CourseName" class="form-control" required />
+                <span asp-validation-for="CourseName" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create course</button>
+            <!-- TODO: add cancel button -->
+            <!-- TODO: add warning if leaving page before creating course -->
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

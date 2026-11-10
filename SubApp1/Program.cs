@@ -3,6 +3,7 @@ using SubApp1.DAL;
 using SubApp1.Services;
 using Serilog;
 using Serilog.Events;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,26 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 // dependency injection  for DB
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Legger inn identitetsrammeverk for innlogging 
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false; // disable email confirmation for easy local testing
+}).AddEntityFrameworkStores<QuizDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/Login";
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // registering the repositories (in DAL)
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
@@ -44,7 +65,13 @@ if (app.Environment.IsDevelopment())
 }
 
 // Enable static assets from wwwroot (images, JS, CSS)
-app.MapStaticAssets(); 
+//app.MapStaticAssets(); 
+app.UseStaticFiles();
+
+app.UseSession(); // 4. Add Session Middleware (Must be placed before UseAuthentication)
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

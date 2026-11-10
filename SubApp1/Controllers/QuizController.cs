@@ -27,11 +27,11 @@ public class QuizController : Controller
     [HttpGet] // Creation form
     public async Task<IActionResult> Create()
     {
-        var vm = new QuizCreateViewModel();
+        var vm = new CreateQuizViewModel();
         // for loop to start with 3 questions upon creation - more can be added in UI
         for (int i = 0; i < 3; i++)
         {
-            vm.Questions.Add(new QuestionInput());
+            vm.Question.Add(new Question());
         }
         await LoadCourses(vm);
         return View(vm);
@@ -40,19 +40,24 @@ public class QuizController : Controller
     // Submit the form to create the quiz
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(QuizCreateViewModel vm)
+    public async Task<IActionResult> Create(CreateQuizViewModel vm)
     {
+        if (vm.CourseId.HasValue && !await _courseRepository.CourseExists(vm.CourseId.Value))
+        {
+            ModelState.AddModelError(nameof(vm.CourseId), "Choose an existing course.");
+        }
+
         if (ModelState.IsValid)
         {
             var quiz = new Quiz
             {
                 Title = vm.Title,
                 Description = vm.Description,
-                CourseId = vm.CourseId!.Value,
+                CourseId = vm.CourseId.GetValueOrDefault(),
                 CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
 
                 // the questions
-                Questions = vm.Questions.Select((q, i) => new QuizQuestion
+                Questions = vm.Question.Select((q, i) => new QuizQuestion
                 {
                     Prompt = q.Prompt.Trim(), // trims whitespace before grading
                     CorrectAnswer = q.CorrectAnswer.Trim(), // trims whitespace of correct answer
@@ -74,10 +79,10 @@ public class QuizController : Controller
     }
 
     // Helper method - Used by drop down menu on the create quiz-page
-    private async Task LoadCourses(QuizCreateViewModel vm)
+    private async Task LoadCourses(CreateQuizViewModel vm)
     {
         var courses = await _courseRepository.GetAllCourses();
-        vm.Courses = new SelectList(courses, "Id", "Name"); // ?
+        vm.Courses = new SelectList(courses, "Id", "Code");
     }
 
     // TAKE QUIZ
@@ -96,7 +101,7 @@ public class QuizController : Controller
     // Validate, grade and display results
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Submit(TakeQuizViewModel submission) 
+    public async Task<IActionResult> Submit(TakeQuizViewModel submission)
     {
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
