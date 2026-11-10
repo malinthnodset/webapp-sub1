@@ -41,7 +41,7 @@ public class QuizServiceTests
         Assert.Equal(2m, result.MaximumPoints);
         Assert.Equal(2, result.CorrectAnswers);
         Assert.Equal(100m, result.Percentage);
-        Assert.Equal(1, result.CourseId);
+        Assert.Equal("ITPE3200", result.CourseCode);
         Assert.Equal("Web Applications", result.CourseTitle);
         Assert.Empty(result.Answers[1].Options);
     }

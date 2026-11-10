@@ -23,11 +23,11 @@ public class QuizDbContext : IdentityDbContext
     // Configures the model, runs once when EF buils the model of the db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-    base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
 
-    // ensures course code is unique
-    modelBuilder.Entity<Course>()
-        .HasIndex(c => c.Code)
-        .IsUnique();
+        // ensures course codes are unique
+        modelBuilder.Entity<Course>()
+            .HasIndex(c => c.Code)
+            .IsUnique();
     }
 }

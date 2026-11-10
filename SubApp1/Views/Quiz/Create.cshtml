@@ -1,56 +1,55 @@
-@model SubApp1.ViewModels.QuizCreateViewModel
+@model SubApp1.ViewModels.CreateQuizViewModel
 
 @{
     ViewData["Title"] = "Create quiz";
 }
 
-<link rel="stylesheet" href="~/quiz-create.css" asp-append-version="true" />
+<!--<link rel="stylesheet" href="~/quiz-create.css" asp-append-version="true" />-->
 
-<div class="create-quiz-page">
-    <div class="create-quiz-shell">
-        <header class="create-quiz-heading">
-            <a class="create-quiz-back" asp-controller="Dashboard" asp-action="Index">
-                <span aria-hidden="true">&larr;</span> Back to dashboard
-            </a>
-            <p class="create-quiz-kicker">STUDY BUDDY</p>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <header class="mb-4">
             <h1>Create a quiz</h1>
-            <p class="create-quiz-intro">Add the details, then write questions to help you study.</p>
+            <p>Add the details, then write Question to help you study.</p>
         </header>
 
         <form asp-action="Create" method="post" class="create-quiz-form" novalidate>
-            <div asp-validation-summary="ModelOnly" class="create-quiz-summary" role="alert" aria-live="assertive"
-                 aria-atomic="true" tabindex="-1"></div>
+            <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
+            <div asp-validation-summary="ModelOnly" class="create-quiz-summary" aria-live="assertive" aria-atomic="true"
+                 tabindex="-1"></div>
 
-            <!-- Quiz details -->
-            <section class="create-quiz-card quiz-details" aria-labelledby="quiz-details-heading">
-                <div class="create-quiz-section-heading">
-                    <span class="create-quiz-step" aria-hidden="true">1</span>
-                    <div>
-                        <h2 id="quiz-details-heading">Quiz details</h2>
-                        <p>Give your quiz a name and choose a course.</p>
+            <!-- QUIZ DETAILS -->
+            <fieldset class="card create-quiz-card mb-4" aria-labelledby="quiz-details-heading">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3 mb-4">
+                        <span class="create-quiz-step" aria-hidden="true">1</span>
+                        <div>
+                            <h2 id="quiz-details-heading" class="h5 fw-semibold mb-1">Quiz details</h2>
+                            <p class="text-body-secondary small mb-0">Give your quiz a name and choose a course.</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label asp-for="Title" class="form-label">Quiz title</label>
-                    <input asp-for="Title" class="form-control" placeholder="e.g. Introduction to biology"
-                           aria-describedby="Title-error" required />
-                    <span asp-validation-for="Title" id="Title-error" class="field-validation"
-                          aria-live="polite"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-medium">Quiz title</label>
+                        <input asp-for="Title" class="form-control" placeholder="e.g. Databases: SQL syntax"
+                               aria-describedby="Title-error" required />
+                        <span asp-validation-for="Title" id="Title-error" class="field-validation"
+                              aria-live="polite"></span>
+                    </div>
 
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label">Description <span
-                        class="optional-label">(optional)</span></label>
-                        <textarea asp-for="Description" class="form-control" rows="3"
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-medium">
+                            Description <span class="optional-label">(optional)</span>
+                        </label>
+                        <textarea asp-for="Description" rows="3" class="form-control"
                                   placeholder="What will this quiz help you practise?"
                                   aria-describedby="Description-error"></textarea>
                         <span asp-validation-for="Description" id="Description-error" class="field-validation"
                               aria-live="polite"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="CourseId" class="form-label">Course</label>
+                    <div>
+                        <label asp-for="CourseId" class="form-label fw-medium">Course code</label>
                         <select asp-for="CourseId" asp-items="Model.Courses" class="form-select"
                                 aria-describedby="CourseId-error" required>
                             <option value="">Choose a course</option>
@@ -58,155 +57,161 @@
                         <span asp-validation-for="CourseId" id="CourseId-error" class="field-validation"
                               aria-live="polite"></span>
                     </div>
-                </section>
+                </div>
+            </fieldset>
 
-                <!-- Quiz questions -->
-                <section class="questions-section" aria-labelledby="questions-heading">
-                    <div class="create-quiz-section-heading questions-heading">
+            <!-- QUIZ Question -->
+            <fieldset class="card create-quiz-card mb-4" aria-labelledby="question-heading">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3 mb-4">
                         <span class="create-quiz-step" aria-hidden="true">2</span>
                         <div>
-                            <h2 id="questions-heading">Your questions</h2>
-                            <p>Add a prompt, its correct answer, and how many points it is worth.</p>
+                            <h2 id="question-heading" class="h5 fw-semibold mb-1">Your questions</h2>
+                            <p class="text-body-secondary small mb-0">
+                                Add a prompt, its correct answer, and how many points it is worth.
+                            </p>
                         </div>
                     </div>
 
-                    <div id="questions">
-                        @for (var i = 0; i < Model.Questions.Count; i++)
+                    <div id="Question" class="d-grid gap-3">
+                        @for (int i = 0; i < Model.Question.Count; i++)
                         {
-                            <div class="create-quiz-card question-row" role="group" aria-labelledby="question-heading-@i">
-                                <h3 class="question-legend" id="question-heading-@i">Question @(i + 1)</h3>
-                                <p class="question-type-label">Text question</p>
-                                <div class="mb-3">
-                                    <label asp-for="Questions[i].Prompt" class="form-label">Question prompt</label>
-                                    <input asp-for="Questions[i].Prompt" class="form-control"
-                                           placeholder="Write your question..." aria-describedby="Questions_@(i)__Prompt-error"
-                                           required />
-                                    <span asp-validation-for="Questions[i].Prompt" id="Questions_@(i)__Prompt-error"
-                                          class="field-validation" aria-live="polite"></span>
-                                </div>
-                                <div class="mb-3">
-                                    <label asp-for="Questions[i].CorrectAnswer" class="form-label">Correct answer</label>
-                                    <input asp-for="Questions[i].CorrectAnswer" class="form-control"
-                                           placeholder="Enter the correct answer"
-                                           aria-describedby="Questions_@(i)__CorrectAnswer-error" required />
-                                    <span asp-validation-for="Questions[i].CorrectAnswer"
-                                          id="Questions_@(i)__CorrectAnswer-error" class="field-validation"
-                                          aria-live="polite"></span>
-                                </div>
-                                <div class="points-field">
-                                    <label asp-for="Questions[i].Points" class="form-label">Points</label>
-                                    <input asp-for="Questions[i].Points" class="form-control" min="0.01" max="10" step="0.01"
-                                           aria-describedby="Questions_@(i)__Points-help Questions_@(i)__Points-error" required />
-                                    <span id="Questions_@(i)__Points-help" class="visually-hidden">Enter a value between 0.01
-                                        and 10 points.</span>
-                                        <span asp-validation-for="Questions[i].Points" id="Questions_@(i)__Points-error"
-                                              class="field-validation" aria-live="polite"></span>
+                            <div class="question-item card" role="group" aria-labelledby="question-heading-@i">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h3 id="question-heading-@i" class="h6 fw-semibold mb-0">Question @(i + 1)</h3>
+                                        <span class="badge rounded-pill text-bg-light border">Text question</span>
                                     </div>
-                                </div>
-                            }
-                        </div>
 
-                        <button type="button" id="add-question" class="add-question-button" aria-controls="questions">
-                            <span aria-hidden="true">+</span> Add a question
-                        </button>
-                        <p id="question-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
-                    </section>
+                                    <!-- PROMPT -->
+                                    <div class="mb-3">
+                                        <label asp-for="Question[i].Prompt" class="form-label fw-medium">Question
+                                            prompt</label>
+                                            <input asp-for="Question[i].Prompt" class="form-control"
+                                                   placeholder="Write your question..."
+                                                   aria-describedby="Question_@(i)__Prompt-error" required />
+                                            <span asp-validation-for="Question[i].Prompt" id="Question_@(i)__Prompt-error"
+                                                  class="field-validation" aria-live="polite"></span>
+                                        </div>
+
+                                        <!-- CORRECT ANSWER -->
+                                        <div class="mb-3">
+                                            <label asp-for="Question[i].CorrectAnswer" class="form-label fw-medium">Correct
+                                                answer</label>
+                                                <input asp-for="Question[i].CorrectAnswer" class="form-control"
+                                                       placeholder="Enter the correct answer"
+                                                       aria-describedby="Question_@(i)__CorrectAnswer-error" required />
+                                                <span asp-validation-for="Question[i].CorrectAnswer"
+                                                      id="Question_@(i)__CorrectAnswer-error" class="field-validation"
+                                                      aria-live="polite"></span>
+                                            </div>
+
+                                            <!-- POINTS -->
+                                            <div class="points-field">
+                                                <label asp-for="Question[i].Points" class="form-label fw-medium">Points</label>
+                                                <input asp-for="Question[i].Points" class="form-control" min="1" max="10"
+                                                       aria-describedby="Question_@(i)__Points-help Question_@(i)__Points-error"
+                                                       required />
+                                                <div id="Question_@(i)__Points-help" class="form-text">1 to 10 points.</div>
+                                                <span asp-validation-for="Question[i].Points" id="Question_@(i)__Points-error"
+                                                      class="field-validation" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <button type="button" id="add-question" class="btn btn-outline-primary mt-4"
+                                    aria-controls="Question">
+                                <span aria-hidden="true">+</span> Add a question
+                            </button>
+                            <p id="question-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+                        </div>
+                    </fieldset>
+
 
                     <div class="create-quiz-actions">
-                        <a class="cancel-quiz-link" asp-controller="Dashboard" asp-action="Index">Cancel</a>
-                        <!-- TODO: add warning pop-up about data loss if leaving before submitting -->
-                        <button type="submit" class="save-quiz-button">Save quiz</button>
-                        <!-- TODO: add system status update "creating quiz" -> "quiz succesfully created" -->
+                        <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save quiz</button>
+                        <!-- TODO: (optional) add system status update "creating quiz" -> "quiz succesfully created" -->
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- TODO: Review and remove unnecessary parts -->
         @section Scripts {
             <script>
-                let nextIndex = @Model.Questions.Count;
-
-                document.querySelector(".create-quiz-summary.validation-summary-errors")?.focus();
-
                 const form = document.querySelector(".create-quiz-form");
-                const questionAnnouncement = document.getElementById("question-announcement");
+                const QuestionContainer = document.getElementById("Question");
+                const addQuestionButton = document.getElementById("add-question");
+                const announcement = document.getElementById("question-announcement");
 
-                const validateField = (field) => {
-                    const container = field.closest(".mb-3, .points-field");
-                    const error = container?.querySelector(".field-validation");
-                    if (!error) return true;
+                let nextIndex = @Model.Question.Count;
+                let hasUnsavedChanges = false;
 
-                    let message = "";
-                    if (field.required && !field.value.trim()) {
-                        message = field.name === "CourseId"
-                            ? "Please select a course."
-                            : "Please fill out this field."; // TODO: Use the error messages defined in model instead
-                    } else if (field.validity.rangeUnderflow || field.validity.rangeOverflow || field.validity.stepMismatch) {
-                        message = "Enter a value between 0 and 10 points.";
-                    } else if (field.validity.badInput) {
-                        message = "Enter a valid number of points.";
-                    }
+                document.querySelector(".create-summary.validation-summary-errors")?.focus();
 
-                    error.textContent = message;
-                    field.setAttribute("aria-invalid", message ? "true" : "false");
-                    return message === "";
-                };
+                // Once user input something, register that there's unsaved input
+                form.addEventListener("input", () => hasUnsavedChanges = true);
 
-                form.addEventListener("input", (event) => {
-                    if (event.target.matches("input, textarea, select")) {
-                        validateField(event.target);
-                    }
+                // Browser warning if leaving page with unsaved changes
+                window.addEventListener("beforeunload", (event) => {
+                    if (!hasUnsavedChanges) return; // no unsaved changes - leave OK
+                    event.preventDefault();
+                    event.returnValue = ""; // display built-in browser confirmation-dialog
                 });
 
-                form.addEventListener("change", (event) => {
-                    if (event.target.matches("input, textarea, select")) {
-                        validateField(event.target);
-                    }
+                // If submitted with no issues - validation is handled by vm and model
+                form.addEventListener("submit", () => {
+                    if ($(form).valid()) hasUnsavedChanges = false;
                 });
 
-                form.addEventListener("submit", (event) => {
-                    const fields = Array.from(form.querySelectorAll(
-                        'input[name="Title"], select[name="CourseId"], input[name$=".Prompt"], input[name$=".CorrectAnswer"], input[name$=".Points"]'
-                    ));
-                    const invalidFields = fields.filter((field) => !validateField(field));
+                // Add question - TODO: move question into partial view for easier maintenance
+                addQuestionButton.addEventListener("click", async () => {
+                    const response =
+                        `<div role="group" aria-labelledby="question-heading-${nextIndex}">
+                                                                                                                <h3>Question ${nextIndex + 1}</h3>
+                                                                                                                <p>Text question</p>
 
-                    if (invalidFields.length > 0) {
-                        event.preventDefault();
-                        invalidFields[0].focus();
-                    }
-                });
+                                                                                                                <div class="mb-3">
+                                                                                                                    <label asp-for="Question[i].Prompt" class="form-label">Question prompt</label>
+                                                                                                                    <input asp-for="Question[i].Prompt" class="form-control"
+                                                                                                                            placeholder="Write your question..." aria-describedby="Question_${nextIndex}__Prompt-error"
+                                                                                                                            required />
+                                                                                                                    <span asp-validation-for="Question[i].Prompt" id="Question_${nextIndex}__Prompt-error"
+                                                                                                                            class="field-validation" aria-live="polite"></span>
+                                                                                                                </div>
 
-                document.getElementById("add-question").addEventListener("click", function () {
-                    const row = `
-                                    <div class="create-quiz-card question-row" role="group" aria-labelledby="question-heading-${nextIndex}">
-                                        <h3 class="question-legend" id="question-heading-${nextIndex}">Question ${nextIndex + 1}</h3>
-                                        <p class="question-type-label">Text question</p>
-                                        <div class="mb-3">
-                                            <label for="Questions_${nextIndex}__Prompt" class="form-label">Question prompt</label>
-                                            <input id="Questions_${nextIndex}__Prompt" name="Questions[${nextIndex}].Prompt" class="form-control" placeholder="Write your question..." aria-describedby="Questions_${nextIndex}__Prompt-error" required />
-                                            <span id="Questions_${nextIndex}__Prompt-error" class="field-validation" aria-live="polite"></span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="Questions_${nextIndex}__CorrectAnswer" class="form-label">Correct answer</label>
-                                            <input id="Questions_${nextIndex}__CorrectAnswer" name="Questions[${nextIndex}].CorrectAnswer" class="form-control" placeholder="Enter the correct answer" aria-describedby="Questions_${nextIndex}__CorrectAnswer-error" required />
-                                            <span id="Questions_${nextIndex}__CorrectAnswer-error" class="field-validation" aria-live="polite"></span>
-                                        </div>
-                                        <div class="points-field">
-                                            <label for="Questions_${nextIndex}__Points" class="form-label">Points</label>
-                                            <input id="Questions_${nextIndex}__Points" name="Questions[${nextIndex}].Points" value="1" type="number" min="0.01" max="10" step="0.01" aria-describedby="Questions_${nextIndex}__Points-help Questions_${nextIndex}__Points-error" class="form-control" required />
-                                            <span id="Questions_${nextIndex}__Points-help" class="visually-hidden">Enter a value between 0.01 and 10 points.</span>
-                                            <span id="Questions_${nextIndex}__Points-error" class="field-validation" aria-live="polite"></span>
-                                        </div>
-                                    </div>`;
-                    document.getElementById("questions").insertAdjacentHTML("beforeend", row);
-                    document.getElementById(`Questions_${nextIndex}__Prompt`).focus();
+                                                                                                                <div class="mb-3">
+                                                                                                                    <label asp-for="Question[i].CorrectAnswer" class="form-label">Correct answer</label>
+                                                                                                                    <input asp-for="Question[i].CorrectAnswer" class="form-control"
+                                                                                                                            placeholder="Enter the correct answer"
+                                                                                                                            aria-describedby="Question_${nextIndex}__CorrectAnswer-error" required />
+                                                                                                                    <span asp-validation-for="Question[i].CorrectAnswer"
+                                                                                                                            id="Question_${nextIndex}__CorrectAnswer-error" class="field-validation"
+                                                                                                                            aria-live="polite"></span>
+                                                                                                                </div>
+
+                                                                                                                <div class="points-field">
+                                                                                                                    <label asp-for="Question[i].Points" class="form-label">Points</label>
+                                                                                                                    <input asp-for="Question[i].Points" class="form-control" min="1" max="10"
+                                                                                                                            aria-describedby="Question_${nextIndex}__Points-help Question_${nextIndex}__Points-error" required />
+                                                                                                                    <span id="Question_${nextIndex}__Points-help" class="visually-hidden">Enter a value between
+                                                                                                                        0 and 10 points.</span>
+                                                                                                                        <span asp-validation-for="Question[i].Points" id="Question_${nextIndex}__Points-error"
+                                                                                                                                class="field-validation" aria-live="polite"></span>
+                                                                                                                    </div>
+                                                                                                                </div>`;
+                    $.validator.unobtrusive.parse(form); // wire up validation for the new fields
+                    // ?
+                    document.getElementById("Question").insertAdjacentHTML("beforeend", row);
+                    // Set focus to the new question (keyboard nav)
+                    document.getElementById(`Question_${nextIndex}__Prompt`).focus();
+                    // 
                     questionAnnouncement.textContent = `Question ${nextIndex + 1} added.`;
                     nextIndex++;
                 });
             </script>
+        
+            <partial name="_ValidationScriptsPartial" />
         }
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

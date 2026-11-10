@@ -43,7 +43,7 @@ public class CourseRepository : ICourseRepository
         }
     }
 
-    public async Task<Course> GetCourseById(int id)
+    public async Task<Course?> GetCourseById(int id)
     {
         try
         {
@@ -86,7 +86,7 @@ public class CourseRepository : ICourseRepository
         }
         catch (Exception e)
         {
-            _logger.LogError("[CourseRepository] , error message {e}:", course, e.Message);
+            _logger.LogError("[CourseRepository] Could not update course {@course}, error message {e}:", course, e.Message);
             throw;
         }
     }

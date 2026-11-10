@@ -20,7 +20,8 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Legger inn identitetsrammeverk for innlogging 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
     options.SignIn.RequireConfirmedAccount = false; // disable email confirmation for easy local testing
 }).AddEntityFrameworkStores<QuizDbContext>();
 
@@ -31,7 +32,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/Login";
 });
 
-builder.Services.AddSession(options => {
+builder.Services.AddSession(options =>
+{
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
@@ -63,7 +65,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // Enable static assets from wwwroot (images, JS, CSS)
-app.MapStaticAssets(); 
+//app.MapStaticAssets(); 
+app.UseStaticFiles();
 
 app.UseSession(); // 4. Add Session Middleware (Must be placed before UseAuthentication)
 

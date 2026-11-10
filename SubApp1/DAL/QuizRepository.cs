@@ -102,7 +102,7 @@ public class QuizRepository : IQuizRepository
     }
 
     // TAKE QUIZ METHODS
-    public async Task<Quiz?> GetQuizForTakingAsync(int id)
+    public async Task<Quiz?> GetQuizForTakingAsync(int Id)
     {
         try
         {
@@ -110,11 +110,11 @@ public class QuizRepository : IQuizRepository
                 .AsNoTracking()
                 .Include(quiz => quiz.Course)
                 .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
-                .SingleOrDefaultAsync(quiz => quiz.Id == id);
+                .SingleOrDefaultAsync(quiz => quiz.Id == Id);
         }
         catch (Exception e)
         {
-            _logger.LogError("[QuizRepository] Could not get quiz {@GetQuizById} for taking, error message; {e}", GetQuizById, e.Message);
+            _logger.LogError("[QuizRepository] Could not get quiz {@Id} for taking, error message; {e}", Id, e.Message);
             throw;
         }
     }
