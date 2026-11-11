@@ -2,6 +2,7 @@
 **/bin/
 **/obj/
 **/logs/
+.DS_Store
 
 # Database files
 *.db
