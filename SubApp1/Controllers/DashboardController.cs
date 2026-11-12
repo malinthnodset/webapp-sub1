@@ -23,7 +23,7 @@ public class DashboardController : Controller
     {
         try
         {
-            var userId = "demo-user"; 
+            var userId = "1"; 
             // TODO: replace with the logged-in user's id
             var model = await _service.GetDashboardAsync(userId);
             return View(model);

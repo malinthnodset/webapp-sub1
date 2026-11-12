@@ -10,8 +10,11 @@ public interface IQuizRepository
     Task<bool> Update(Quiz quiz);
     Task<bool> Delete(int id);
     
+    
     // Related to taking a quiz:
     Task<Quiz?> GetQuizForTakingAsync(int id);
     Task AddAttemptAsync(QuizAttempt attempt); // add a new attempt to the database
     Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId); // get all attempts for a given student and quiz (check if they have already taken it)
+    Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int studentId); // dashboard: get the latest attempt for a given student and quiz, including the answers they gave (to show their best score and completion status)
+
 }
