@@ -32,14 +32,14 @@ public class CourseController : Controller
             if (returnOk)
             {
                 _logger.LogInformation("New course {@course} was created", course);
-                return View(); // TODO: where to return? Dashboard?
+                return View(); 
             }
         }
         _logger.LogWarning("Course creation failed for course {@course}", course);
-        return View(); // TODO: where to return?  
+        return View(); 
     }
 
-    // TODO: Update course (optional)
+    // TODO: Update course 
 
-    // TODO: Delete course (optional)
+    // TODO: Delete course 
 }

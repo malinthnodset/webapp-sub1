@@ -75,7 +75,7 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            var existingCourse = await _db.Courses.FindAsync(course);
+            var existingCourse = await _db.Courses.FindAsync(course.Id);
             if (existingCourse == null)
             {
                 return false; // Course does not exist

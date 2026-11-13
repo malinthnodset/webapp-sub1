@@ -5,6 +5,7 @@ using SubApp1.ViewModels;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Security.Permissions;
 
 namespace SubApp1.Tests;
 
@@ -135,28 +136,28 @@ public class QuizServiceTests
         await using var db = new QuizDbContext(options);
         await db.Database.EnsureCreatedAsync();
 
-// sees the database is empty, so we seed it with a quiz with 10 questions
-var course = new Course("ITPE3200", "Web applications");
-var student = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
+        // sees the database is empty, so we seed it with a quiz with 10 questions
+        var course = new Course { Code = "ITPE3200", Name = "Web applications" };
+        var student = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
 
-db.Quizzes.Add(new Quiz
-{
-    Id = 1000,
-    Title = "Web basics",
-    Description = "Test quiz",
-    Course = course,
-    CreatedByStudent = student,
-    Questions = Enumerable.Range(1, 10)
-        .Select(i => new QuizQuestion
+        db.Quizzes.Add(new Quiz
         {
-            Prompt = $"Question {i}",
-            CorrectAnswer = $"Answer {i}",
-            Points = 1,
-            Order = i
-        })
-        .ToList()
-});
-await db.SaveChangesAsync();
+            Id = 1000,
+            Title = "Web basics",
+            Description = "Test quiz",
+            Course = course,
+            CreatedByStudent = student,
+            Questions = Enumerable.Range(1, 10)
+                .Select(i => new QuizQuestion
+                {
+                    Prompt = $"Question {i}",
+                    CorrectAnswer = $"Answer {i}",
+                    Points = 1,
+                    Order = i
+                })
+                .ToList()
+        });
+        await db.SaveChangesAsync();
 
         var repository = new QuizRepository(db, NullLogger<QuizRepository>.Instance);
         var service = new QuizService(repository);
@@ -214,7 +215,7 @@ await db.SaveChangesAsync();
             Id = 1,
             Title = "Web basics",
             CourseId = 1,
-            Course = new Course("ITPE3200", "Web Applications") { Id = 1 },
+            Course = new Course { Code = "ITPE3200", Name = "Web Applications", Id = 1 },
             Questions = new List<QuizQuestion>
             {
                 new() { Id = 1, QuizId = 1, Prompt = "What does HTTP stand for?", CorrectAnswer = "Hypertext Transfer Protocol", Points = 1, Order = 1 },

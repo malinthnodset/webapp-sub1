@@ -31,7 +31,7 @@ public class AccountController : Controller
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             foreach (var error in result.Errors)
@@ -39,6 +39,8 @@ public class AccountController : Controller
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
+
+        // TODO: logging and error handling
 
         return View(model);
     }
@@ -58,7 +60,7 @@ public class AccountController : Controller
         // Default to home page if ReturnUrl is null or empty
         string targetUrl = !string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl)
             ? model.ReturnUrl
-            : Url.Action("Index", "Home") ?? "~/";
+            : Url.Action("Index", "Dashboard") ?? "~/";
 
         if (ModelState.IsValid)
         {
@@ -73,6 +75,8 @@ public class AccountController : Controller
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         }
 
+        // TODO: logging and error handling
+
         return View(model);
     }
 
@@ -81,6 +85,6 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Dashboard");
     }
 }

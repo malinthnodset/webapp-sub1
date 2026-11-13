@@ -61,7 +61,7 @@ public class QuizRepository : IQuizRepository
     {
         try
         {
-            var existingQuiz = await _db.Quizzes.FindAsync(quiz);
+            var existingQuiz = await _db.Quizzes.FindAsync(quiz.Id);
             if (existingQuiz is null)
             {
                 return false;
