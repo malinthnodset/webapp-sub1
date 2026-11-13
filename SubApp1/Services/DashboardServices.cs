@@ -22,6 +22,8 @@ public class DashboardService
                 .ThenInclude(q => q.Questions)
             .ToListAsync();
 
+        var attemptsByQuiz = new Dictionary<int, int>();
+
         // Best percentage per quiz for this user (best attempt counts)
         var bestByQuiz = new Dictionary<int, double>();
         if (int.TryParse(userId, out var studentId))
@@ -35,8 +37,12 @@ public class DashboardService
             bestByQuiz = attempts
                 .GroupBy(a => a.QuizId)
                 .ToDictionary(g => g.Key, g => g.Max(a => (double)a.Result!.Percentage));
-        }
 
+            attemptsByQuiz = attempts
+                .GroupBy(a => a.QuizId)
+                .ToDictionary(g => g.Key, g => g.Count());
+    }
+        
         return new DashboardViewModel
         {
             Courses = courses.Select(c => new CourseSummaryViewModel
@@ -48,7 +54,8 @@ public class DashboardService
                     Id = q.Id,
                     Title = q.Title,
                     QuestionCount = q.Questions.Count,
-                    BestPercentage = bestByQuiz.GetValueOrDefault(q.Id, 0)
+                    BestPercentage = bestByQuiz.GetValueOrDefault(q.Id, 0),
+                    AttemptCount = attemptsByQuiz.GetValueOrDefault(q.Id, 0)
                 }).ToList()
             }).ToList()
         };

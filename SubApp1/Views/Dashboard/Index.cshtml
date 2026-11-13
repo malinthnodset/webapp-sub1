@@ -38,13 +38,14 @@
             { //Link to quiz
                 <li class="list-group-item d-flex align-items-center">
                     <a asp-controller="Quiz"
-                        asp-action="Take"
+                        asp-action="@(quiz.HasAttempts ? "Result" : "Take")"
                         asp-route-id="@quiz.Id"
                         class="flex-grow-1 text-decoration-none">
                         @quiz.Title
                     </a>
                     <span class="badge bg-light text-dark border me-3">@quiz.QuestionCount Questions</span>
                     <span class="text-muted small me-3">@quiz.BestPercentage.ToString("0")%</span>
+                    <span class="text-muted small me-3">@quiz.AttemptCount attempt@(quiz.AttemptCount == 1 ? "" : "s")</span>
                     @if (quiz.IsCompleted)
                     {
                         <span class="badge bg-success">✓</span>
@@ -58,7 +59,7 @@
             <!--Shows a message if the course has no quizzes -->
             @if (!course.Quizzes.Any())
             {
-                <li class="list-group-item text-muted">No quizzes yet.</li>
+                <li class="list-group-item text-muted">No quizzes yet</li>
             }
             </ul>
         </div>
