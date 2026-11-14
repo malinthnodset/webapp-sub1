@@ -142,6 +142,7 @@ public class QuizController : Controller
         return View("Result", result);
     }
 
+    //Hvorfor er dette kommentert ut? (før denne implementeres sjekk koden under om den er lik!)
     //SHOW RESULT - TODO: implement GetQuizResultAsync(attemptId)
     //[HttpGet] // Creation form
     //            public async Task<IActionResult> Result(int attemptId)
@@ -154,6 +155,20 @@ public class QuizController : Controller
     //    }
     //    return View(result);
     //}
+
+// Dashboard: SHOW LATEST RESULT: open past results without retaking the quiz
+[HttpGet]
+public async Task<IActionResult> Result(int id)
+{
+    var studentId = 1; // TODO: same logged-in student id as in Submit
+    var result = await _quizService.GetLatestResultAsync(id, studentId);
+    if (result == null)
+    {
+        _logger.LogWarning("[QuizController] No attempts found for quiz {QuizId}", id);
+        return RedirectToAction("Take", new { id });   // no attempt yet -> take the quiz
+    }
+    return View(result);
+}
 
 
 }

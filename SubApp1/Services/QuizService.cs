@@ -142,6 +142,52 @@ public class QuizService : IQuizService
             TotalQuestions = answers.Count
         };
     }
+// Dashboard: Rebuilds the result page for the student's latest attempt (same model as after grading)
+public async Task<QuizResultViewModel?> GetLatestResultAsync(int quizId, int studentId)
+{
+    var attempt = await _quizRepository.GetLatestAttemptWithAnswersAsync(quizId, studentId);
+    if (attempt is null || attempt.Result is null) return null;
+
+    var attempts = await _quizRepository.GetAttemptsForStudentAsync(quizId, studentId);
+    var ordered = attempts
+        .Where(a => a.CompletedAt.HasValue && a.Result is not null)
+        .OrderBy(a => a.CompletedAt).ThenBy(a => a.Id)
+        .ToList();
+
+    return new QuizResultViewModel
+    {
+        QuizId = attempt.QuizId,
+        Title = attempt.Quiz.Title,
+        CourseCode = attempt.Quiz.Course.Code,
+        CourseTitle = attempt.Quiz.Course.Name,
+        AttemptNumber = ordered.FindIndex(a => a.Id == attempt.Id) + 1,
+        CompletedAt = ToUtcOffset(attempt.CompletedAt!.Value),
+        AttemptHistory = ordered
+            .Select((a, i) => new QuizAttemptHistoryViewModel
+            {
+                AttemptNumber = i + 1,
+                CompletedAt = ToUtcOffset(a.CompletedAt!.Value),
+                PointsEarned = a.Result!.PointsEarned,
+                MaximumPoints = a.Result.MaximumPoints
+            })
+            .OrderByDescending(h => h.CompletedAt)
+            .ToList(),
+        Answers = attempt.Answers
+            .OrderBy(a => a.QuizQuestionId)
+            .Select(a => new QuizAnswerResultViewModel
+            {
+                Prompt = a.QuizQuestion.Prompt,
+                SubmittedAnswer = a.SubmittedAnswer ?? string.Empty,
+                CorrectAnswer = a.QuizQuestion.CorrectAnswer,
+                IsCorrect = a.IsCorrect ?? false,
+                PointsAwarded = a.PointsAwarded
+            }).ToList(),
+        PointsEarned = attempt.Result.PointsEarned,
+        MaximumPoints = attempt.Result.MaximumPoints,
+        CorrectAnswers = attempt.Result.CorrectAnswers,
+        TotalQuestions = attempt.Result.TotalQuestions
+    };
+}
 
     private static DateTimeOffset ToUtcOffset(DateTime value)
     {

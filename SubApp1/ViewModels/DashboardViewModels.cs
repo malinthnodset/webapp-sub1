@@ -30,5 +30,8 @@ public class QuizSummaryViewModel
     public int QuestionCount { get; set; }
     public double BestPercentage { get; set; }   // 0-100
     //returns true if the best percentage is 60 or higher
+    public int AttemptCount { get; set; }
     public bool IsCompleted => BestPercentage >= 60;
+    public bool HasAttempts => AttemptCount > 0;
+
 }
