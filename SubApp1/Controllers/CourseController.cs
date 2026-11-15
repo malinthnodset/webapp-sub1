@@ -40,6 +40,14 @@ public class CourseController : Controller
     }
 
     // TODO: Update course 
+    // public async Task<IActionResult> Update(int Id)
+    // {
+    //     if (ModelState.IsValid)
+    //     {
+    //         var course = await _courseRepository.Update(Id);        
+
+    //     }
+    // }
 
     // TODO: Delete course 
 }

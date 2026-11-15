@@ -4,32 +4,57 @@
     ViewData["Title"] = "Create course";
 }
 
-<h2>Create a new course</h2>
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
-            <div asp-validation-summary="ModelOnly" class="create-summary" aria-live="assertive" aria-atomic="true"
-                 tabindex="-1"></div>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <header class="mb-4">
+            <h1>Create a new course</h1>
+            <p>Add a course code and course name.</p>
+        </header>
 
-            <div class="mb-3">
-                <label asp-for="CourseCode" class="form-label"></label>
-                <input asp-for="CourseCode" class="form-control" required />
-                <span asp-validation-for="CourseCode" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="CourseName" class="form-label"></label>
-                <input asp-for="CourseName" class="form-control" required />
-                <span asp-validation-for="CourseName" class="text-danger"></span>
-            </div>
+        <div class="card p-4 ">
+            <form asp-action="Create" method="post" class="create-course-form card-body">
+                <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
+                <div asp-validation-summary="ModelOnly" class="create-summary" aria-live="assertive" aria-atomic="true"
+                     tabindex="-1"></div>
 
-            <button type="submit" class="btn btn-primary">Create course</button>
-            <!-- TODO: add cancel button -->
-            <!-- TODO: add warning if leaving page before creating course -->
-        </form>
+                <div class="mb-3">
+                    <label asp-for="CourseCode" class="form-label fw-medium"></label>
+                    <input asp-for="CourseCode" class="form-control" placeholder="e.g. ITPE3200" required />
+                    <span asp-validation-for="CourseCode" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CourseName" class="form-label fw-medium"></label>
+                    <input asp-for="CourseName" class="form-control" placeholder="e.g. Webapplikasjoner" required />
+                    <span asp-validation-for="CourseName" class="text-danger"></span>
+                </div>
+
+                <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create course</button>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
+    <script>
+        const form = document.querySelector(".create-course-form");
+        let hasUnsavedChanges = false;
+
+        // Once user input something, register that there's unsaved input
+        form.addEventListener("input", () => hasUnsavedChanges = true);
+
+        // Browser warning if leaving page with unsaved changes
+        window.addEventListener("beforeunload", (event) => {
+            if (!hasUnsavedChanges) return; // no unsaved changes - leave OK
+            event.preventDefault();
+            event.returnValue = ""; // display built-in browser confirmation-dialog
+        });
+
+        // If submitted with no issues - validation is handled by vm and model
+        form.addEventListener("submit", () => {
+            if ($(form).valid()) hasUnsavedChanges = false;
+        });
+    </script>
+
     <partial name="_ValidationScriptsPartial" />
 }

@@ -169,38 +169,38 @@
                 addQuestionButton.addEventListener("click", async () => {
                     const response =
                         `<div role="group" aria-labelledby="question-heading-${nextIndex}">
-                                                                                                                            <h3>Question ${nextIndex + 1}</h3>
-                                                                                                                            <p>Text question</p>
+                            <h3>Question ${nextIndex + 1}</h3>
+                            <p>Text question</p>
 
-                                                                                                                            <div class="mb-3">
-                                                                                                                                <label asp-for="Question[i].Prompt" class="form-label">Question prompt</label>
-                                                                                                                                <input asp-for="Question[i].Prompt" class="form-control"
-                                                                                                                                        placeholder="Write your question..." aria-describedby="Question_${nextIndex}__Prompt-error"
-                                                                                                                                        required />
-                                                                                                                                <span asp-validation-for="Question[i].Prompt" id="Question_${nextIndex}__Prompt-error"
-                                                                                                                                        class="field-validation" aria-live="polite"></span>
-                                                                                                                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Question[i].Prompt" class="form-label">Question prompt</label>
+                                <input asp-for="Question[i].Prompt" class="form-control"
+                                        placeholder="Write your question..." aria-describedby="Question_${nextIndex}__Prompt-error"
+                                        required />
+                                <span asp-validation-for="Question[i].Prompt" id="Question_${nextIndex}__Prompt-error"
+                                        class="field-validation" aria-live="polite"></span>
+                            </div>
 
-                                                                                                                            <div class="mb-3">
-                                                                                                                                <label asp-for="Question[i].CorrectAnswer" class="form-label">Correct answer</label>
-                                                                                                                                <input asp-for="Question[i].CorrectAnswer" class="form-control"
-                                                                                                                                        placeholder="Enter the correct answer"
-                                                                                                                                        aria-describedby="Question_${nextIndex}__CorrectAnswer-error" required />
-                                                                                                                                <span asp-validation-for="Question[i].CorrectAnswer"
-                                                                                                                                        id="Question_${nextIndex}__CorrectAnswer-error" class="field-validation"
-                                                                                                                                        aria-live="polite"></span>
-                                                                                                                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Question[i].CorrectAnswer" class="form-label">Correct answer</label>
+                                <input asp-for="Question[i].CorrectAnswer" class="form-control"
+                                        placeholder="Enter the correct answer"
+                                        aria-describedby="Question_${nextIndex}__CorrectAnswer-error" required />
+                                <span asp-validation-for="Question[i].CorrectAnswer"
+                                        id="Question_${nextIndex}__CorrectAnswer-error" class="field-validation"
+                                        aria-live="polite"></span>
+                            </div>
 
-                                                                                                                            <div class="points-field">
-                                                                                                                                <label asp-for="Question[i].Points" class="form-label">Points</label>
-                                                                                                                                <input asp-for="Question[i].Points" class="form-control" min="1" max="10"
-                                                                                                                                        aria-describedby="Question_${nextIndex}__Points-help Question_${nextIndex}__Points-error" required />
-                                                                                                                                <span id="Question_${nextIndex}__Points-help" class="visually-hidden">Enter a value between
-                                                                                                                                    0 and 10 points.</span>
-                                                                                                                                    <span asp-validation-for="Question[i].Points" id="Question_${nextIndex}__Points-error"
-                                                                                                                                            class="field-validation" aria-live="polite"></span>
-                                                                                                                                </div>
-                                                                                                                            </div>`;
+                            <div class="points-field">
+                                <label asp-for="Question[i].Points" class="form-label">Points</label>
+                                <input asp-for="Question[i].Points" class="form-control" min="1" max="10"
+                                        aria-describedby="Question_${nextIndex}__Points-help Question_${nextIndex}__Points-error" required />
+                                <span id="Question_${nextIndex}__Points-help" class="visually-hidden">Enter a value between
+                                    0 and 10 points.</span>
+                                    <span asp-validation-for="Question[i].Points" id="Question_${nextIndex}__Points-error"
+                                            class="field-validation" aria-live="polite"></span>
+                                </div>
+                            </div>`;
                     $.validator.unobtrusive.parse(form); // wire up validation for the new fields
                     // ?
                     document.getElementById("Question").insertAdjacentHTML("beforeend", row);
