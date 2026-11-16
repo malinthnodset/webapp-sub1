@@ -8,6 +8,10 @@ namespace SubApp1.ViewModels;
 public class DashboardViewModel
 {
     public List<CourseSummaryViewModel> Courses { get; set; } = new();
+
+    // Indicates whether the current user is a teacher or a student
+    public bool IsTeacher { get; set; }
+    public bool IsStudent { get; set; }
 }
 
 // Course-info

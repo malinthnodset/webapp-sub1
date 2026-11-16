@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SubApp1.ViewModels;
+using SubApp1.Models;
 
 namespace SubApp1.Controllers;
 
@@ -30,8 +31,10 @@ public class AccountController : Controller
 
             if (result.Succeeded)
             {
+                // Assign the selected role to the user
+                await _userManager.AddToRoleAsync(user, model.Role.ToString());
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             foreach (var error in result.Errors)
@@ -58,7 +61,7 @@ public class AccountController : Controller
         // Default to home page if ReturnUrl is null or empty
         string targetUrl = !string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl)
             ? model.ReturnUrl
-            : Url.Action("Index", "Home") ?? "~/";
+            : Url.Action("Index", "Dashboard") ?? "~/";
 
         if (ModelState.IsValid)
         {
@@ -81,6 +84,6 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Dashboard");
     }
 }
