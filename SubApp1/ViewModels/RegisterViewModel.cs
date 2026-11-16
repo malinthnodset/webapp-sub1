@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using SubApp1.Models; 
 
 namespace SubApp1.ViewModels;
 
@@ -16,4 +17,6 @@ public class RegisterViewModel
     [Display(Name = "Confirm password")]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
+
+     public Role Role { get; set; } = Role.STUDENT;
 }

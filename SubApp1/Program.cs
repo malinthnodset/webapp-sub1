@@ -4,6 +4,7 @@ using SubApp1.Services;
 using Serilog;
 using Serilog.Events;
 using Microsoft.AspNetCore.Identity;
+using SubApp1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,9 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false; // disable email confirmation for easy local testing
-}).AddEntityFrameworkStores<QuizDbContext>();
+})
+.AddRoles<IdentityRole>()  
+.AddEntityFrameworkStores<QuizDbContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -57,6 +60,18 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
 });
 
 var app = builder.Build();
+
+// Seed roles into the database if they don't exist
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    foreach (var role in Enum.GetNames<Role>())
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {

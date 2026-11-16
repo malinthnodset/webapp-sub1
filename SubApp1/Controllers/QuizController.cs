@@ -4,6 +4,7 @@ using SubApp1.Services;
 using SubApp1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SubApp1.Controllers;
 
@@ -24,6 +25,7 @@ public class QuizController : Controller
     }
 
     // CREATE QUIZ
+    [Authorize(Roles = "TEACHER")] // Sørger for at det kun er lærere som kan nå denne siden, til og med når den er direkte skrevet inn i URL.
     [HttpGet] // Creation form
     public async Task<IActionResult> Create()
     {
