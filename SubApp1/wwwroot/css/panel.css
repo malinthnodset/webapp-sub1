@@ -8,7 +8,7 @@
 /* ---------- Navbar: solid and always readable ---------- */
 .pixel-nav {
   position: relative;
-  z-index: var(--z-content);
+  z-index: calc(var(--z-content) + 1);
   background: var(--pixel-cream);
   border-bottom: calc(2px * var(--px)) solid var(--pixel-ink);
 }
