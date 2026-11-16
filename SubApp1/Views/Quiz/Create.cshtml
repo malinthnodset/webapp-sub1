@@ -1,4 +1,5 @@
 @model SubApp1.ViewModels.CreateQuizViewModel
+@model SubApp1.ViewModels.CreateQuizViewModel
 
 @{
     ViewData["Title"] = "Create quiz";
@@ -17,7 +18,20 @@
             <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
             <div asp-validation-summary="ModelOnly" class="create-quiz-summary" aria-live="assertive" aria-atomic="true"
                  tabindex="-1"></div>
+            <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
+            <div asp-validation-summary="ModelOnly" class="create-quiz-summary" aria-live="assertive" aria-atomic="true"
+                 tabindex="-1"></div>
 
+            <!-- QUIZ DETAILS -->
+            <fieldset class="card create-quiz-card mb-4" aria-labelledby="quiz-details-heading">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3 mb-4">
+                        <span class="create-quiz-step" aria-hidden="true">1</span>
+                        <div>
+                            <h2 id="quiz-details-heading" class="h5 fw-semibold mb-1">Quiz details</h2>
+                            <p class="text-body-secondary small mb-0">Give your quiz a name and choose a course.</p>
+                        </div>
+                    </div>
             <!-- QUIZ DETAILS -->
             <fieldset class="card create-quiz-card mb-4" aria-labelledby="quiz-details-heading">
                 <div class="card-body p-4">
@@ -37,6 +51,7 @@
                               aria-live="polite"></span>
                     </div>
 
+
                     <div class="mb-3">
                         <label asp-for="Description" class="form-label fw-medium">
                             Description <span class="optional-label">(optional)</span>
@@ -48,6 +63,7 @@
                               aria-live="polite"></span>
                     </div>
 
+                    
                     <div>
                         <label asp-for="CourseId" class="form-label fw-medium">Course code</label>
                         <select asp-for="CourseId" asp-items="Model.Courses" class="form-select"
@@ -64,6 +80,13 @@
             <fieldset class="card create-quiz-card mb-4" aria-labelledby="question-heading">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-start gap-3 mb-4">
+                </div>
+            </fieldset>
+
+            <!-- QUIZ Question -->
+            <fieldset class="card create-quiz-card mb-4" aria-labelledby="question-heading">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3 mb-4">
                         <span class="create-quiz-step" aria-hidden="true">2</span>
                         <div>
                             <h2 id="question-heading" class="h5 fw-semibold mb-1">Your questions</h2>
@@ -72,6 +95,7 @@
                             </p>
                         </div>
                     </div>
+
 
                     <div id="Question" class="d-grid gap-3">
                         @for (int i = 0; i < Model.Question.Count; i++)
@@ -120,7 +144,6 @@
                                     </div>
                                 }
                             </div>
-
                             <button type="button" id="add-question" class="btn btn-outline-primary mt-4"
                                     aria-controls="Question">
                                 <span aria-hidden="true">+</span> Add a question
