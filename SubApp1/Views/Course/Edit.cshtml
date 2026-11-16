@@ -1,0 +1,37 @@
+@model SubApp1.ViewModels.EditCourseViewModel
+
+@{
+    ViewData["Title"] = "Edit course";
+}
+
+<h2>Edit the course</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" /> <!-- so the course id is posted with the form -->
+
+            <!-- validation errors upon failed submit appear here - screen reader jumps up automatically -->
+            <div asp-validation-summary="ModelOnly" class="create-summary" aria-live="assertive" aria-atomic="true"
+                 tabindex="-1"></div>
+
+            <div class="mb-3">
+                <label asp-for="CourseCode" class="form-label"></label>
+                <input asp-for="CourseCode" class="form-control" required />
+                <span asp-validation-for="CourseCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CourseName" class="form-label"></label>
+                <input asp-for="CourseName" class="form-control" required />
+                <span asp-validation-for="CourseName" class="text-danger"></span>
+            </div>
+
+            <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update course</button>
+            <!-- TODO: add cancel button -->
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
