@@ -4,6 +4,7 @@ using SubApp1.Services;
 using SubApp1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SubApp1.Controllers;
 
@@ -24,14 +25,15 @@ public class QuizController : Controller
     }
 
     // CREATE QUIZ
+    [Authorize(Roles = "TEACHER")] // Sørger for at det kun er lærere som kan nå denne siden, til og med når den er direkte skrevet inn i URL.
     [HttpGet] // Creation form
     public async Task<IActionResult> Create()
     {
-        var vm = new QuizCreateViewModel();
+        var vm = new CreateQuizViewModel();
         // for loop to start with 3 questions upon creation - more can be added in UI
         for (int i = 0; i < 3; i++)
         {
-            vm.Questions.Add(new QuestionInput());
+            vm.Question.Add(new Question());
         }
         await LoadCourses(vm);
         return View(vm);
@@ -40,19 +42,24 @@ public class QuizController : Controller
     // Submit the form to create the quiz
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(QuizCreateViewModel vm)
+    public async Task<IActionResult> Create(CreateQuizViewModel vm)
     {
+        if (vm.CourseId.HasValue && !await _courseRepository.CourseExists(vm.CourseId.Value))
+        {
+            ModelState.AddModelError(nameof(vm.CourseId), "Choose an existing course.");
+        }
+
         if (ModelState.IsValid)
         {
             var quiz = new Quiz
             {
                 Title = vm.Title,
                 Description = vm.Description,
-                CourseId = vm.CourseId!.Value,
+                CourseId = vm.CourseId.GetValueOrDefault(),
                 CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
 
                 // the questions
-                Questions = vm.Questions.Select((q, i) => new QuizQuestion
+                Questions = vm.Question.Select((q, i) => new QuizQuestion
                 {
                     Prompt = q.Prompt.Trim(), // trims whitespace before grading
                     CorrectAnswer = q.CorrectAnswer.Trim(), // trims whitespace of correct answer
@@ -74,10 +81,10 @@ public class QuizController : Controller
     }
 
     // Helper method - Used by drop down menu on the create quiz-page
-    private async Task LoadCourses(QuizCreateViewModel vm)
+    private async Task LoadCourses(CreateQuizViewModel vm)
     {
         var courses = await _courseRepository.GetAllCourses();
-        vm.Courses = new SelectList(courses, "Id", "Name"); // ?
+        vm.Courses = new SelectList(courses, "Id", "Code");
     }
 
     // TAKE QUIZ
@@ -96,7 +103,7 @@ public class QuizController : Controller
     // Validate, grade and display results
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Submit(TakeQuizViewModel submission) 
+    public async Task<IActionResult> Submit(TakeQuizViewModel submission)
     {
         var quiz = await _quizService.GetQuizToTakeAsync(submission.QuizId);
         if (quiz is null)
@@ -137,6 +144,7 @@ public class QuizController : Controller
         return View("Result", result);
     }
 
+    //Hvorfor er dette kommentert ut? (før denne implementeres sjekk koden under om den er lik!)
     //SHOW RESULT - TODO: implement GetQuizResultAsync(attemptId)
     //[HttpGet] // Creation form
     //            public async Task<IActionResult> Result(int attemptId)
@@ -149,6 +157,20 @@ public class QuizController : Controller
     //    }
     //    return View(result);
     //}
+
+// Dashboard: SHOW LATEST RESULT: open past results without retaking the quiz
+[HttpGet]
+public async Task<IActionResult> Result(int id)
+{
+    var studentId = 1; // TODO: same logged-in student id as in Submit
+    var result = await _quizService.GetLatestResultAsync(id, studentId);
+    if (result == null)
+    {
+        _logger.LogWarning("[QuizController] No attempts found for quiz {QuizId}", id);
+        return RedirectToAction("Take", new { id });   // no attempt yet -> take the quiz
+    }
+    return View(result);
+}
 
 
 }

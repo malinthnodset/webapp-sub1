@@ -1,6 +1,7 @@
 using SubApp1.DAL;
 using Microsoft.AspNetCore.Mvc;
 using SubApp1.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SubApp1.Controllers;
 
@@ -17,6 +18,7 @@ public class CourseController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "TEACHER")] // Sørger for at det kun er lærere som kan nå denne siden, til og med når den er direkte skrevet inn i URL.
     public IActionResult Create()
     {
         return View(); // TODO: return course creation page (form)
@@ -32,11 +34,11 @@ public class CourseController : Controller
             if (returnOk)
             {
                 _logger.LogInformation("New course {@course} was created", course);
-                return View(); // TODO: where to return?
+                return View(); // TODO: where to return? Dashboard?
             }
         }
         _logger.LogWarning("Course creation failed for course {@course}", course);
-        return View(); // TODO: what to return?  
+        return View(); // TODO: where to return?  
     }
 
     // TODO: Update course (optional)

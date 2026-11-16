@@ -141,11 +141,11 @@
     display: none;
 }
 
-.create-quiz-summary:empty {
+.create-summary:empty {
     display: none;
 }
 
-.create-quiz-summary:not(:empty) {
+.create-summary:not(:empty) {
     margin-bottom: 1rem;
     padding: 0.85rem 1rem;
     border-left: 4px solid #c94f45;

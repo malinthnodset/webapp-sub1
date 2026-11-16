@@ -11,11 +11,11 @@ public class QuizQuestion
 	public int QuizId { get; set; }
 	public Quiz Quiz { get; set; } = null!;
 
-	[Required(ErrorMessage = "Add the question.")]
+	[Required(ErrorMessage = "Please add a question.")]
 	[StringLength(250)]
 	public string Prompt { get; set; } = string.Empty;
 
-	[Required(ErrorMessage = "Add the correct answer.")]
+	[Required(ErrorMessage = "Write the correct answer.")]
 	[StringLength(250)]
 	public string CorrectAnswer { get; set; } = string.Empty;
 

@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SubApp1.Models;
 
 namespace SubApp1.DAL;
 
-public class QuizDbContext : DbContext
+public class QuizDbContext : IdentityDbContext
 {
     // Creates constructor that takes in options, and sends them to DbContext with :base(options)
     public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options)
@@ -22,11 +23,11 @@ public class QuizDbContext : DbContext
     // Configures the model, runs once when EF buils the model of the db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-    base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
 
-    // ensures course code is unique
-    modelBuilder.Entity<Course>()
-        .HasIndex(c => c.Code)
-        .IsUnique();
+        // ensures course codes are unique
+        modelBuilder.Entity<Course>()
+            .HasIndex(c => c.Code)
+            .IsUnique();
     }
 }

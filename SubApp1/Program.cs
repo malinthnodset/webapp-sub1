@@ -3,6 +3,8 @@ using SubApp1.DAL;
 using SubApp1.Services;
 using Serilog;
 using Serilog.Events;
+using Microsoft.AspNetCore.Identity;
+using SubApp1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,28 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 // dependency injection  for DB
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Legger inn identitetsrammeverk for innlogging 
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false; // disable email confirmation for easy local testing
+})
+.AddRoles<IdentityRole>()  
+.AddEntityFrameworkStores<QuizDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/Login";
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // registering the repositories (in DAL)
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
@@ -37,6 +61,18 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
 
 var app = builder.Build();
 
+// Seed roles into the database if they don't exist
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    foreach (var role in Enum.GetNames<Role>())
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     DBInit.Seed(app);
@@ -44,7 +80,13 @@ if (app.Environment.IsDevelopment())
 }
 
 // Enable static assets from wwwroot (images, JS, CSS)
-app.MapStaticAssets(); 
+//app.MapStaticAssets(); 
+app.UseStaticFiles();
+
+app.UseSession(); // 4. Add Session Middleware (Must be placed before UseAuthentication)
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
