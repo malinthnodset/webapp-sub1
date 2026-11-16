@@ -117,7 +117,7 @@
                                             <div class="points-field">
                                                 <label asp-for="Question[i].Points" class="form-label fw-medium">Points</label>
                                                 <input asp-for="Question[i].Points" asp-format="{0:0.00}" class="form-control"
-                                                       type="number" min="1" max="10" step="0.01"
+                                                       type="number" min="0" max="10" step="0.01"
                                                        aria-describedby="Question_@(i)__Points-help Question_@(i)__Points-error"
                                                        required />
                                                 <span asp-validation-for="Question[i].Points" id="Question_@(i)__Points-error"
@@ -131,6 +131,7 @@
                                     aria-controls="Question">
                                 <span aria-hidden="true">+</span> Add a question
                             </button>
+                            <p id="question-limit-error" class="text-danger mt-2" role="alert" hidden></p>
                             <p id="question-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
                         </div>
                     </fieldset>
@@ -150,15 +151,21 @@
                 const form = document.querySelector(".create-quiz-form");
                 const questionContainer = document.getElementById("Question");
                 const addQuestionButton = document.getElementById("add-question");
+                const questionLimitError = document.getElementById("question-limit-error");
                 const announcement = document.getElementById("question-announcement");
 
-                let nextIndex = @Model.Question.Count;
                 let hasUnsavedChanges = false;
 
-                document.querySelector(".create-summary.validation-summary-errors")?.focus();
+                document.querySelector(".create-quiz-summary.validation-summary-errors")?.focus();
 
                 // Once user input something, register that there's unsaved input
                 form.addEventListener("input", () => hasUnsavedChanges = true);
+
+                // validation after adding/removing questions
+                function refreshValidation() {
+                    $(form).removeData("validator").removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+                }
 
                 // Browser warning if leaving page with unsaved changes
                 window.addEventListener("beforeunload", (event) => {
@@ -172,7 +179,7 @@
                     if ($(form).valid()) hasUnsavedChanges = false;
                 });
 
-                // After a delete, rewrite every index so Question[0..n-1] is contiguous again
+                // Keep question indexes contiguous after adding or removing a card
                 function renumberQuestions() {
                     const attrs = ["id", "name", "for", "aria-describedby", "aria-labelledby", "data-valmsg-for"];
                     const cards = questionContainer.querySelectorAll(".question-item");
@@ -192,8 +199,6 @@
                         card.querySelector("h3").textContent = `Question ${i + 1}`;
                         card.querySelector(".remove-question").setAttribute("aria-label", `Remove question ${i + 1}`);
                     });
-
-                    nextIndex = cards.length;
                 }
 
                 // One listener on the container handles both server-rendered and newly added cards
@@ -209,6 +214,7 @@
                     button.closest(".question-item").remove();
                     renumberQuestions();
                     refreshValidation();
+                    questionLimitError.hidden = true;
                     announcement.textContent = "Question removed.";
                     hasUnsavedChanges = true;
                 });
@@ -216,66 +222,35 @@
                 // Add question
                 addQuestionButton.addEventListener("click", () => {
                     const i = questionContainer.querySelectorAll(".question-item").length;
+                    if (i >= 50) {
+                        questionLimitError.textContent = "A quiz can have at most 50 questions.";
+                        questionLimitError.hidden = false;
+                        return;
+                    }
 
-                    const html = `
-                        <div class="question-item card" role="group" aria-labelledby="question-heading-${i}">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <h3 id="question-heading-${i}" class="h6 fw-semibold mb-0">Question ${i + 1}</h3>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge rounded-pill text-bg-light border">Text question</span>
-                                        <button type="button" class="btn btn-sm btn-outline-danger remove-question"
-                                                aria-label="Remove question ${i + 1}">✕ Remove</button>
-                                    </div>
-                                </div>
+                    const templateCard = questionContainer.querySelector(".question-item");
+                    if (!templateCard) return;
 
-                                <div class="mb-3">
-                                    <label for="Question_${i}__Prompt" class="form-label fw-medium">Question prompt</label>
-                                    <input id="Question_${i}__Prompt" name="Question[${i}].Prompt" class="form-control"
-                                            placeholder="Write your question..."
-                                            data-val="true" data-val-required="Please add a question."
-                                            data-val-length="Max 250 characters." data-val-length-max="250"
-                                            aria-describedby="Question_${i}__Prompt-error" required />
-                                    <span class="field-validation" data-valmsg-for="Question[${i}].Prompt"
-                                            data-valmsg-replace="true" id="Question_${i}__Prompt-error" aria-live="polite"></span>
-                                </div>
+                    questionLimitError.hidden = true;
+                    const newCard = templateCard.cloneNode(true);
+                    newCard.querySelectorAll("input, textarea").forEach(input => {
+                        input.value = input.name.endsWith(".Points") ? "1.00" : "";
+                        input.classList.remove("input-validation-error");
+                        input.removeAttribute("aria-invalid");
+                    });
+                    newCard.querySelectorAll(".field-validation").forEach(message => {
+                        message.textContent = "";
+                        message.classList.remove("field-validation-error");
+                        message.classList.add("field-validation-valid");
+                    });
 
-                                <div class="mb-3">
-                                    <label for="Question_${i}__CorrectAnswer" class="form-label fw-medium">Correct answer</label>
-                                    <input id="Question_${i}__CorrectAnswer" name="Question[${i}].CorrectAnswer" class="form-control"
-                                            placeholder="Enter the correct answer"
-                                            data-val="true" data-val-required="Write the correct answer."
-                                            data-val-length="Max 250 characters." data-val-length-max="250"
-                                            aria-describedby="Question_${i}__CorrectAnswer-error" required />
-                                    <span class="field-validation" data-valmsg-for="Question[${i}].CorrectAnswer"
-                                            data-valmsg-replace="true" id="Question_${i}__CorrectAnswer-error" aria-live="polite"></span>
-                                </div>
-
-                                <div class="points-field">
-                                    <label for="Question_${i}__Points" class="form-label fw-medium">Points</label>
-                                    <input id="Question_${i}__Points" name="Question[${i}].Points" class="form-control"
-                                            type="number" min="1" max="10" step="1" value="1"
-                                            data-val="true" data-val-number="Points must be a number."
-                                            data-val-range="Points must be between 0 and 10."
-                                            data-val-range-min="0" data-val-range-max="10"
-                                            aria-describedby="Question_${i}__Points-error" required />
-                                    <div class="form-text">1 to 10 points.</div>
-                                    <span class="field-validation" data-valmsg-for="Question[${i}].Points"
-                                            data-valmsg-replace="true" id="Question_${i}__Points-error" aria-live="polite"></span>
-                                </div>
-                            </div>
-                        </div>`;
-
-                    questionContainer.insertAdjacentHTML("beforeend", html);
-
-                    // re-parse AFTER inserting so the new fields get validation
-                    $(form).removeData("validator").removeData("unobtrusiveValidation");
-                    $.validator.unobtrusive.parse(form);
+                    questionContainer.append(newCard);
+                    renumberQuestions();
+                    refreshValidation();
 
                     document.getElementById(`Question_${i}__Prompt`).focus(); // keyboard nav
                     announcement.textContent = `Question ${i + 1} added.`;
                     hasUnsavedChanges = true;
-                    nextIndex++;
                 });
             </script>
         
