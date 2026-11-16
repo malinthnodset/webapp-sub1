@@ -1,7 +1,6 @@
 .create-quiz-page {
-    min-height: calc(100vh - 5rem);
-    padding: 2.5rem 1rem 4rem;
-    background: #f2f7f5;
+    padding: 1rem 0.5rem 2rem;
+    background: transparent;
     color: #193a35;
 }
 

@@ -1,0 +1,16 @@
+@model SubApp1.ViewModels.SceneViewModel
+
+@* Purely decorative, so screen readers skip it *@
+<div class="pixel-scene" aria-hidden="true">
+    <div class="pixel-scene__wall"></div>
+    <div class="pixel-scene__baseboard"></div>
+    <div class="pixel-scene__floor"></div>
+    <div class="pixel-furniture pixel-furniture--window"></div>
+
+    @foreach (var slug in Model.FurnitureSlugs)
+    {
+        <div class="pixel-furniture pixel-furniture--@slug"></div>
+    }
+
+    <div class="pixel-cat @(Model.CatOutOfBox ? "pixel-cat--idle" : "pixel-cat--box")"></div>
+</div>

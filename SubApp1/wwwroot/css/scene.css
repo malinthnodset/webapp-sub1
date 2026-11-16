@@ -1,0 +1,146 @@
+/* The room: fixed, behind everything, never clickable */
+.pixel-scene {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scene);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pixel-scene__wall {
+  position: absolute;
+  inset: 0 0 var(--pixel-floor-height) 0;
+  background: linear-gradient(var(--pixel-wall-top) 0 50%, var(--pixel-wall-bottom) 50% 100%);
+}
+
+.pixel-scene__baseboard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--pixel-floor-height);
+  height: calc(5px * var(--px));
+  background: url("../images/scene/baseBoard.png") repeat-x;
+  background-size: calc(44px * var(--px)) 100%;
+  image-rendering: pixelated;
+}
+
+.pixel-scene__floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--pixel-floor-height);
+  background: url("../images/scene/floorCherryTile.png");   /* repeats by default */
+  background-size: calc(32px * var(--px)) calc(32px * var(--px));
+  image-rendering: pixelated;
+}
+
+/* ---------- Furniture ----------
+   --w and --h are the sprite's size in image pixels. Position is in % of the window. */
+.pixel-furniture {
+  display: none;                       /* shown only on wide screens, see bottom */
+  position: absolute;
+  width: calc(var(--w) * var(--px) * 1px);
+  height: calc(var(--h) * var(--px) * 1px);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+}
+
+/* Window: sky colour is a second background layer under the frame.
+   --frame = thickness of the window frame in image pixels; adjust if sky shows outside. */
+.pixel-furniture--window {
+  --w: 32; --h: 44; --frame: 3;
+  left: 40%;
+  top: 14vh;
+  background-image: url("../images/scene/windowBirchEmpty.png"), linear-gradient(#5db7d8, #a9dfe9);
+  background-size: 100% 100%, calc(100% - var(--frame) * 2 * var(--px) * 1px) calc(100% - var(--frame) * 2 * var(--px) * 1px);
+  background-position: 0 0, center;
+}
+
+/* Left side */
+.pixel-furniture--painting-wave {
+  --w: 32; --h: 32;
+  left: 3%;
+  top: calc(6vh + var(--px) * 44px + 1rem);
+  background-image: url("../images/furniture/paintingGreatWave.png");
+}
+.pixel-furniture--cat-tree {
+  --w: 41; --h: 71;
+  left: 3%;
+  bottom: 10vh;
+  background-image: url("../images/furniture/smallTreeRed.png");
+}
+.pixel-furniture--bed {
+  --w: 72; --h: 38;
+  left: 30%;
+  bottom: 3vh;
+  background-image: url("../images/furniture/bedTeal.png");
+}
+
+/* Right side */
+.pixel-furniture--painting-mona-lisa {
+  --w: 32; --h: 32;
+  right: 3%;
+  top: 8vh;
+  background-image: url("../images/furniture/paintingStarryNight.png");
+}
+.pixel-furniture--plant {
+  --w: 35; --h: 57;
+  right: 3%;
+  bottom: 37vh;
+  background-image: url("../images/furniture/plant.png");
+}
+.pixel-furniture--yarn {
+  --w: 18; --h: 14;
+  right: calc(3% + var(--px) * 30px);
+  bottom: 3vh;
+  background-image: url("../images/furniture/neonYarn.png");
+}
+
+/* ---------- Cat (step 5 adds the animations) ---------- */
+.pixel-cat {
+  display: none;
+  position: absolute;
+  right: 5%;
+  bottom: 5vh;
+  width: calc(32px * var(--px));
+  height: calc(32px * var(--px));
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+/* Sprite sheets: each frame is 32 image-pixels wide. steps(N) jumps between frames
+   instead of sliding. Both animations stop after under 5 seconds (WCAG 2.2.2). */
+.pixel-cat--box {
+  background-image: url("../images/cat/cat-box.png");
+  background-size: calc(128px * var(--px)) 100%;       /* 4 frames */
+  animation: pixel-cat-box 1.2s steps(4) 3;
+}
+
+.pixel-cat--idle {
+  background-image: url("../images/cat/cat-idle.png");
+  background-size: calc(320px * var(--px)) 100%;       /* 10 frames */
+  animation: pixel-cat-idle 1s steps(10) 4;
+}
+
+@keyframes pixel-cat-box {
+  to { background-position-x: calc(-128px * var(--px)); }
+}
+
+@keyframes pixel-cat-idle {
+  to { background-position-x: calc(-320px * var(--px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-cat { animation: none; }
+}
+
+/* Furniture and cat only fit beside the 56rem panel on wide screens.
+   Below this the room is just wall and floor, and the content wins. */
+@media (min-width: 1100px) {
+  .pixel-furniture,
+  .pixel-cat {
+    display: block;
+  }
+}
