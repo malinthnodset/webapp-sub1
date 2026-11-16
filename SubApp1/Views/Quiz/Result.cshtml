@@ -4,16 +4,14 @@
     ViewData["Title"] = "Quiz result"; // Set the shared layout's page title
 }
 
-<link rel="stylesheet" href="~/quiz-result.css" asp-append-version="true" />
-
 <!-- HTML setup for the quiz itself -->
 <div class="row g-4">
-    <main class="col-lg-9">
+    <div class="col-lg-9">   <!-- changed main to div so there only is one main -->
         <header class="card border-0 bg-primary-subtle mb-4">
             <div class="card-body p-4">
                 <p class="text-uppercase fw-semibold mb-2">Quiz result</p>
                 <h1 class="h2 mb-1">@Model.Title</h1>
-                <p class="mb-3">@Model.CourseTitle <span class="text-muted">(Course @Model.CourseId)</span></p>
+                <p class="mb-3">@Model.CourseTitle <span class="text-muted">(@Model.CourseCode)</span></p>
                 <div class="d-flex flex-wrap align-items-end gap-4">
                     <p class="display-6 fw-bold mb-0">@Model.Percentage%</p>
                     <p class="mb-1">@Model.PointsEarned / @Model.MaximumPoints points</p>
@@ -87,7 +85,7 @@
             <a class="btn btn-primary" asp-action="Take" asp-route-id="@Model.QuizId">Try again</a>
             <a class="btn btn-outline-secondary" asp-controller="Dashboard" asp-action="Index">Back to dashboard</a>
         </div>
-    </main>
+    </div>
 
     <!-- The setup for the attempt history list -->
     <aside class="col-lg-3">
@@ -120,3 +118,7 @@
         </section>
     </aside>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/quiz-result.css" asp-append-version="true" />
+}

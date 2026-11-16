@@ -102,7 +102,7 @@ public class QuizRepository : IQuizRepository
     }
 
     // TAKE QUIZ METHODS
-    public async Task<Quiz?> GetQuizForTakingAsync(int id)
+    public async Task<Quiz?> GetQuizForTakingAsync(int Id)
     {
         try
         {
@@ -110,11 +110,11 @@ public class QuizRepository : IQuizRepository
                 .AsNoTracking()
                 .Include(quiz => quiz.Course)
                 .Include(quiz => quiz.Questions.OrderBy(question => question.Order))
-                .SingleOrDefaultAsync(quiz => quiz.Id == id);
+                .SingleOrDefaultAsync(quiz => quiz.Id == Id);
         }
         catch (Exception e)
         {
-            _logger.LogError("[QuizRepository] Could not get quiz {@GetQuizById} for taking, error message; {e}", GetQuizById, e.Message);
+            _logger.LogError("[QuizRepository] Could not get quiz {@Id} for taking, error message; {e}", Id, e.Message);
             throw;
         }
     }
@@ -153,4 +153,26 @@ public class QuizRepository : IQuizRepository
             throw;
         }
     }
+    // Dashboard: Get the latest completed attempt with everything the result page needs
+public async Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int studentId)
+{
+    try
+    {
+        return await _db.QuizAttempts
+            .AsNoTracking()
+            .Where(a => a.QuizId == quizId && a.StudentId == studentId
+                        && a.CompletedAt != null && a.Result != null)
+            .Include(a => a.Result)
+            .Include(a => a.Quiz).ThenInclude(q => q.Course)
+            .Include(a => a.Answers).ThenInclude(x => x.QuizQuestion)
+            .OrderByDescending(a => a.CompletedAt)
+            .ThenByDescending(a => a.Id)
+            .FirstOrDefaultAsync();
+    }
+    catch (Exception e)
+    {
+        _logger.LogError("[QuizRepository] GetLatestAttemptWithAnswers for quiz {@quizId} failed, error message: {@e}", quizId, e.Message);
+        throw;
+    }
+}
 }

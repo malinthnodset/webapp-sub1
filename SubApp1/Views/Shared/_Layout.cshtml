@@ -8,39 +8,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Study Buddy</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Our own CSS comes after Bootstrap, so equal rules are won by ours -->
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/scene.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/panel.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
     <script src="~/lib/jquery/dist/jquery.min.js" defer></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href=""
 </head>
 
 <body>
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+
+    @* The room is fixed behind everything. Enabled in step 4. *@
+     @await Component.InvokeAsync("Scene") 
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm pixel-nav">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">Study Buddy</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">Study Buddy</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse justify-content-between" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <!--
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard"
                                asp-action="Index">Dashboard</a>
                         </li>
+                        -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Quiz" asp-action="Create">Create quiz</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Course" asp-action="Create">Create course</a>
+                        </li>
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
     <!-- Main page content -->
-    <main class="container">
-        <section role="main" class="pb-3">
+    <main class="pixel-main" id="main">
+        <div class="pixel-panel">
             @RenderBody()
-        </section>
+        </div>        
     </main>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

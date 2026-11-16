@@ -14,8 +14,8 @@ public class Quiz
 	public string? Description { get; set; }
 
 	// connecting to course (FK)
-	public int CourseId { get; set; }
 	[Required(ErrorMessage = "The quiz must belong to an existing course.")]
+	public int CourseId { get; set; }
 	public Course Course { get; set; } = null!;
 
 	// creator of the quiz (FK)

@@ -5,7 +5,7 @@ namespace SubApp1.ViewModels;
 
 
 //Holds the list of courses passed to the dashboard view.
-public class DashboardViewModel 
+public class DashboardViewModel
 {
     public List<CourseSummaryViewModel> Courses { get; set; } = new();
 }
@@ -18,7 +18,7 @@ public class CourseSummaryViewModel
     //returns the number of quizzes in the course
     public int QuizCount => Quizzes.Count;
     //returns true if the course has at least one quiz and all quizzes are completed
-    public bool IsCompleted => Quizzes.Count > 0 && Quizzes.All(q => q.IsCompleted); 
+    public bool IsCompleted => Quizzes.Count > 0 && Quizzes.All(q => q.IsCompleted);
     public List<QuizSummaryViewModel> Quizzes { get; set; } = new();
 }
 
@@ -30,5 +30,8 @@ public class QuizSummaryViewModel
     public int QuestionCount { get; set; }
     public double BestPercentage { get; set; }   // 0-100
     //returns true if the best percentage is 60 or higher
+    public int AttemptCount { get; set; }
     public bool IsCompleted => BestPercentage >= 60;
+    public bool HasAttempts => AttemptCount > 0;
+
 }
