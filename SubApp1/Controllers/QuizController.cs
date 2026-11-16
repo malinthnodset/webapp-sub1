@@ -83,7 +83,21 @@ public class QuizController : Controller
 
     // TODO: UPDATE QUIZ
 
-    // TODO: DELETE QUIZ
+    // DELETE QUIZ
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "TEACHER")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        bool returnOk = await _quizRepository.Delete(id);
+        if (returnOk)
+        {
+            _logger.LogInformation("[QuizController] Quiz {@id} was deleted", id);
+            return RedirectToAction("Index", "Dashboard");
+        }
+        _logger.LogWarning("[QuizController] Quiz deletion failed for quiz {@id}", id);
+        return RedirectToAction("Index", "Dashboard");
+    }    
 
     // Helper method - Used by drop down menu on the create quiz-page
     private async Task LoadCourses(CreateQuizViewModel vm)
