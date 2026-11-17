@@ -40,5 +40,3 @@ public class Question
     [Range(0, 10)]
     public decimal Points { get; set; } = 1;
 }
-
-// TODO: add a multiple choice Q option

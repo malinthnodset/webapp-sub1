@@ -42,6 +42,7 @@ public class QuizController : Controller
     // Submit the form to create the quiz
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "TEACHER")]
     public async Task<IActionResult> Create(CreateQuizViewModel vm)
     {
         if (vm.CourseId.HasValue && !await _courseRepository.CourseExists(vm.CourseId.Value))
@@ -79,6 +80,24 @@ public class QuizController : Controller
         await LoadCourses(vm);       // dropdown list isn't posted back, so this reloads it
         return View(vm);           // redisplay with the user's input and error messages
     }
+
+    // TODO: UPDATE QUIZ
+
+    // DELETE QUIZ
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "TEACHER")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        bool returnOk = await _quizRepository.Delete(id);
+        if (returnOk)
+        {
+            _logger.LogInformation("[QuizController] Quiz {@id} was deleted", id);
+            return RedirectToAction("Index", "Dashboard");
+        }
+        _logger.LogWarning("[QuizController] Quiz deletion failed for quiz {@id}", id);
+        return RedirectToAction("Index", "Dashboard");
+    }    
 
     // Helper method - Used by drop down menu on the create quiz-page
     private async Task LoadCourses(CreateQuizViewModel vm)
@@ -144,33 +163,19 @@ public class QuizController : Controller
         return View("Result", result);
     }
 
-    //Hvorfor er dette kommentert ut? (før denne implementeres sjekk koden under om den er lik!)
-    //SHOW RESULT - TODO: implement GetQuizResultAsync(attemptId)
-    //[HttpGet] // Creation form
-    //            public async Task<IActionResult> Result(int attemptId)
-    //{
-    //    var result = await _quizService.GetQuizResultAsync(attemptId);
-    //    if (result == null)
-    //    {
-    //        _logger.LogError("[QuizController] Quiz attempt id {AttemptId} not found", attemptId);
-    //        return NotFound();
-    //    }
-    //    return View(result);
-    //}
-
-// Dashboard: SHOW LATEST RESULT: open past results without retaking the quiz
-[HttpGet]
-public async Task<IActionResult> Result(int id)
-{
-    var studentId = 1; // TODO: same logged-in student id as in Submit
-    var result = await _quizService.GetLatestResultAsync(id, studentId);
-    if (result == null)
+    // Dashboard: SHOW LATEST RESULT: open past results without retaking the quiz
+    [HttpGet]
+    public async Task<IActionResult> Result(int id)
     {
-        _logger.LogWarning("[QuizController] No attempts found for quiz {QuizId}", id);
-        return RedirectToAction("Take", new { id });   // no attempt yet -> take the quiz
+        var studentId = 1; // TODO: same logged-in student id as in Submit
+        var result = await _quizService.GetLatestResultAsync(id, studentId);
+        if (result == null)
+        {
+            _logger.LogWarning("[QuizController] No attempts found for quiz {QuizId}", id);
+            return RedirectToAction("Take", new { id });   // no attempt yet -> take the quiz
+        }
+        return View(result);
     }
-    return View(result);
-}
 
 
 }
