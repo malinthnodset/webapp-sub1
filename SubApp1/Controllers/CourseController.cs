@@ -6,6 +6,7 @@ using SubApp1.ViewModels;
 
 namespace SubApp1.Controllers;
 
+[Authorize]     //If the user tries to access the course page without being logged in, they get redirected to the Login-path; fail-safe default and complete mediation
 public class CourseController : Controller
 {
     // dependency injection - controller looks to interface repository files

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SubApp1.Controllers;
 
+[Authorize]     //If the user tries to access the quiz page without being logged in, they get redirected to the Login-path; fail-safe default and complete mediation
 public class QuizController : Controller
 {
     // dependency injection - controller looks to interface repository files, and the service

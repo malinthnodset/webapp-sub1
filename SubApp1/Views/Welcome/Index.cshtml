@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Velkommen!";
+}
+
+<link rel="stylesheet" href="~/css/welcome.css"/>
+
+<section class="welcome">
+    <h1>Velkommen til StudyBuddy</h1>
+
+<p class="welcome-intro">
+    Her kan du samle masse søte gjenstander til katten din mens du øver deg på pensum!
+</p>
+
+<ul class="welcome-features">
+    <li>Ta quizer! Klarer du å få 100%? Σ(ﾟДﾟ)</li>
+    <li>Pynt rommet til kjæledyret ditt mens du lærer!（･∀･)つ</li>
+</ul>
+
+<div class="welcome-actions">
+    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">
+        Register deg
+    </a>
+    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary">
+        Logg inn
+    </a>
+</div>
+</section>
+
