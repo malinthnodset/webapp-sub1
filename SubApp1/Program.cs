@@ -98,5 +98,5 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+    pattern: "{controller=Welcome}/{action=Index}/{id?}");  //Makes the first page the user gets directed to "Welcome"
 app.Run();

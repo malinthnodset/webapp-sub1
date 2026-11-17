@@ -61,7 +61,7 @@ public class QuizRepository : IQuizRepository
     {
         try
         {
-            var existingQuiz = await _db.Quizzes.FindAsync(quiz);
+            var existingQuiz = await _db.Quizzes.FindAsync(quiz.Id);
             if (existingQuiz is null)
             {
                 return false;
@@ -80,11 +80,11 @@ public class QuizRepository : IQuizRepository
 
     // searches for quiz by it's ID, if it doesn't exist it returns false
     // if it exists, it is deleted and the changes saved
-    public async Task<bool> Delete(int id)
+    public async Task<bool> Delete(int Id)
     {
         try
         {
-            var existingQuiz = await _db.Quizzes.FindAsync(id);
+            var existingQuiz = await _db.Quizzes.FindAsync(Id);
             if (existingQuiz is null)
             {
                 return false;
@@ -96,7 +96,7 @@ public class QuizRepository : IQuizRepository
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to delete quiz {QuizId}", id);
+            _logger.LogError(e, "Failed to delete quiz {QuizId}", Id);
             throw;
         }
     }

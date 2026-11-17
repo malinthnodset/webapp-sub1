@@ -84,6 +84,6 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Dashboard");
+        return RedirectToAction("Index", "Welcome");    //When the user logs out, they get redirected to get Welcome page again
     }
 }

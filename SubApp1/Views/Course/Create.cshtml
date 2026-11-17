@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create course";
 }
 
-<h2>Create a new course</h2>
+<h1>Create a new course</h1>
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Create" method="post">
@@ -23,9 +23,8 @@
                 <span asp-validation-for="CourseName" class="text-danger"></span>
             </div>
 
+            <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Cancel</a>
             <button type="submit" class="btn btn-primary">Create course</button>
-            <!-- TODO: add cancel button -->
-            <!-- TODO: add warning if leaving page before creating course -->
         </form>
     </div>
 </div>
