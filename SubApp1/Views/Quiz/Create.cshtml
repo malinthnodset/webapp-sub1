@@ -4,13 +4,11 @@
     ViewData["Title"] = "Create quiz";
 }
 
-<!--<link rel="stylesheet" href="~/css/quiz-create.css" asp-append-version="true" />-->
-
 <div class="row justify-content-center">
     <div class="col-lg-8 col-xl-7">
         <header class="mb-4">
             <h1>Create a quiz</h1>
-            <p>Add the details, then write Question to help you study.</p>
+            <p>Add the details, then write questions to help you study.</p>
         </header>
 
         <form asp-action="Create" method="post" class="create-quiz-form" novalidate>
@@ -30,7 +28,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Title" class="form-label fw-medium">Quiz title</label>
+                        <label asp-for="Title" class="form-label fw-medium">Title</label>
                         <input asp-for="Title" class="form-control" placeholder="e.g. Databases: SQL syntax"
                                aria-describedby="Title-error" required />
                         <span asp-validation-for="Title" id="Title-error" class="field-validation"
@@ -147,112 +145,6 @@
         </div>
 
         @section Scripts {
-            <script>
-                const form = document.querySelector(".create-quiz-form");
-                const questionContainer = document.getElementById("Question");
-                const addQuestionButton = document.getElementById("add-question");
-                const questionLimitError = document.getElementById("question-limit-error");
-                const announcement = document.getElementById("question-announcement");
-
-                let hasUnsavedChanges = false;
-
-                document.querySelector(".create-quiz-summary.validation-summary-errors")?.focus();
-
-                // Once user input something, register that there's unsaved input
-                form.addEventListener("input", () => hasUnsavedChanges = true);
-
-                // validation after adding/removing questions
-                function refreshValidation() {
-                    $(form).removeData("validator").removeData("unobtrusiveValidation");
-                    $.validator.unobtrusive.parse(form);
-                }
-
-                // Browser warning if leaving page with unsaved changes
-                window.addEventListener("beforeunload", (event) => {
-                    if (!hasUnsavedChanges) return;
-                    event.preventDefault();
-                    event.returnValue = "";
-                });
-
-                // If submitted with no issues - validation is handled by vm and model
-                form.addEventListener("submit", () => {
-                    if ($(form).valid()) hasUnsavedChanges = false;
-                });
-
-                // Keep question indexes contiguous after adding or removing a card
-                function renumberQuestions() {
-                    const attrs = ["id", "name", "for", "aria-describedby", "aria-labelledby", "data-valmsg-for"];
-                    const cards = questionContainer.querySelectorAll(".question-item");
-
-                    cards.forEach((card, i) => {
-                        card.setAttribute("aria-labelledby", `question-heading-${i}`);
-                        card.querySelectorAll("*").forEach(el => {
-                            for (const attr of attrs) {
-                                const value = el.getAttribute(attr);
-                                if (!value) continue;
-                                el.setAttribute(attr, value
-                                    .replace(/Question\[\d+\]/g, `Question[${i}]`)
-                                    .replace(/Question_\d+__/g, `Question_${i}__`)
-                                    .replace(/question-heading-\d+/g, `question-heading-${i}`));
-                            }
-                        });
-                        card.querySelector("h3").textContent = `Question ${i + 1}`;
-                        card.querySelector(".remove-question").setAttribute("aria-label", `Remove question ${i + 1}`);
-                    });
-                }
-
-                // One listener on the container handles both server-rendered and newly added cards
-                questionContainer.addEventListener("click", (event) => {
-                    const button = event.target.closest(".remove-question");
-                    if (!button) return;
-
-                    if (questionContainer.querySelectorAll(".question-item").length <= 1) {
-                        announcement.textContent = "A quiz must have at least one question.";
-                        return;
-                    }
-
-                    button.closest(".question-item").remove();
-                    renumberQuestions();
-                    refreshValidation();
-                    questionLimitError.hidden = true;
-                    announcement.textContent = "Question removed.";
-                    hasUnsavedChanges = true;
-                });
-
-                // Add question
-                addQuestionButton.addEventListener("click", () => {
-                    const i = questionContainer.querySelectorAll(".question-item").length;
-                    if (i >= 50) {
-                        questionLimitError.textContent = "A quiz can have at most 50 questions.";
-                        questionLimitError.hidden = false;
-                        return;
-                    }
-
-                    const templateCard = questionContainer.querySelector(".question-item");
-                    if (!templateCard) return;
-
-                    questionLimitError.hidden = true;
-                    const newCard = templateCard.cloneNode(true);
-                    newCard.querySelectorAll("input, textarea").forEach(input => {
-                        input.value = input.name.endsWith(".Points") ? "1.00" : "";
-                        input.classList.remove("input-validation-error");
-                        input.removeAttribute("aria-invalid");
-                    });
-                    newCard.querySelectorAll(".field-validation").forEach(message => {
-                        message.textContent = "";
-                        message.classList.remove("field-validation-error");
-                        message.classList.add("field-validation-valid");
-                    });
-
-                    questionContainer.append(newCard);
-                    renumberQuestions();
-                    refreshValidation();
-
-                    document.getElementById(`Question_${i}__Prompt`).focus(); // keyboard nav
-                    announcement.textContent = `Question ${i + 1} added.`;
-                    hasUnsavedChanges = true;
-                });
-            </script>
-        
+            <script src="~/js/quiz-create.js" asp-append-version="true"></script>
             <partial name="_ValidationScriptsPartial" />
         }

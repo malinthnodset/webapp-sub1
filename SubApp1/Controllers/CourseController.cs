@@ -18,6 +18,7 @@ public class CourseController : Controller
         _courseRepository = courseRepository;
     }
 
+    // GET: /Course/Create
     [HttpGet]
     [Authorize(Roles = "TEACHER")] // Sørger for at det kun er lærere som kan nå denne siden, til og med når den er direkte skrevet inn i URL.
     public IActionResult Create()
@@ -26,6 +27,7 @@ public class CourseController : Controller
         return View(vm);
     }
 
+    // POST: /Course/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "TEACHER")]
@@ -50,7 +52,7 @@ public class CourseController : Controller
         return View(vm);
     }
 
-    // UPDATE
+    // UPDATE - GET: /Course/Edit
     [HttpGet]
     [Authorize(Roles = "TEACHER")] // Sørger for at det kun er lærere som kan nå denne siden, til og med når den er direkte skrevet inn i URL.
     public async Task<IActionResult> Edit(int id)
@@ -71,6 +73,7 @@ public class CourseController : Controller
         return View(vm);
     }
 
+    // UPDATE - POST: /Course/Edit
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "TEACHER")]
@@ -95,6 +98,7 @@ public class CourseController : Controller
         return View(vm);
     }
 
+    // DELETE - POST
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "TEACHER")]
