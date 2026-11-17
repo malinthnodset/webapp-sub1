@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
+builder.Services.AddScoped<IFurnitureService, FurnitureService>();
 
 // DATABASE
 
@@ -77,6 +78,13 @@ if (app.Environment.IsDevelopment())
 {
     DBInit.Seed(app);
     app.UseDeveloperExceptionPage();
+}
+
+// Furniture list is seeded in all environments, without touching existing rows
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<QuizDbContext>();
+    FurnitureSeed.Seed(db);
 }
 
 // Enable static assets from wwwroot (images, JS, CSS)

@@ -19,7 +19,7 @@
   right: 0;
   bottom: var(--pixel-floor-height);
   height: calc(5px * var(--px));
-  background: url("../images/scene/baseBoard.png") repeat-x;
+  background: url("../images/scene/baseboard.png") repeat-x;
   background-size: calc(44px * var(--px)) 100%;
   image-rendering: pixelated;
 }
@@ -30,7 +30,7 @@
   right: 0;
   bottom: 0;
   height: var(--pixel-floor-height);
-  background: url("../images/scene/floorCherryTile.png");   /* repeats by default */
+  background: url("../images/scene/floor-tile.png");   /* repeats by default */
   background-size: calc(32px * var(--px)) calc(32px * var(--px));
   image-rendering: pixelated;
 }
@@ -53,29 +53,36 @@
   --w: 32; --h: 44; --frame: 3;
   left: 40%;
   top: 14vh;
-  background-image: url("../images/scene/windowBirchEmpty.png"), linear-gradient(#5db7d8, #a9dfe9);
+  background-image: url("../images/scene/window.png"), linear-gradient(#5db7d8, #a9dfe9);
   background-size: 100% 100%, calc(100% - var(--frame) * 2 * var(--px) * 1px) calc(100% - var(--frame) * 2 * var(--px) * 1px);
   background-position: 0 0, center;
 }
+.pixel-furniture--rug {
+  --w: 37; --h: 27;
+  left: 4%;
+  bottom: 20vh;
+  background-image: url("../images/furniture/rug.png");
+}
+
 
 /* Left side */
 .pixel-furniture--painting-wave {
   --w: 32; --h: 32;
   left: 3%;
   top: calc(6vh + var(--px) * 44px + 1rem);
-  background-image: url("../images/furniture/paintingGreatWave.png");
+  background-image: url("../images/furniture/painting-wave.png");
 }
 .pixel-furniture--cat-tree {
   --w: 41; --h: 71;
   left: 3%;
   bottom: 10vh;
-  background-image: url("../images/furniture/smallTreeRed.png");
+  background-image: url("../images/furniture/cat-tree.png");
 }
 .pixel-furniture--bed {
   --w: 72; --h: 38;
   left: 30%;
   bottom: 3vh;
-  background-image: url("../images/furniture/bedTeal.png");
+  background-image: url("../images/furniture/bed.png");
 }
 
 /* Right side */
@@ -83,7 +90,7 @@
   --w: 32; --h: 32;
   right: 3%;
   top: 8vh;
-  background-image: url("../images/furniture/paintingStarryNight.png");
+  background-image: url("../images/furniture/painting-starry-night.png");
 }
 .pixel-furniture--plant {
   --w: 35; --h: 57;
@@ -93,9 +100,9 @@
 }
 .pixel-furniture--yarn {
   --w: 18; --h: 14;
-  right: calc(3% + var(--px) * 30px);
-  bottom: 3vh;
-  background-image: url("../images/furniture/neonYarn.png");
+  right: calc(7% + var(--px) * 30px);
+  bottom: 6vh;
+  background-image: url("../images/furniture/yarn.png");
 }
 
 /* ---------- Cat (step 5 adds the animations) ---------- */

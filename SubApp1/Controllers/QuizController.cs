@@ -141,7 +141,19 @@ public class QuizController : Controller
             _logger.LogWarning("[QuizController] Invalid submission for quiz {QuizId}", submission);
             return BadRequest();
         }
-        return View("Result", result);
+        // Carry the unlock info across redirect. TempData lives for exactly one request. 
+        if (result.CatJustFreed)
+        {
+            TempData["CatFreed"] = true;
+        }
+        if (result.NewFurnitureName is not null)
+        {
+            TempData["NewFurnitureName"] = result.NewFurnitureName;
+            TempData["NewFurnitureSlug"] = result.NewFurnitureSlug;
+        }
+
+        // Refreshing the result page does not submit the quiz again
+        return RedirectToAction("Result", new { id = submission.QuizId });
     }
 
     //Hvorfor er dette kommentert ut? (før denne implementeres sjekk koden under om den er lik!)
