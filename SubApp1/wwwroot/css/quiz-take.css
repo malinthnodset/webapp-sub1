@@ -1,7 +1,6 @@
 .take-quiz-page {
-    min-height: calc(100vh - 5rem);
-    padding: 3.5rem 1rem;
-    background: #f2f7f5;
+    padding: 1rem;
+    background: transparent;
     color: #193a35;
 }
 
