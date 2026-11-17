@@ -1,10 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SubApp1.Services;
 using SubApp1.ViewModels;
+using SubApp1.Models;
 
 //Handles the "Dashboard page" by asking DashboardService for the data and passing the result to the Index.cshtml.
 
 namespace SubApp1.Controllers;
+
+[Authorize]     //If the user tries to access the dashboard without being logged in, they get redirected to the Login-path; fail-safe default and complete mediation
 //(constructor) receives the DashboardService and logger through dependency injection, 
 // and stores them in private fields for use in the Index action method.
 public class DashboardController : Controller
@@ -23,9 +27,15 @@ public class DashboardController : Controller
     {
         try
         {
-            var userId = "demo-user"; 
+            var userId = "1"; 
             // TODO: replace with the logged-in user's id
             var model = await _service.GetDashboardAsync(userId);
+
+
+            model.IsTeacher = User.IsInRole(nameof(Role.TEACHER));
+            model.IsStudent = User.IsInRole(nameof(Role.STUDENT));
+
+
             return View(model);
         }
         catch (Exception ex)

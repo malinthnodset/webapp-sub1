@@ -1,0 +1,23 @@
+:root {
+  /* Pixel scale: every sprite is shown at a whole-number multiple of its own size */
+  --px: 3;
+
+  /* Colours: change here, and the whole site follows */
+  --pixel-ink: #193a35;          /* text on the panel (from the quiz CSS) */
+  --pixel-cream: #f7e0bf;        /* panel and navbar background */
+  --pixel-teal: #176f64;
+  --pixel-teal-dark: #10574e;
+  --pixel-focus: #0b5ed7;
+  --pixel-wall-top: #b8d89c;
+  --pixel-wall-bottom: #8fbf72;
+
+  --pixel-floor-height: 45vh;
+  --pixel-font: "Pixelify Sans", system-ui, sans-serif;
+  --z-scene: 0;
+  --z-content: 2;
+}
+
+/* Wide screens get bigger pixels */
+@media (min-width: 1600px) {
+  :root { --px: 4; }
+}

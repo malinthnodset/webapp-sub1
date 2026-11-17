@@ -75,12 +75,12 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            var existingCourse = await _db.Courses.FindAsync(course);
-            if (existingCourse == null)
-            {
-                return false; // Course does not exist
-            }
-            _db.Courses.Update(existingCourse);
+            var existing = await _db.Courses.FindAsync(course.Id);
+            if (existing == null) return false;
+
+            existing.Code = course.Code;
+            existing.Name = course.Name;
+
             await _db.SaveChangesAsync();
             return true;
         }
