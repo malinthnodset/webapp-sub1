@@ -34,18 +34,15 @@
                 </button>
                 <div class="navbar-collapse collapse justify-content-between" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto">
-                        <!--
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard"
-                               asp-action="Index">Dashboard</a>
-                        </li>
-                        -->     
+                    @if (User.IsInRole("TEACHER"))
+                    {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Quiz" asp-action="Create">Create quiz</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Course" asp-action="Create">Create course</a>
                         </li>
+                    }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
