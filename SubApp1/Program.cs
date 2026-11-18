@@ -42,6 +42,14 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Sørger for at e-postadressen til brukeren er unik i databasen
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<QuizDbContext>()
+.AddDefaultTokenProviders();
+
 // registering the repositories (in DAL)
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();

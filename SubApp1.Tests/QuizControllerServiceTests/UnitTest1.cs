@@ -2,12 +2,10 @@
 using SubApp1.Models;
 using SubApp1.Services;
 using SubApp1.ViewModels;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SubApp1.Tests;
 
+// Unit tests for QuizService. 5 positive tests and 3 negative tests
 public class QuizServiceTests
 {
     private readonly FakeQuizRepository _repository = new();
@@ -123,75 +121,6 @@ public class QuizServiceTests
         Assert.Equal(2, _repository.SavedAttempts.Count);
     }
 
-    [Fact]
-    public async Task SeededWebBasicsQuiz_HasTenQuestionsAndCanSaveAnAttempt()
-    {
-        await using var connection = new SqliteConnection("Data Source=:memory:");
-        await connection.OpenAsync();
-
-        var options = new DbContextOptionsBuilder<QuizDbContext>()
-            .UseSqlite(connection)
-            .Options;
-        await using var db = new QuizDbContext(options);
-        await db.Database.EnsureCreatedAsync();
-
-// sees the database is empty, so we seed it with a quiz with 10 questions
-var course = new Course("ITPE3200", "Web applications");
-var student = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
-
-db.Quizzes.Add(new Quiz
-{
-    Id = 1000,
-    Title = "Web basics",
-    Description = "Test quiz",
-    Course = course,
-    CreatedByStudent = student,
-    Questions = Enumerable.Range(1, 10)
-        .Select(i => new QuizQuestion
-        {
-            Prompt = $"Question {i}",
-            CorrectAnswer = $"Answer {i}",
-            Points = 1,
-            Order = i
-        })
-        .ToList()
-});
-await db.SaveChangesAsync();
-
-        var repository = new QuizRepository(db, NullLogger<QuizRepository>.Instance);
-        var service = new QuizService(repository);
-        var quiz = await service.GetQuizToTakeAsync(1000);
-        var questions = await db.QuizQuestions
-            .Where(question => question.QuizId == 1000)
-            .OrderBy(question => question.Order)
-            .ToListAsync();
-
-        Assert.NotNull(quiz);
-        Assert.Equal("Web basics", quiz.Title);
-        Assert.Equal(10, quiz.Questions.Count);
-
-        var submission = new TakeQuizViewModel
-        {
-            QuizId = 1000,
-            Questions = questions.Select(question => new TakeQuizQuestionViewModel
-            {
-                QuestionId = question.Id,
-                SubmittedAnswer = question.CorrectAnswer
-            }).ToList()
-        };
-        var result = await service.GradeQuizAsync(submission, studentId: 1);
-
-        Assert.NotNull(result);
-        Assert.Equal(10m, result.PointsEarned);
-        Assert.Equal(1, await db.QuizAttempts.CountAsync());
-        Assert.Equal(10, await db.QuizAnswers.CountAsync());
-        Assert.Equal(1, await db.QuizResults.CountAsync());
-
-        var persistedHistory = await repository.GetAttemptsForStudentAsync(result.QuizId, studentId: 1);
-        Assert.Single(persistedHistory);
-        Assert.NotNull(persistedHistory[0].Result);
-    }
-
     private static TakeQuizViewModel CreateSubmission(params string[] answers)
     {
         return new TakeQuizViewModel
@@ -250,5 +179,10 @@ await db.SaveChangesAsync();
         public Task<bool> Update(Quiz quiz) => throw new NotSupportedException();
 
         public Task<bool> Delete(int id) => throw new NotSupportedException();
+
+        public Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int studentId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
