@@ -16,17 +16,19 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IFurnitureService, FurnitureService>();
 
 // DATABASE
-
 // dependency injection  for DB
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// AUTH
 // Legger inn identitetsrammeverk for innlogging 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false; // disable email confirmation for easy local testing
+    options.User.RequireUniqueEmail = true; // Sofie - flyttet opp fra kommentert ut kode nedenfor
+
 })
-.AddRoles<IdentityRole>()  
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<QuizDbContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -43,17 +45,19 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Sofie - kommentert ut midlertidig for å få programmet til å kjøre. La epost-sjekken opp i AddIdentity over
 // Sørger for at e-postadressen til brukeren er unik i databasen
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-{
-    options.User.RequireUniqueEmail = true;
-})
-.AddEntityFrameworkStores<QuizDbContext>()
-.AddDefaultTokenProviders();
+// builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+// {
+//     options.User.RequireUniqueEmail = true;
+// })
+// .AddEntityFrameworkStores<QuizDbContext>()
+// .AddDefaultTokenProviders();
 
-// registering the repositories (in DAL)
+// DAL - registering repositories
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+// TODO: add user repo
 
 // LOGGER
 builder.Services.AddSerilog((services, loggerConfiguration) =>

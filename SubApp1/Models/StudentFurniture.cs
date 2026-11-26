@@ -9,7 +9,9 @@ public class StudentFurniture
     public int StudentId { get; set; }
 
     public int FurnitureId { get; set; }
-    public Furniture Furniture { get; set; } = null!;
+
+    // nav property
+    public virtual Furniture Furniture { get; set; } = null!;
 
     public DateTime UnlockedAt { get; set; }
 }

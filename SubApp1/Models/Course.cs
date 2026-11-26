@@ -14,6 +14,6 @@ public class Course
     [StringLength(200)]
     public string Name { get; set; } = string.Empty;
 
-    // Connect quizzes to the course
-    public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
+    // Navgivation property - connect quizzes to the course
+    public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
 }
