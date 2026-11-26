@@ -2,11 +2,29 @@
 
 @{
     ViewData["Title"] = "Quiz result"; // Set the shared layout's page title
+
+    // Set by quiz controller submit, reading them here also clears them
+    var newFurnitureName = TempData["NewFurnitureName"] as string;
+    var newFurnitureSlug = TempData["NewFurnitureSlug"] as string;
+    var catFreed = TempData["CatFreed"] is true;
 }
 
 <!-- HTML setup for the quiz itself -->
 <div class="row g-4">
     <div class="col-lg-9">   <!-- changed main to div so there only is one main -->
+        @if (newFurnitureName is not null)
+        {
+            <section class="pixel-notice" role="status">
+                <div class="pixel-furniture pixel-furniture--@newFurnitureSlug" aria-hidden="true"></div>
+                <p class="pixel-notice__text">New item for your cat: @newFurnitureName!</p>
+            </section>
+        }
+        else if (catFreed)
+        {
+            <section class="pixel-notice" role="status">
+                <p class="pixel-notice__text">Your cat climbed out of its box! Finish more quizzes to fill its room.</p>
+            </section>
+        }
         <header class="card border-0 bg-primary-subtle mb-4">
             <div class="card-body p-4">
                 <p class="text-uppercase fw-semibold mb-2">Quiz result</p>

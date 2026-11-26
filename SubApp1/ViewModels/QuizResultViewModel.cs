@@ -25,6 +25,12 @@ public class QuizResultViewModel
 
     public int TotalQuestions { get; set; }
 
+    public bool CatJustFreed { get; set; }
+
+    public string? NewFurnitureName { get; set; }
+
+    public string? NewFurnitureSlug { get; set; }
+
     public decimal Percentage => MaximumPoints == 0 // Avoid division by zero for an empty quiz
         ? 0
         : Math.Round(PointsEarned / MaximumPoints * 100, 2);
