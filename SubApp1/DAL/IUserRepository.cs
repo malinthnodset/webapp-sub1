@@ -9,4 +9,6 @@ public interface IUserRepository
     Task<bool> Delete(int id);
 
     // TODO: get user by id
+
+    // TODO: create actual user repository, not just interface
 }

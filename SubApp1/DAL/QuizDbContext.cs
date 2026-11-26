@@ -43,4 +43,10 @@ public class QuizDbContext : IdentityDbContext
             .HasIndex(sf => new { sf.StudentId, sf.FurnitureId })
             .IsUnique();
     }
+
+    // Lazy loading
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
+    }
 }

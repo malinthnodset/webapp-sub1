@@ -16,5 +16,6 @@ public class Furniture
     // Decides the order in which furniture is unlocked
     public int SortOrder { get; set; }
 
-    public ICollection<StudentFurniture> Owners { get; set; } = new List<StudentFurniture>();
+    // navigation property
+    public virtual ICollection<StudentFurniture> Owners { get; set; } = new List<StudentFurniture>();
 }

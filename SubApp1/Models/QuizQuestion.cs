@@ -9,7 +9,9 @@ public class QuizQuestion
 
 	// Connect question to the quiz
 	public int QuizId { get; set; }
-	public Quiz Quiz { get; set; } = null!;
+
+	// nav property
+	public virtual Quiz Quiz { get; set; } = null!;
 
 	[Required(ErrorMessage = "Please add a question.")]
 	[StringLength(250)]
@@ -21,9 +23,8 @@ public class QuizQuestion
 
 	[Range(0, 10)]
 	public decimal Points { get; set; } = 1;
-
 	public int Order { get; set; } // Order of the questions in the quiz
 
-	// Connect users answers
-	public ICollection<QuizAnswer> Answers { get; set; } = new List<QuizAnswer>();
+	// nav property - connect users answers
+	public virtual ICollection<QuizAnswer> Answers { get; set; } = new List<QuizAnswer>();
 }
