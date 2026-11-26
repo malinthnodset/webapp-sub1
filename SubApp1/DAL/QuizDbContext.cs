@@ -20,6 +20,10 @@ public class QuizDbContext : IdentityDbContext
     public DbSet<QuizAttempt> QuizAttempts => Set<QuizAttempt>();
     public DbSet<QuizResult> QuizResults => Set<QuizResult>();
 
+    public DbSet<Furniture> FurnitureItems => Set<Furniture>();
+
+    public DbSet<StudentFurniture> StudentFurnitures => Set<StudentFurniture>();
+
     // Configures the model, runs once when EF buils the model of the db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,5 +33,20 @@ public class QuizDbContext : IdentityDbContext
         modelBuilder.Entity<Course>()
             .HasIndex(c => c.Code)
             .IsUnique();
+
+        // a slug is unique, and a student can own each furniture only once
+        modelBuilder.Entity<Furniture>()
+            .HasIndex(f => f.Slug)
+            .IsUnique();
+
+        modelBuilder.Entity<StudentFurniture>()
+            .HasIndex(sf => new { sf.StudentId, sf.FurnitureId })
+            .IsUnique();
+    }
+
+    // Lazy loading
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
     }
 }

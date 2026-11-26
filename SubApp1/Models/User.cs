@@ -20,6 +20,7 @@ public abstract class User
     public Role Role { get; set; }
 
     // TODO: include study program or faculty?
+    // TODO ? N:M relationship student-courses ?
 }
 
 public enum Role

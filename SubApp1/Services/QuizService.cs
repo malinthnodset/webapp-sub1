@@ -7,10 +7,12 @@ namespace SubApp1.Services;
 public class QuizService : IQuizService
 {
     private readonly IQuizRepository _quizRepository;
+    private readonly IFurnitureService _furnitureService;
 
-    public QuizService(IQuizRepository quizRepository)
+    public QuizService(IQuizRepository quizRepository, IFurnitureService furnitureService)
     {
         _quizRepository = quizRepository;
+        _furnitureService = furnitureService;
     }
 
     // Searches for the quiz by it's Id, if it doesn't exist it returns null, if it does exist it maps 
@@ -109,6 +111,8 @@ public class QuizService : IQuizService
 
         //builds the result page with the attempt history and the current attempt's results
         await _quizRepository.AddAttemptAsync(attempt);
+        // saves the attempt for unlock checking
+        var unlock = await _furnitureService.CheckUnlockAsync(studentId);
         var attempts = await _quizRepository.GetAttemptsForStudentAsync(quiz.Id, studentId);
         var orderedAttempts = attempts
             .Where(savedAttempt => savedAttempt.CompletedAt.HasValue && savedAttempt.Result is not null)
@@ -139,7 +143,10 @@ public class QuizService : IQuizService
             PointsEarned = pointsEarned,
             MaximumPoints = maximumPoints,
             CorrectAnswers = answers.Count(answer => answer.IsCorrect),
-            TotalQuestions = answers.Count
+            TotalQuestions = answers.Count,
+            CatJustFreed = unlock.CasJustFreed,
+            NewFurnitureName = unlock.NewFurniture?.Name,
+            NewFurnitureSlug = unlock.NewFurniture?.Slug
         };
     }
 // Dashboard: Rebuilds the result page for the student's latest attempt (same model as after grading)
