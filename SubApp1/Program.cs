@@ -20,14 +20,6 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Legger inn identitetsrammeverk for innlogging 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false; // disable email confirmation for easy local testing
-})
-.AddRoles<IdentityRole>()  
-.AddEntityFrameworkStores<QuizDbContext>();
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -42,10 +34,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Sørger for at e-postadressen til brukeren er unik i databasen
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
     options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = false;
 })
 .AddEntityFrameworkStores<QuizDbContext>()
 .AddDefaultTokenProviders();
@@ -69,22 +61,21 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
 
 var app = builder.Build();
 
-// Seed roles into the database if they don't exist
+if (app.Environment.IsDevelopment())
+{
+    await DBInit.SeedAsync(app);
+    app.UseDeveloperExceptionPage();
+}
+
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
     foreach (var role in Enum.GetNames<Role>())
     {
         if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole(role));
+            await roleManager.CreateAsync(new IdentityRole<int>(role));
     }
-}
-
-if (app.Environment.IsDevelopment())
-{
-    DBInit.Seed(app);
-    app.UseDeveloperExceptionPage();
 }
 
 // Enable static assets from wwwroot (images, JS, CSS)

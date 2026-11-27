@@ -9,7 +9,7 @@ public class QuizAttempt
 	public Quiz Quiz { get; set; } = null!;
 
 	public int UserId { get; set; }
-	public User Student { get; set; } = null!;
+	public User User { get; set; } = null!;
 
 	public DateTime StartedAt { get; set; } = DateTime.UtcNow;
 	public DateTime? CompletedAt { get; set; }

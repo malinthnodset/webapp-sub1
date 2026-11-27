@@ -15,22 +15,22 @@ namespace SubApp1.Tests;
 // Unit tests for AccountController. 3 positive tests and 3 negative tests for Register, Login, and Logout actions.
 public class AccountControllerTests
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
     private readonly AccountController _controller;
 
     public AccountControllerTests()
     {
         // Mock UserManager and SignInManager using NSubstitute
-        _userManager = Substitute.For<UserManager<IdentityUser>>(
-            Substitute.For<IUserStore<IdentityUser>>(),
+        _userManager = Substitute.For<UserManager<User>>(
+            Substitute.For<IUserStore<User>>(),
             null, null, null, null, null, null, null, null);
 
         // Mock SignInManager with necessary dependencies
-        _signInManager = Substitute.For<SignInManager<IdentityUser>>(
+        _signInManager = Substitute.For<SignInManager<User>>(
             _userManager,
             Substitute.For<IHttpContextAccessor>(),
-            Substitute.For<IUserClaimsPrincipalFactory<IdentityUser>>(),
+            Substitute.For<IUserClaimsPrincipalFactory<User>>(),
             null, null, null, null);
 
         // Create an instance of AccountController with the mocked dependencies
@@ -49,10 +49,10 @@ public class AccountControllerTests
     public async Task Register_WhenSuccessful_AssignsRoleSignsInAndRedirects()   
     {
         // Arrange
-        var model = new RegisterViewModel { Email = "bob@johansen.no", Password = "Pass123!", Role = Role.STUDENT };
-        _userManager.CreateAsync(Arg.Any<IdentityUser>(), model.Password)
+        var model = new RegisterViewModel { Name = "Bob Johansen", Email = "bob@johansen.no", Password = "Pass123!", Role = Role.STUDENT };
+        _userManager.CreateAsync(Arg.Any<User>(), model.Password)
                     .Returns(IdentityResult.Success);
-        _userManager.AddToRoleAsync(Arg.Any<IdentityUser>(), "STUDENT")
+        _userManager.AddToRoleAsync(Arg.Any<User>(), "STUDENT")
                     .Returns(IdentityResult.Success);
 
         // Act
@@ -62,8 +62,8 @@ public class AccountControllerTests
         var redirect = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Index", redirect.ActionName);
         Assert.Equal("Dashboard", redirect.ControllerName);
-        await _userManager.Received(1).AddToRoleAsync(Arg.Any<IdentityUser>(), "STUDENT");
-        await _signInManager.Received(1).SignInAsync(Arg.Any<IdentityUser>(), false);
+        await _userManager.Received(1).AddToRoleAsync(Arg.Any<User>(), "STUDENT");
+        await _signInManager.Received(1).SignInAsync(Arg.Any<User>(), false);
     }
 
     // Negative test for failed registration
@@ -71,8 +71,8 @@ public class AccountControllerTests
     public async Task Register_WhenCreateFails_ReturnsViewWithErrors()            
     {
         // Arrange
-        var model = new RegisterViewModel { Email = "bob@johansen.no", Password = "weak", Role = Role.TEACHER };
-        _userManager.CreateAsync(Arg.Any<IdentityUser>(), model.Password)
+        var model = new RegisterViewModel { Name = "Bob Johansen", Email = "bob@johansen.no", Password = "weak", Role = Role.TEACHER };
+        _userManager.CreateAsync(Arg.Any<User>(), model.Password)
                     .Returns(IdentityResult.Failed(new IdentityError { Description = "Password too short" }));
 
         // Act
@@ -83,7 +83,7 @@ public class AccountControllerTests
         Assert.Equal(model, view.Model);
         Assert.Contains(_controller.ModelState[string.Empty]!.Errors,
                         e => e.ErrorMessage == "Password too short");
-        await _signInManager.DidNotReceive().SignInAsync(Arg.Any<IdentityUser>(), Arg.Any<bool>());
+        await _signInManager.DidNotReceive().SignInAsync(Arg.Any<User>(), Arg.Any<bool>());
     }
 
     // Positive test for successful login
@@ -144,9 +144,9 @@ public class AccountControllerTests
     public async Task Register_WhenAccountAlreadyExists_ReturnsViewWithDuplicateError()
     {
         // Arrange
-        var model = new RegisterViewModel { Email = "bob@johansen.no", Password = "Pass123!", Role = Role.STUDENT };
+        var model = new RegisterViewModel { Name = "Bob Johansen", Email = "bob@johansen.no", Password = "Pass123!", Role = Role.STUDENT };
         var duplicateError = new IdentityErrorDescriber().DuplicateUserName(model.Email);
-        _userManager.CreateAsync(Arg.Any<IdentityUser>(), model.Password)
+        _userManager.CreateAsync(Arg.Any<User>(), model.Password)
                     .Returns(IdentityResult.Failed(duplicateError));
 
         // Act
@@ -157,7 +157,7 @@ public class AccountControllerTests
         Assert.Equal(model, view.Model);   // the user's input is preserved
         Assert.Contains(_controller.ModelState[string.Empty]!.Errors,
                         e => e.ErrorMessage == duplicateError.Description);
-        await _userManager.DidNotReceive().AddToRoleAsync(Arg.Any<IdentityUser>(), Arg.Any<string>());
-        await _signInManager.DidNotReceive().SignInAsync(Arg.Any<IdentityUser>(), Arg.Any<bool>());
+        await _userManager.DidNotReceive().AddToRoleAsync(Arg.Any<User>(), Arg.Any<string>());
+        await _signInManager.DidNotReceive().SignInAsync(Arg.Any<User>(), Arg.Any<bool>());
 }
 }
