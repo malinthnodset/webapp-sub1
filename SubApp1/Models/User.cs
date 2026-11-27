@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-
 namespace SubApp1.Models;
 
-// abstract class for shared attributed between student and teacher
+// class for shared attributed between student and teacher
 
-public abstract class User
+public class User
 {
     public int Id { get; set; } // set by DB
 

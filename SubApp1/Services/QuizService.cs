@@ -40,7 +40,7 @@ public class QuizService : IQuizService
 
     // Grades the quiz by comparing the submitted answers to the correct answers, calculates the points 
     // earned, and saves the attempt and result to the database. then return the results of the quiz attempt 
-    public async Task<QuizResultViewModel?> GradeQuizAsync(TakeQuizViewModel submission, int studentId)
+    public async Task<QuizResultViewModel?> GradeQuizAsync(TakeQuizViewModel submission, int userId)
     {
         //checks that the quiz exists, number of questions is correct and that question ids are in unique
         var quiz = await _quizRepository.GetQuizForTakingAsync(submission.QuizId);
@@ -84,7 +84,7 @@ public class QuizService : IQuizService
         var attempt = new QuizAttempt
         {
             QuizId = quiz.Id,
-            StudentId = studentId,
+            UserId = userId,
             StartedAt = startedAt,
             CompletedAt = completedAt
         };
@@ -109,7 +109,7 @@ public class QuizService : IQuizService
 
         //builds the result page with the attempt history and the current attempt's results
         await _quizRepository.AddAttemptAsync(attempt);
-        var attempts = await _quizRepository.GetAttemptsForStudentAsync(quiz.Id, studentId);
+        var attempts = await _quizRepository.GetAttemptsForStudentAsync(quiz.Id, userId);
         var orderedAttempts = attempts
             .Where(savedAttempt => savedAttempt.CompletedAt.HasValue && savedAttempt.Result is not null)
             .OrderBy(savedAttempt => savedAttempt.CompletedAt)
@@ -143,12 +143,12 @@ public class QuizService : IQuizService
         };
     }
 // Dashboard: Rebuilds the result page for the student's latest attempt (same model as after grading)
-public async Task<QuizResultViewModel?> GetLatestResultAsync(int quizId, int studentId)
+public async Task<QuizResultViewModel?> GetLatestResultAsync(int quizId, int userId)
 {
-    var attempt = await _quizRepository.GetLatestAttemptWithAnswersAsync(quizId, studentId);
+    var attempt = await _quizRepository.GetLatestAttemptWithAnswersAsync(quizId, userId);
     if (attempt is null || attempt.Result is null) return null;
 
-    var attempts = await _quizRepository.GetAttemptsForStudentAsync(quizId, studentId);
+    var attempts = await _quizRepository.GetAttemptsForStudentAsync(quizId, userId);
     var ordered = attempts
         .Where(a => a.CompletedAt.HasValue && a.Result is not null)
         .OrderBy(a => a.CompletedAt).ThenBy(a => a.Id)

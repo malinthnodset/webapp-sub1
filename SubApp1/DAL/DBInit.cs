@@ -22,8 +22,8 @@ public static class DBInit
         var webCourse = new Course { Name = "Web applications", Code = "ITPE3200" };
 
         // create students
-        var alice = new Student { Name = "Alice Hansen", Email = "alice@hansen.no" };
-        var bob = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
+        var alice = new User { Name = "Alice Hansen", Email = "alice@hansen.no" };
+        var bob = new User { Name = "Bob Johansen", Email = "bob@johansen.no" };
 
         // create quiz with questions
         context.Quizzes.AddRange(
@@ -32,7 +32,7 @@ public static class DBInit
                 Title = "Test",
                 Description = "A test quiz",
                 Course = testCourse,
-                CreatedByStudent = alice,
+                CreatedByUser = alice,
                 Questions = new List<QuizQuestion>
                 {
                     // questions
@@ -46,7 +46,7 @@ public static class DBInit
                 Title = "Web basics Quiz",
                 Description = "A short introduction to web development.",
                 Course = webCourse,
-                CreatedByStudent = bob,
+                CreatedByUser = bob,
                 Questions = new List<QuizQuestion>
                 {
                     new() { Prompt = "What does HTTP stand for?", CorrectAnswer = "Hypertext Transfer Protocol", Points = 1, Order = 1 },

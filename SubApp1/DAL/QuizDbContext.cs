@@ -13,7 +13,7 @@ public class QuizDbContext : IdentityDbContext
 
     // db tables
     public DbSet<Course> Courses => Set<Course>();
-    public DbSet<Student> Students => Set<Student>();
+    public DbSet<User> Students => Set<User>();
     public DbSet<Quiz> Quizzes => Set<Quiz>();
     public DbSet<QuizQuestion> QuizQuestions => Set<QuizQuestion>();
     public DbSet<QuizAnswer> QuizAnswers => Set<QuizAnswer>();

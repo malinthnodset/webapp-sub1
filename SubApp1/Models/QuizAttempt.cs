@@ -8,8 +8,8 @@ public class QuizAttempt
 	public int QuizId { get; set; }
 	public Quiz Quiz { get; set; } = null!;
 
-	public int StudentId { get; set; }
-	public Student Student { get; set; } = null!;
+	public int UserId { get; set; }
+	public User Student { get; set; } = null!;
 
 	public DateTime StartedAt { get; set; } = DateTime.UtcNow;
 	public DateTime? CompletedAt { get; set; }

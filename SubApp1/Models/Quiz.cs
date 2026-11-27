@@ -19,8 +19,8 @@ public class Quiz
 	public Course Course { get; set; } = null!;
 
 	// creator of the quiz (FK)
-	public int CreatedByStudentId { get; set; }
-	public Student CreatedByStudent { get; set; } = null!;
+	public int CreatedByUserId { get; set; }
+	public User CreatedByUser { get; set; } = null!;
 
 	// potentially add time stamps for creation/update time
 	// public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

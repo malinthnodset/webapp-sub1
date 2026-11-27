@@ -26,12 +26,12 @@ public class DashboardService
 
         // Best percentage per quiz for this user (best attempt counts)
         var bestByQuiz = new Dictionary<int, double>();
-        if (int.TryParse(userId, out var studentId))
+        if (int.TryParse(userId, out var parsedUserId))
         {
             var attempts = await _db.QuizAttempts
                 .AsNoTracking()
                 .Include(a => a.Result)
-                .Where(a => a.StudentId == studentId && a.Result != null && a.Result.MaximumPoints > 0)
+                .Where(a => a.UserId == parsedUserId && a.Result != null && a.Result.MaximumPoints > 0)
                 .ToListAsync();
 
             bestByQuiz = attempts
