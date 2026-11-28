@@ -11,14 +11,18 @@ using SubApp1.DAL;
 namespace SubApp1.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    [Migration("20261127215035_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261128194034_DBInit")]
+    partial class DBInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "10.0.15")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
@@ -170,6 +174,31 @@ namespace SubApp1.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("SubApp1.Models.Furniture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("FurnitureItems");
+                });
+
             modelBuilder.Entity("SubApp1.Models.Quiz", b =>
                 {
                     b.Property<int>("Id")
@@ -317,6 +346,31 @@ namespace SubApp1.Migrations
                         .IsUnique();
 
                     b.ToTable("QuizResults");
+                });
+
+            modelBuilder.Entity("SubApp1.Models.StudentFurniture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FurnitureId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UnlockedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FurnitureId");
+
+                    b.HasIndex("UserId", "FurnitureId")
+                        .IsUnique();
+
+                    b.ToTable("StudentFurnitures");
                 });
 
             modelBuilder.Entity("SubApp1.Models.User", b =>
@@ -519,9 +573,25 @@ namespace SubApp1.Migrations
                     b.Navigation("QuizAttempt");
                 });
 
+            modelBuilder.Entity("SubApp1.Models.StudentFurniture", b =>
+                {
+                    b.HasOne("SubApp1.Models.Furniture", "Furniture")
+                        .WithMany("Owners")
+                        .HasForeignKey("FurnitureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Furniture");
+                });
+
             modelBuilder.Entity("SubApp1.Models.Course", b =>
                 {
                     b.Navigation("Quizzes");
+                });
+
+            modelBuilder.Entity("SubApp1.Models.Furniture", b =>
+                {
+                    b.Navigation("Owners");
                 });
 
             modelBuilder.Entity("SubApp1.Models.Quiz", b =>

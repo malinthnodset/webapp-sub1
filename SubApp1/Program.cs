@@ -46,6 +46,9 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
+// registering the services (in Services)
+builder.Services.AddScoped<IFurnitureService, FurnitureService>();
+
 // LOGGER
 builder.Services.AddSerilog((services, loggerConfiguration) =>
 {
@@ -58,6 +61,7 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
             e.Level == LogEventLevel.Information &&
             e.MessageTemplate.Text.Contains("Executed DbCommand"));
 });
+
 
 var app = builder.Build();
 

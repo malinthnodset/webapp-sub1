@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SubApp1.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class DBInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,6 +65,21 @@ namespace SubApp1.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FurnitureItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Slug = table.Column<string>(type: "TEXT", nullable: false),
+                    SortOrder = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FurnitureItems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -197,6 +212,27 @@ namespace SubApp1.Migrations
                         name: "FK_Quizzes_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentFurnitures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FurnitureId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UnlockedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentFurnitures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentFurnitures_FurnitureItems_FurnitureId",
+                        column: x => x.FurnitureId,
+                        principalTable: "FurnitureItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -348,6 +384,12 @@ namespace SubApp1.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_FurnitureItems_Slug",
+                table: "FurnitureItems",
+                column: "Slug",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_QuizAnswers_QuizAttemptId",
                 table: "QuizAnswers",
                 column: "QuizAttemptId");
@@ -387,6 +429,17 @@ namespace SubApp1.Migrations
                 name: "IX_Quizzes_CreatedByUserId",
                 table: "Quizzes",
                 column: "CreatedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentFurnitures_FurnitureId",
+                table: "StudentFurnitures",
+                column: "FurnitureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentFurnitures_UserId_FurnitureId",
+                table: "StudentFurnitures",
+                columns: new[] { "UserId", "FurnitureId" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -414,6 +467,9 @@ namespace SubApp1.Migrations
                 name: "QuizResults");
 
             migrationBuilder.DropTable(
+                name: "StudentFurnitures");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -421,6 +477,9 @@ namespace SubApp1.Migrations
 
             migrationBuilder.DropTable(
                 name: "QuizAttempts");
+
+            migrationBuilder.DropTable(
+                name: "FurnitureItems");
 
             migrationBuilder.DropTable(
                 name: "Quizzes");
