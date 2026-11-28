@@ -7,8 +7,8 @@ namespace SubApp1.ViewComponents;
 
 public class SceneViewComponent : ViewComponent
 {
-    // TODO: replace with the logged-in student's id (same as quiz controller)
-    private const int TempStudentId = 1;
+    // TODO: replace with the logged-in user's id (same as quiz controller)
+    private const int TempUserId = 1;
 
     private readonly IFurnitureService _furnitureService;
 
@@ -25,7 +25,7 @@ public class SceneViewComponent : ViewComponent
             return View(new SceneViewModel());
         }
 
-        var model = await _furnitureService.GetSceneAsync(TempStudentId);
+        var model = await _furnitureService.GetSceneAsync(TempUserId);
         return View(model);
 
     }

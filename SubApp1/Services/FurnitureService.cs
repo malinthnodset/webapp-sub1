@@ -17,27 +17,27 @@ public class FurnitureService : IFurnitureService
     }
 
     // Counts every attempt, so retaking a quiz also counts. Easier to test; change back to Distinct() later.
-    private Task<int> CountCompletedQuizzesAsync(int studentId) =>
-        _db.QuizAttempts.CountAsync(a => a.StudentId == studentId);
+    private Task<int> CountCompletedQuizzesAsync(int userId) =>
+        _db.QuizAttempts.CountAsync(a => a.UserId == userId);
         
     // Count number of distinct quizzes the student has attempted (retaking the same quiz does not unlock anything).
-    //private Task<int> CountCompletedQuizzesAsync(int studentId) =>
+    //private Task<int> CountCompletedQuizzesAsync(int userId) =>
     //    _db.QuizAttempts
-    //        .Where(a => a.StudentId == studentId)
+    //        .Where(a => a.UserId == userId)
     //        .Select(a => a.QuizId)
     //        .Distinct()
     //        .CountAsync();
 
-    public async Task<UnlockResult> CheckUnlockAsync(int studentId)
+    public async Task<UnlockResult> CheckUnlockAsync(int userId)
     {
         var result = new UnlockResult();
         try
         {
-            var completed = await CountCompletedQuizzesAsync(studentId);
-            var totalAttempts = await _db.QuizAttempts.CountAsync(a => a.StudentId == studentId);
+            var completed = await CountCompletedQuizzesAsync(userId);
+            var totalAttempts = await _db.QuizAttempts.CountAsync(a => a.UserId == userId);
             result.CasJustFreed = totalAttempts == 1;
 
-            var owned = await _db.StudentFurnitures.CountAsync(sf => sf.StudentId == studentId);
+            var owned = await _db.StudentFurnitures.CountAsync(sf => sf.UserId == userId);
             if (!UnlockRules.ShouldUnlockFurniture(completed, owned))
             {
                 return result;
@@ -45,7 +45,7 @@ public class FurnitureService : IFurnitureService
 
             // First furniture (by SortOrder) that this student does not own yet
             var next = await _db.FurnitureItems
-                .Where(f => !_db.StudentFurnitures.Any(sf => sf.StudentId == studentId && sf.FurnitureId == f.Id))
+                .Where(f => !_db.StudentFurnitures.Any(sf => sf.UserId == userId && sf.FurnitureId == f.Id))
                 .OrderBy(f => f.SortOrder)
                 .FirstOrDefaultAsync();
 
@@ -57,31 +57,31 @@ public class FurnitureService : IFurnitureService
 
             _db.StudentFurnitures.Add(new StudentFurniture
             {
-                StudentId = studentId,
+                UserId = userId,
                 FurnitureId = next.Id,
                 UnlockedAt = DateTime.UtcNow
             });
             await _db.SaveChangesAsync();
 
             result.NewFurniture = next;
-            _logger.LogInformation("[FurnitureService] Student {StudentId} unlocked {Slug}", studentId, next.Slug);
+            _logger.LogInformation("[FurnitureService] Student {UserId} unlocked {Slug}", userId, next.Slug);
         }   
         catch (Exception ex)
         {
             // A failed unlock must never break grading
-            _logger.LogError(ex, "[FurnitureService] Unlock check failed for student {StudentId}", studentId);
+            _logger.LogError(ex, "[FurnitureService] Unlock check failed for student {UserId}", userId);
         }
         return result;
     }
 
-    public async Task<SceneViewModel> GetSceneAsync(int studentId)
+    public async Task<SceneViewModel> GetSceneAsync(int userId)
     {
         try
         {
-            var completed = await CountCompletedQuizzesAsync(studentId);
+            var completed = await CountCompletedQuizzesAsync(userId);
             var slugs = await _db.StudentFurnitures
                 .AsNoTracking()
-                .Where(sf => sf.StudentId == studentId)
+                .Where(sf => sf.UserId == userId)
                 .OrderBy(sf => sf.Furniture.SortOrder)
                 .Select(sf => sf.Furniture.Slug)
                 .ToListAsync();
@@ -94,7 +94,7 @@ public class FurnitureService : IFurnitureService
         }
         catch (Exception ex)
         {
-            _logger .LogError(ex, "[FurnitureService] Could not load the scene for the student {StudentId}", studentId);
+            _logger .LogError(ex, "[FurnitureService] Could not load the scene for the student {UserId}", userId);
             return new SceneViewModel(); // empty room, but the site still works
         }
     }

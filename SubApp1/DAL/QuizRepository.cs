@@ -134,7 +134,7 @@ public class QuizRepository : IQuizRepository
         }
     }
 
-    // Pulls student attempt history by studentId and quizId
+    // Pulls student attempt history by userId and quizId
     public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int userId)
     {
         try

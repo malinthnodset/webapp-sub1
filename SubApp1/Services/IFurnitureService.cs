@@ -12,8 +12,8 @@ public class UnlockResult
 public interface IFurnitureService
 {
     // Called after a quiz is attempt is saved. Returns what (if anything) was unlocked. 
-    Task<UnlockResult> CheckUnlockAsync(int studentId);
+    Task<UnlockResult> CheckUnlockAsync(int userId);
 
     // What the room should look like for this student
-    Task<SceneViewModel> GetSceneAsync(int studentId);
+    Task<SceneViewModel> GetSceneAsync(int userId);
 }

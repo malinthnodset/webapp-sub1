@@ -40,7 +40,7 @@ public class QuizDbContext : IdentityDbContext<User, IdentityRole<int>, int>
             .IsUnique();
 
         modelBuilder.Entity<StudentFurniture>()
-            .HasIndex(sf => new { sf.StudentId, sf.FurnitureId })
+            .HasIndex(sf => new { sf.UserId, sf.FurnitureId })
             .IsUnique();
     }
 

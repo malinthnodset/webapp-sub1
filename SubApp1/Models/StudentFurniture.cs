@@ -5,8 +5,8 @@ public class StudentFurniture
 {
     public int Id { get; set; }
 
-    // Same int id as QuizAttempt.StudentId uses
-    public int StudentId { get; set; }
+    // Same int id as QuizAttempt.UserId uses
+    public int UserId { get; set; }
 
     public int FurnitureId { get; set; }
 
