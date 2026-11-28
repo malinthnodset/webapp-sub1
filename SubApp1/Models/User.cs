@@ -1,26 +1,15 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace SubApp1.Models;
 
-// abstract class for shared attributed between student and teacher
-
-public abstract class User
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; } // set by DB
-
     [Required(ErrorMessage = "Firstname cannot be empty")]
     public string Name { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Email cannot be empyt"), EmailAddress]
-    public string Email { get; set; } = string.Empty;
-
-    // password
-
-    [Required(ErrorMessage = "Choose a role")]
-    public Role Role { get; set; }
-
-    // TODO: include study program or faculty?
-    // TODO ? N:M relationship student-courses ?
+    [Required(ErrorMessage = "Email cannot be empty"), EmailAddress]
+    public override string? Email { get; set; }
 }
 
 public enum Role

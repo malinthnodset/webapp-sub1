@@ -32,7 +32,7 @@ public class QuizServiceTests
     {
         var result = await _service.GradeQuizAsync(CreateSubmission(
             "Hypertext Transfer Protocol",
-            "4"), studentId: 1);
+            "4"), userId: 1);
 
         Assert.NotNull(result);
         Assert.Equal(2m, result.PointsEarned);
@@ -49,7 +49,7 @@ public class QuizServiceTests
     {
         var result = await _service.GradeQuizAsync(CreateSubmission(
             "  hypertext transfer protocol  ",
-            " 4 "), studentId: 1);
+            " 4 "), userId: 1);
 
         Assert.NotNull(result);
         Assert.Equal(2m, result.PointsEarned);
@@ -60,7 +60,7 @@ public class QuizServiceTests
     {
         var result = await _service.GradeQuizAsync(CreateSubmission(
             "HTTP",
-            "4"), studentId: 1);
+            "4"), userId: 1);
 
         Assert.NotNull(result);
         Assert.Equal(1m, result.PointsEarned);
@@ -75,7 +75,7 @@ public class QuizServiceTests
         var submission = CreateSubmission("answer", "answer");
         submission.QuizId = 999;
 
-        var result = await _service.GradeQuizAsync(submission, studentId: 1);
+        var result = await _service.GradeQuizAsync(submission, userId: 1);
 
         Assert.Null(result);
     }
@@ -86,7 +86,7 @@ public class QuizServiceTests
         var submission = CreateSubmission("answer", "answer");
         submission.Questions[0].QuestionId = 999;
 
-        var result = await _service.GradeQuizAsync(submission, studentId: 1);
+        var result = await _service.GradeQuizAsync(submission, userId: 1);
 
         Assert.Null(result);
     }
@@ -96,7 +96,7 @@ public class QuizServiceTests
     {
         var submission = CreateSubmission("answer");
 
-        var result = await _service.GradeQuizAsync(submission, studentId: 1);
+        var result = await _service.GradeQuizAsync(submission, userId: 1);
 
         Assert.Null(result);
     }
@@ -106,10 +106,10 @@ public class QuizServiceTests
     {
         var firstResult = await _service.GradeQuizAsync(CreateSubmission(
             "Hypertext Transfer Protocol",
-            "4"), studentId: 1);
+            "4"), userId: 1);
         var secondResult = await _service.GradeQuizAsync(CreateSubmission(
             "HTTP",
-            "4"), studentId: 1);
+            "4"), userId: 1);
 
         Assert.NotNull(firstResult);
         Assert.NotNull(secondResult);
@@ -143,7 +143,7 @@ public class QuizServiceTests
             Id = 1,
             Title = "Web basics",
             CourseId = 1,
-            Course = new Course("ITPE3200", "Web Applications") { Id = 1 },
+            Course = new Course { Id = 1, Code = "ITPE3200", Name = "Web Applications" },
             Questions = new List<QuizQuestion>
             {
                 new() { Id = 1, QuizId = 1, Prompt = "What does HTTP stand for?", CorrectAnswer = "Hypertext Transfer Protocol", Points = 1, Order = 1 },
@@ -166,10 +166,10 @@ public class QuizServiceTests
             return Task.CompletedTask;
         }
 
-        public Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
+        public Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int userId)
         {
             IReadOnlyList<QuizAttempt> attempts = SavedAttempts
-                .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
+                .Where(attempt => attempt.QuizId == quizId && attempt.UserId == userId)
                 .ToList();
             return Task.FromResult(attempts);
         }
@@ -180,7 +180,7 @@ public class QuizServiceTests
 
         public Task<bool> Delete(int id) => throw new NotSupportedException();
 
-        public Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int studentId)
+        public Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int userId)
         {
             throw new NotImplementedException();
         }

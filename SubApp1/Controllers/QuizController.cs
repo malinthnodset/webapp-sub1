@@ -58,7 +58,7 @@ public class QuizController : Controller
                 Title = vm.Title,
                 Description = vm.Description,
                 CourseId = vm.CourseId.GetValueOrDefault(),
-                CreatedByStudentId = 1,      // TODO: replace with logged-in student id when login exists!
+                CreatedByUserId = 1,      // TODO: replace with logged-in user id when login exists!
 
                 // the questions
                 Questions = vm.Question.Select((q, i) => new QuizQuestion
@@ -153,9 +153,9 @@ public class QuizController : Controller
         // If modelstate is valid, save and grade the attempt:
 
         // TODO: add logged in students ID 
-        var studentId = 1;
+        var userId = 1;
 
-        var result = await _quizService.GradeQuizAsync(submission, studentId);
+        var result = await _quizService.GradeQuizAsync(submission, userId);
         if (result == null)
         {
             _logger.LogWarning("[QuizController] Invalid submission for quiz {QuizId}", submission);
@@ -180,8 +180,8 @@ public class QuizController : Controller
     [HttpGet]
     public async Task<IActionResult> Result(int id)
     {
-        var studentId = 1; // TODO: same logged-in student id as in Submit
-        var result = await _quizService.GetLatestResultAsync(id, studentId);
+        var userId = 1; // TODO: same logged-in user id as in Submit
+        var result = await _quizService.GetLatestResultAsync(id, userId);
         if (result == null)
         {
             _logger.LogWarning("[QuizController] No attempts found for quiz {QuizId}", id);

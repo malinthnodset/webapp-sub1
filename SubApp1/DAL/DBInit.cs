@@ -6,24 +6,36 @@ namespace SubApp1.DAL;
 // Seed test data for development environment 
 public static class DBInit
 {
-    public static void Seed(IApplicationBuilder app)
+    public static async Task SeedAsync(IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.CreateScope();
+        await using var serviceScope = app.ApplicationServices.CreateAsyncScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<QuizDbContext>();
 
-        // Migration - creates/updates the schema
-        context.Database.Migrate();
+        await context.Database.MigrateAsync();
 
         // Everything is seeded together, so if Courses exist -> the seed has already run
-        if (context.Courses.Any()) return;
+        if (await context.Courses.AnyAsync()) return;
 
         // create courses
         var testCourse = new Course { Name = "Test course", Code = "TEST1001" };
         var webCourse = new Course { Name = "Web applications", Code = "ITPE3200" };
 
-        // create students
-        var alice = new Student { Name = "Alice Hansen", Email = "alice@hansen.no" };
-        var bob = new Student { Name = "Bob Johansen", Email = "bob@johansen.no" };
+        var alice = new User
+        {
+            Name = "Alice Hansen",
+            UserName = "alice@hansen.no",
+            NormalizedUserName = "ALICE@HANSEN.NO",
+            Email = "alice@hansen.no",
+            NormalizedEmail = "ALICE@HANSEN.NO"
+        };
+        var bob = new User
+        {
+            Name = "Bob Johansen",
+            UserName = "bob@johansen.no",
+            NormalizedUserName = "BOB@JOHANSEN.NO",
+            Email = "bob@johansen.no",
+            NormalizedEmail = "BOB@JOHANSEN.NO"
+        };
 
         // create quiz with questions
         context.Quizzes.AddRange(
@@ -32,7 +44,7 @@ public static class DBInit
                 Title = "Test",
                 Description = "A test quiz",
                 Course = testCourse,
-                CreatedByStudent = alice,
+                CreatedByUser = alice,
                 Questions = new List<QuizQuestion>
                 {
                     // questions
@@ -46,7 +58,7 @@ public static class DBInit
                 Title = "Web basics Quiz",
                 Description = "A short introduction to web development.",
                 Course = webCourse,
-                CreatedByStudent = bob,
+                CreatedByUser = bob,
                 Questions = new List<QuizQuestion>
                 {
                     new() { Prompt = "What does HTTP stand for?", CorrectAnswer = "Hypertext Transfer Protocol", Points = 1, Order = 1 },
@@ -58,8 +70,8 @@ public static class DBInit
                 }
             });
 
-        // EF inserts the courses and students (found through the quizzes),
+        // EF inserts users and courses through the quiz relationships,
         // then the quizzes, then the questions, in the right order, in a single transaction -> avoids half seeded db
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

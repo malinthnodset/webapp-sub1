@@ -135,13 +135,13 @@ public class QuizRepository : IQuizRepository
     }
 
     // Pulls student attempt history by studentId and quizId
-    public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int studentId)
+    public async Task<IReadOnlyList<QuizAttempt>> GetAttemptsForStudentAsync(int quizId, int userId)
     {
         try
         {
             return await _db.QuizAttempts
                 .AsNoTracking()
-                .Where(attempt => attempt.QuizId == quizId && attempt.StudentId == studentId)
+                .Where(attempt => attempt.QuizId == quizId && attempt.UserId == userId)
                 .Include(attempt => attempt.Result)
                 .OrderBy(attempt => attempt.CompletedAt)
                 .ThenBy(attempt => attempt.Id)
@@ -154,25 +154,25 @@ public class QuizRepository : IQuizRepository
         }
     }
     // Dashboard: Get the latest completed attempt with everything the result page needs
-    public async Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int studentId)
+public async Task<QuizAttempt?> GetLatestAttemptWithAnswersAsync(int quizId, int userId)
+{
+    try
     {
-        try
-        {
-            return await _db.QuizAttempts
-                .AsNoTracking()
-                .Where(a => a.QuizId == quizId && a.StudentId == studentId
-                            && a.CompletedAt != null && a.Result != null)
-                .Include(a => a.Result)
-                .Include(a => a.Quiz).ThenInclude(q => q.Course)
-                .Include(a => a.Answers).ThenInclude(x => x.QuizQuestion)
-                .OrderByDescending(a => a.CompletedAt)
-                .ThenByDescending(a => a.Id)
-                .FirstOrDefaultAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("[QuizRepository] GetLatestAttemptWithAnswers for quiz {@quizId} failed, error message: {@e}", quizId, e.Message);
-            throw;
-        }
+        return await _db.QuizAttempts
+            .AsNoTracking()
+            .Where(a => a.QuizId == quizId && a.UserId == userId
+                        && a.CompletedAt != null && a.Result != null)
+            .Include(a => a.Result)
+            .Include(a => a.Quiz).ThenInclude(q => q.Course)
+            .Include(a => a.Answers).ThenInclude(x => x.QuizQuestion)
+            .OrderByDescending(a => a.CompletedAt)
+            .ThenByDescending(a => a.Id)
+            .FirstOrDefaultAsync();
     }
+    catch (Exception e)
+    {
+        _logger.LogError("[QuizRepository] GetLatestAttemptWithAnswers for quiz {@quizId} failed, error message: {@e}", quizId, e.Message);
+        throw;
+    }
+}
 }
