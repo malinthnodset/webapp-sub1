@@ -8,7 +8,9 @@ public class QuizResult
 	public int Id { get; set; }
 
 	public int QuizAttemptId { get; set; }
-	public QuizAttempt QuizAttempt { get; set; } = null!;
+
+	// nav property
+	public virtual QuizAttempt QuizAttempt { get; set; } = null!;
 
 	[Range(0, 100000)]
 	public decimal PointsEarned { get; set; }
